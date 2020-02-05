@@ -39,11 +39,16 @@ void print_cpuload(void) {
 		count++;
 	}
 	*ptr = '\0';
-	printf("WS-cpuload: %d%s\n", count, buffer);
 
+	if (count) {
+		printf("WS-cpuload: %d%s\n", count, buffer);
+	}
 };
 
 void print_ddrbw(void) {
+
+	if (g_ddr_stats.total_available_bw == 0)
+		return;
 	printf("WS-ddrbw: 3 Read_avg %06d Write_avg %06d Total_avg %06d\n",
 		g_ddr_stats.read_bw_avg,
 		g_ddr_stats.write_bw_avg,

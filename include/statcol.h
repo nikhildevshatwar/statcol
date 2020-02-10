@@ -12,8 +12,13 @@
 #include "app_remote_service_priv.h"
 #include "app_perf_stats_priv.h"
 #include "app_perf_stats.h"
+#include "app_ethfw_stats.h"
 
 #define DEBUG
+
+#define APP_IPC_REMOTE_SERVICE_RPMSG_PORT_ID		21
+#define RPMSG_ADDR_ANY					0xffffffff
+
 #define MAX_RPMSG_CONTEXTS				20
 #define MAX_CPU_CORES					20
 

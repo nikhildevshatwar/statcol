@@ -1,12 +1,16 @@
 #include "statcol.h"
-#include "statcol_services.h"
 
 struct rpmsg_context g_rpmsg_contexts[MAX_RPMSG_CONTEXTS];
 struct rpmsg_context *g_ddr_ctx = NULL;
-app_perf_stats_ddr_stats_t g_ddr_stats;
+struct rpmsg_context *g_ethfw_ctx = NULL;
 
 struct metric_cpuload g_metric_cpuload[MAX_CPU_CORES];
 int running = 1;
+
+
+int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
+			void *prm, uint prm_size, uint flags);
+
 
 struct metric_cpuload *alloc_metric_cpuload(char *name) {
 	struct metric_cpuload *mc;
@@ -47,12 +51,76 @@ void print_cpuload(void) {
 
 void print_ddrbw(void) {
 
-	if (g_ddr_stats.total_available_bw == 0)
+	app_perf_stats_ddr_stats_t ddr_stats;
+
+	remote_service_run(g_ddr_ctx, APP_PERF_STATS_SERVICE_NAME,
+		APP_PERF_STATS_CMD_GET_DDR_STATS,
+		&ddr_stats, sizeof(ddr_stats), 0);
+
+	remote_service_run(g_ddr_ctx, APP_PERF_STATS_SERVICE_NAME,
+		APP_PERF_STATS_CMD_RESET_DDR_STATS,
+		NULL, 0, 0);
+
+	if (ddr_stats.total_available_bw == 0)
 		return;
 	printf("WS-ddrbw: 3 Read_avg %06d Write_avg %06d Total_avg %06d\n",
-		g_ddr_stats.read_bw_avg,
-		g_ddr_stats.write_bw_avg,
-		g_ddr_stats.total_available_bw);
+		ddr_stats.read_bw_avg,
+		ddr_stats.write_bw_avg,
+		ddr_stats.total_available_bw);
+};
+
+uint32_t get_bits_per_sec(uint64_t bytes, char **unit) {
+	uint64_t bits;
+
+	bits = bytes * 8;
+	if (bits < 1000) {
+		*unit = "";
+		return bits;
+	} else if (bits < 1000 * 1000) {
+		*unit = "K";
+		return bits / 1000;
+	} else if (bits < 1000 * 1000 * 1000) {
+		*unit = "M";
+		return bits / (1000 * 1000);
+	} else {
+		*unit = "G";
+		return bits / (1000 * 1000 * 1000);
+	}
+}
+
+void print_ethfw_stats(void) {
+	app_ethfw_port_bandwidth_t ethfw_stats;
+	uint32_t tx_bw, rx_bw;
+	char *tx_unit, *rx_unit;
+	char buffer[200], *ptr;
+	int count, i;
+
+	if (g_ethfw_ctx == NULL) {
+		return;
+	}
+
+	remote_service_run(g_ethfw_ctx, APP_ETHFW_STATS_SERVICE_NAME,
+		APP_ETHFW_STATS_CMD_GET_BANDWIDTH,
+		&ethfw_stats, sizeof(ethfw_stats), 0);
+
+	ptr = &buffer[0];
+	for (i = 0, count = 0; i < APP_ETHFW_PORT_NUM_MAX; i++) {
+
+		if (ethfw_stats.isportenabled[i] == 0)
+			continue;
+
+		tx_bw = get_bits_per_sec(ethfw_stats.tx_bandwidth[i], &tx_unit);
+		rx_bw = get_bits_per_sec(ethfw_stats.rx_bandwidth[i], &rx_unit);
+		ptr += sprintf(ptr, " port%d_TX %03d%sbps port%d_RX %03d%sbps",
+				i, tx_bw, tx_unit,
+				i, rx_bw, rx_unit);
+		count++;
+	}
+	*ptr = '\0';
+
+	if (count) {
+		printf("WS-ethfw-bw: %d%s\n", count * 2, buffer);
+	}
 };
 
 void scan_rpmsg_char_nodes(void) {
@@ -105,7 +173,9 @@ void scan_rpmsg_char_nodes(void) {
 		ctx->name = core;
 		debug(">> Created RPMSG endpoint %s for %s (fd = %d, port = %d)\n", ep_name, core, ctx->fd, ctx->port);
 
-		if (strcmp(core, "r5f-main-0-core-1") == 0) {
+		if (strcmp(core, "r5f-main-0-core-0") == 0) {
+			g_ethfw_ctx = ctx;
+		} else if (strcmp(core, "r5f-main-0-core-1") == 0) {
 			g_ddr_ctx = ctx;
 		}
 
@@ -119,7 +189,6 @@ void scan_rpmsg_char_nodes(void) {
 			free(rproc_dev);
 	}
 }
-
 
 int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
 			void *prm, uint prm_size, uint flags) {
@@ -179,22 +248,7 @@ void *stat_collector_task_rpmsg(void *data) {
 			remote_service_run(ctx, APP_PERF_STATS_SERVICE_NAME,
 				APP_PERF_STATS_CMD_GET_CPU_LOAD,
 				&cpuload, sizeof(cpuload), 0);
-
 			ctx->m_cpuload->load = cpuload.cpu_load * 1.0 / 100;
-
-			remote_service_run(ctx, APP_PERF_STATS_SERVICE_NAME,
-				APP_PERF_STATS_CMD_RESET_LOAD_CALC,
-				NULL, 0, APP_REMOTE_SERVICE_FLAG_NO_WAIT_ACK);
-		}
-
-		if (g_ddr_ctx) {
-			remote_service_run(g_ddr_ctx, APP_PERF_STATS_SERVICE_NAME,
-				APP_PERF_STATS_CMD_GET_DDR_STATS,
-				&g_ddr_stats, sizeof(g_ddr_stats), 0);
-
-			remote_service_run(g_ddr_ctx, APP_PERF_STATS_SERVICE_NAME,
-				APP_PERF_STATS_CMD_RESET_DDR_STATS,
-				NULL, 0, 0);
 		}
 
 		usleep(400 * 1000);
@@ -208,7 +262,10 @@ void *stat_collector_task_print(void *data) {
 
 		if (i % 4 == 3) {
 			print_cpuload();
-			print_ddrbw();
+			if (g_ddr_ctx)
+				print_ddrbw();
+			if (g_ethfw_ctx)
+				print_ethfw_stats();
 		}
 		usleep(100 * 1000);
 	}

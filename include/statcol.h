@@ -39,4 +39,5 @@ struct rpmsg_context {
 	int fd;
 	int port;
 	struct metric_cpuload *m_cpuload;
+	pthread_mutex_t lock;
 };

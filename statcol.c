@@ -145,6 +145,7 @@ void scan_rpmsg_char_nodes(void) {
 
 		debug("rpmsg-char supported in %s\n", core);
 		ctx = &g_rpmsg_contexts[i];
+		pthread_mutex_init(&ctx->lock, NULL);
 
 		rproc_dev = rproc_device_find_for_name(core);
 		if (!rproc_dev)
@@ -199,6 +200,8 @@ int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
 	if (prm_size > APP_REMOTE_SERVICE_PRM_SIZE_MAX)
 		return -EINVAL;
 
+	pthread_mutex_lock(&ctx->lock);
+
 	header = (app_service_msg_header_t *)ctx->rpmsg_tx_msg_buf;
 	header->cmd = cmd;
 	header->flags = flags;
@@ -214,19 +217,24 @@ int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
 
 	if (ret < 0) {
 		printf("ERROR: Fail to send rpmsg_char message to %s\n", ctx->name);
+		pthread_mutex_unlock(&ctx->lock);
 		return ret;
 	}
 
-	if (flags & APP_REMOTE_SERVICE_FLAG_NO_WAIT_ACK)
+	if (flags & APP_REMOTE_SERVICE_FLAG_NO_WAIT_ACK) {
+		pthread_mutex_unlock(&ctx->lock);
 		return 0;
+	}
 
 	/* Read the data after header and copy back to buffer */
 	ret = read(ctx->fd, ctx->rpmsg_tx_msg_buf, payload_size);
 	if (ret < 0 || ret < payload_size) {
 		printf("ERROR: Fail to send rpmsg_char message to %s\n", ctx->name);
+		pthread_mutex_unlock(&ctx->lock);
 		return ret;
 	}
 	memcpy(prm, (header + 1), prm_size);
+	pthread_mutex_unlock(&ctx->lock);
 	return header->status;
 }
 

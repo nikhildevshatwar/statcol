@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <argp.h>
 #include <pthread.h>
-#include <rpmsg_char_helper.h>
+#include <ti_rpmsg_char.h>
 #include "app_remote_service_priv.h"
 #include "app_perf_stats_priv.h"
 #include "app_perf_stats.h"
@@ -35,9 +35,9 @@ struct metric_cpuload {
 
 struct rpmsg_context {
 	uint8_t rpmsg_tx_msg_buf[IPC_RPMESSAGE_MSG_SIZE] __attribute__ ((aligned(1024)));
-	char *name;
-	int fd;
-	int port;
+	char name[32];
+
+	rpmsg_char_dev_t *dev;
 	struct metric_cpuload *m_cpuload;
 	pthread_mutex_t lock;
 };

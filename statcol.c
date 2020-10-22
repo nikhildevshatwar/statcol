@@ -1,12 +1,11 @@
 #include "statcol.h"
 
-struct rpmsg_context g_rpmsg_contexts[MAX_RPMSG_CONTEXTS];
+struct rpmsg_context g_rpmsg_contexts[RPROC_ID_MAX];
 struct rpmsg_context *g_ddr_ctx = NULL;
 struct rpmsg_context *g_ethfw_ctx = NULL;
 
 struct metric_cpuload g_metric_cpuload[MAX_CPU_CORES];
 int running = 1;
-
 
 int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
 			void *prm, uint prm_size, uint flags);
@@ -51,7 +50,7 @@ void print_cpuload(void) {
 
 void print_ddrbw(void) {
 
-	app_perf_stats_ddr_stats_t ddr_stats;
+	app_perf_stats_ddr_stats_t ddr_stats = {};
 
 	remote_service_run(g_ddr_ctx, APP_PERF_STATS_SERVICE_NAME,
 		APP_PERF_STATS_CMD_GET_DDR_STATS,
@@ -89,7 +88,7 @@ uint32_t get_bits_per_sec(uint64_t bytes, char **unit) {
 }
 
 void print_ethfw_stats(void) {
-	app_ethfw_port_bandwidth_t ethfw_stats;
+	app_ethfw_port_bandwidth_t ethfw_stats = {};
 	uint32_t tx_bw, rx_bw;
 	char *tx_unit, *rx_unit;
 	char buffer[200], *ptr;
@@ -123,72 +122,35 @@ void print_ethfw_stats(void) {
 	}
 };
 
-void scan_rpmsg_char_nodes(void) {
+int scan_rpmsg_char_nodes(void) {
 
 	struct rpmsg_context *ctx;
-	rproc_device_t *rproc_dev;
-	rproc_char_device_t *rp_cdev;
-	rproc_char_endpt_t *ep;
-	char *ep_name;
+	rpmsg_char_dev_t *dev;
+	int i, num_ctx = 0;
 
-	char **corenames;
-	char *core;
-	int i;
+	ctx = &g_rpmsg_contexts[num_ctx];
+	for (i = 0; i < RPROC_ID_MAX; i++) {
 
-	corenames = rproc_get_supported_names();
+		sprintf(ctx->name, "statcol_rproc%d", i);
+		dev = rpmsg_char_open(i, NULL,
+				APP_IPC_REMOTE_SERVICE_RPMSG_PORT_ID, ctx->name, 0);
+		if (!dev)
+			continue;
 
-	for (i = 0; i < MAX_RPMSG_CONTEXTS; i++) {
-
-		core = corenames[i];
-		if (core == NULL)
-			break;
-
-		debug("rpmsg-char supported in %s\n", core);
-		ctx = &g_rpmsg_contexts[i];
 		pthread_mutex_init(&ctx->lock, NULL);
+		ctx->m_cpuload = alloc_metric_cpuload(ctx->name);
+		ctx->dev = dev;
+		num_ctx++;
 
-		rproc_dev = rproc_device_find_for_name(core);
-		if (!rproc_dev)
-			continue;
-		debug("    rproc_dev exists\n");
+		debug(">> Opened RPMSG char device. Local ep = %d, fd = %d\n",
+			dev->endpt, dev->fd);
 
-		rp_cdev = rproc_device_find_chrdev_by_remote_port(rproc_dev,
-				APP_IPC_REMOTE_SERVICE_RPMSG_PORT_ID);
-		if (!rp_cdev)
-			continue;
-		debug("    rproc_char_dev exists\n");
-
-		ep = rproc_char_device_create_endpt(rp_cdev, "rpmsg_chrdev",
-				RPMSG_ADDR_ANY);
-		if (!ep)
-			continue;
-		debug("    char_dev endpoint created\n");
-
-		ep_name = rproc_char_endpt_get_dev_name(ep);
-		ctx->port = rproc_char_endpt_get_local_port(ep);
-		ctx->fd = open(ep_name, O_RDWR);
-		if (!ctx->fd)
-			continue;
-
-		ctx->m_cpuload = alloc_metric_cpuload(core);
-		ctx->name = core;
-		debug(">> Created RPMSG endpoint %s for %s (fd = %d, port = %d)\n", ep_name, core, ctx->fd, ctx->port);
-
-		if (strcmp(core, "r5f-main-0-core-0") == 0) {
+		if (i == R5F_MAIN0_0) {
 			g_ethfw_ctx = ctx;
-		} else if (strcmp(core, "r5f-main-0-core-1") == 0) {
 			g_ddr_ctx = ctx;
 		}
-
-		if (ep_name)
-			free(ep_name);
-		if (ep)
-			free(ep);
-		if (rp_cdev)
-			free(rp_cdev);
-		if (rproc_dev)
-			free(rproc_dev);
 	}
+	return num_ctx;
 }
 
 int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
@@ -207,13 +169,13 @@ int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
 	header->flags = flags;
 	header->status = 0;
 	header->prm_size = prm_size;
-	sprintf(header->service_name, "%s\0", service);
+	sprintf(header->service_name, "%s", service);
 	/* Copy data after header */
 	if (prm)
 		memcpy((header + 1), prm, prm_size);
 
 	payload_size = sizeof(*header) + prm_size;
-	ret = write(ctx->fd, ctx->rpmsg_tx_msg_buf, payload_size);
+	ret = write(ctx->dev->fd, ctx->rpmsg_tx_msg_buf, payload_size);
 
 	if (ret < 0) {
 		printf("ERROR: Fail to send rpmsg_char message to %s\n", ctx->name);
@@ -227,7 +189,7 @@ int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
 	}
 
 	/* Read the data after header and copy back to buffer */
-	ret = read(ctx->fd, ctx->rpmsg_tx_msg_buf, payload_size);
+	ret = read(ctx->dev->fd, ctx->rpmsg_tx_msg_buf, payload_size);
 	if (ret < 0 || ret < payload_size) {
 		printf("ERROR: Fail to send rpmsg_char message to %s\n", ctx->name);
 		pthread_mutex_unlock(&ctx->lock);
@@ -238,7 +200,7 @@ int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
 	return header->status;
 }
 
-void *stat_collector_task_rpmsg(void *data) {
+void *statcol_task_rpmsg(void *data) {
 
 	app_perf_stats_cpu_load_t cpuload;
 	struct metric_cpuload *mc;
@@ -250,7 +212,7 @@ void *stat_collector_task_rpmsg(void *data) {
 		for (i = 0; i < MAX_RPMSG_CONTEXTS; i++) {
 
 			ctx = &g_rpmsg_contexts[i];
-			if (!ctx->name)
+			if (!ctx->dev)
 				continue;
 
 			remote_service_run(ctx, APP_PERF_STATS_SERVICE_NAME,
@@ -263,7 +225,7 @@ void *stat_collector_task_rpmsg(void *data) {
 	}
 }
 
-void *stat_collector_task_print(void *data) {
+void *statcol_task_print(void *data) {
 	int i;
 
 	for (i = 0; running; i++) {
@@ -288,15 +250,20 @@ int parse_args(int argc, char **argv) {
 }
 
 int main(int argc, char *argv[]) {
-	pthread_t remote_service, print;
+	pthread_t thr_collect, thr_print;
 
 	parse_args(argc, argv);
-	scan_rpmsg_char_nodes();
 
-	pthread_create(&remote_service, NULL, stat_collector_task_rpmsg, NULL);
-	pthread_create(&print, NULL, stat_collector_task_print, NULL);
+	rpmsg_char_init(NULL);
+	if (scan_rpmsg_char_nodes()) {
 
-	pthread_join(print, NULL);
-	pthread_join(remote_service, NULL);
+		/* Create the threads and wait for them */
+		pthread_create(&thr_collect, NULL, statcol_task_rpmsg, NULL);
+		pthread_create(&thr_print, NULL, statcol_task_print, NULL);
+		pthread_join(thr_print, NULL);
+		pthread_join(thr_collect, NULL);
+	}
+
+	rpmsg_char_exit();
 	return 0;
 }

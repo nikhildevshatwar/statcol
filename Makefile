@@ -1,7 +1,6 @@
-CROSS_COMPILE ?= aarch64-linux-gnu-
-CC ?= $(CROSS_COMPILE)gcc
+CROSS_COMPILE ?= aarch64-none-linux-gnu-
 CFLAGS += -I include -g -O0
-LIBS := -lrpmsg_char_helper -lpthread
+LIBS := -lti_rpmsg_char -lpthread
 SYSROOT ?= $(HOME)/targetfs
 CFLAGS += --sysroot=$(SYSROOT)
 
@@ -9,7 +8,7 @@ SOURCES := statcol.c
 all: statcol
 
 statcol: $(SOURCES)
-	$(CC) $(CFLAGS) $(LIBS) -o $@ $^
+	$(CROSS_COMPILE)gcc $(CFLAGS) $(LIBS) -o $@ $^
 
 clean:
 	rm -rf statcol

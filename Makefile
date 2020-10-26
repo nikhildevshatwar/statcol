@@ -13,7 +13,10 @@ statcol: $(SOURCES)
 clean:
 	rm -rf statcol
 
-install:
-	install -d ${DESTDIR}/usr/bin/
-	install -m 0755 statcol ${DESTDIR}/usr/bin/
-
+install: statcol
+	install -d ${DESTDIR}/$(bindir)
+	install -m 0755 statcol ${DESTDIR}/$(bindir)
+	# Install the web related stuff
+	install -d ${DESTDIR}/$(datadir)/statcol
+	cp -r static ${DESTDIR}/$(datadir)/statcol/
+	cp -r scripts ${DESTDIR}/$(datadir)/statcol/

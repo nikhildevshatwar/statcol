@@ -124,25 +124,36 @@ const useStyles = makeStyles((theme) => ({
 export default function App() {
   const classes = useStyles();
 
+  // Websocket Hook
+  const [socket, setSocket] = React.useState(null);
+  // Endpoint Hook
+  const [endpoint, setEndpoint] = React.useState("linux");
+  // IP Address Hook
+  const [address, setAddress] = React.useState("");
   // Drawer Hook
   const [open, setOpen] = React.useState(true);
+
+  // Hook Callbacks
+  const handleAddressChange = (event) => {
+    setAddress(event.target.value);
+  };
+  const handleSocketChange = () => {
+    if (socket != null) {
+      socket.close();
+    }
+
+    const socketURL = ["ws://", address, ":", "8080", "/", endpoint].join("");
+    setSocket(new WebSocket(socketURL));
+  };
+  const handleEndpointChange = (endpoint) => {
+    setEndpoint(endpoint);
+    handleSocketChange();
+  };
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  // Endpoint Hook
-  const [endpoint, setEndpoint] = React.useState("linux");
-
-  // IP Address Hook
-  const [address, setAddress] = React.useState("");
-  const handleAddressChange = (event) => {
-    setAddress(event.target.value);
-  };
-  const handleAddressSend = () => {
-    /* Add websocket creation code*/
   };
 
   return (
@@ -185,7 +196,7 @@ export default function App() {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={handleAddressSend}
+            onClick={handleSocketChange}
             aria-label="send ip address"
             className={classes.publishButton}
           >
@@ -209,7 +220,7 @@ export default function App() {
           </IconButton>
         </div>
         <List className={classes.tabList}>
-          <Endpoints endpointSetter={setEndpoint} />
+          <Endpoints endpointSetter={handleEndpointChange} />
         </List>
       </Drawer>
       <main className={classes.content}>

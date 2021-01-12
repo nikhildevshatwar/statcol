@@ -16,7 +16,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Endpoint(classes, icon, text, endpoint, endpointSetter) {
+function Endpoint(icon, text, endpoint, endpointSetter) {
+  const classes = useStyles();
+
   return (
     <ListItem button onClick={() => endpointSetter(endpoint)}>
       <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
@@ -26,33 +28,12 @@ function Endpoint(classes, icon, text, endpoint, endpointSetter) {
 }
 
 export default function Endpoints(props) {
-  const classes = useStyles();
-
   return (
     <React.Fragment>
+      {Endpoint(<DashboardIcon />, "Linux", "linux", props.endpointSetter)}
+      {Endpoint(<ShoppingCartIcon />, "RAM", "ram", props.endpointSetter)}
+      {Endpoint(<PeopleIcon />, "Temperature", "temp", props.endpointSetter)}
       {Endpoint(
-        classes,
-        <DashboardIcon />,
-        "Linux",
-        "linux",
-        props.endpointSetter
-      )}
-      {Endpoint(
-        classes,
-        <ShoppingCartIcon />,
-        "RAM",
-        "ram",
-        props.endpointSetter
-      )}
-      {Endpoint(
-        classes,
-        <PeopleIcon />,
-        "Temperature",
-        "temp",
-        props.endpointSetter
-      )}
-      {Endpoint(
-        classes,
         <BarChartIcon />,
         "Network Traffic",
         "net_traffic",

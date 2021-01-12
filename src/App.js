@@ -141,6 +141,9 @@ export default function App() {
     if (socket != null) {
       socket.close();
     }
+    if (address === "") {
+      return;
+    }
 
     const socketURL = ["ws://", address, ":", "8080", "/", endpoint].join("");
     setSocket(new WebSocket(socketURL));

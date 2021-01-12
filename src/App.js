@@ -13,13 +13,14 @@ import List from "@material-ui/core/List";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
+import { colors } from "./globals";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    backgroundColor: "#A3BCB6",
+    backgroundColor: colors.background,
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
   },
   appBar: {
-    backgroundColor: "#39603D",
+    backgroundColor: colors.appBar,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   drawerPaper: {
-    backgroundColor: "#3C403D",
+    backgroundColor: colors.drawer,
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -97,11 +98,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   drawerButton: {
-    color: "white",
+    color: colors.text,
   },
   inputRoot: {
-    backgroundColor: "#203522",
-    color: "white",
+    backgroundColor: colors.input,
+    color: colors.text,
     borderRadius: "5ch",
   },
   inputInput: {

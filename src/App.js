@@ -209,7 +209,7 @@ export default function App() {
           </IconButton>
         </div>
         <List className={classes.tabList}>
-          <Tabs />
+          <Tabs endpointSetter={setEndpoint} />
         </List>
       </Drawer>
       <main className={classes.content}>

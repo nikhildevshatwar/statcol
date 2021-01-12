@@ -17,41 +17,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Tab(classes, icon, text, endpoint) {
+  return (
+    <ListItem button onClick={(ev) => console.log(endpoint)}>
+      <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
+      <ListItemText primary={text} />
+    </ListItem>
+  );
+}
+
 export default function Tabs() {
   const classes = useStyles();
 
   return (
-    <div>
-      <ListItem button>
-        <ListItemIcon className={classes.icon}>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Linux" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon className={classes.icon}>
-          <ShoppingCartIcon />
-        </ListItemIcon>
-        <ListItemText primary="RAM" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon className={classes.icon}>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Temperature" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon className={classes.icon}>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Network Traffic" />
-      </ListItem>
-      <ListItem button>
-        <ListItemIcon className={classes.icon}>
-          <LayersIcon />
-        </ListItemIcon>
-        <ListItemText primary="Interrupts" />
-      </ListItem>
-    </div>
+    <React.Fragment>
+      {Tab(classes, <DashboardIcon />, "Linux", "linux")}
+      {Tab(classes, <ShoppingCartIcon />, "RAM", "ram")}
+      {Tab(classes, <PeopleIcon />, "Temperature", "temp")}
+      {Tab(classes, <BarChartIcon />, "Network Traffic", "net_traffic")}
+    </React.Fragment>
   );
 }

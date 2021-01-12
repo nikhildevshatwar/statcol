@@ -6,7 +6,6 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
-import LayersIcon from "@material-ui/icons/Layers";
 import { makeStyles } from "@material-ui/core/styles";
 import { colors } from "./globals";
 
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Tab(classes, icon, text, endpoint, endpointSetter) {
+function Endpoint(classes, icon, text, endpoint, endpointSetter) {
   return (
     <ListItem button onClick={() => endpointSetter(endpoint)}>
       <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
@@ -26,21 +25,33 @@ function Tab(classes, icon, text, endpoint, endpointSetter) {
   );
 }
 
-export default function Tabs(props) {
+export default function Endpoints(props) {
   const classes = useStyles();
 
   return (
     <React.Fragment>
-      {Tab(classes, <DashboardIcon />, "Linux", "linux", props.endpointSetter)}
-      {Tab(classes, <ShoppingCartIcon />, "RAM", "ram", props.endpointSetter)}
-      {Tab(
+      {Endpoint(
+        classes,
+        <DashboardIcon />,
+        "Linux",
+        "linux",
+        props.endpointSetter
+      )}
+      {Endpoint(
+        classes,
+        <ShoppingCartIcon />,
+        "RAM",
+        "ram",
+        props.endpointSetter
+      )}
+      {Endpoint(
         classes,
         <PeopleIcon />,
         "Temperature",
         "temp",
         props.endpointSetter
       )}
-      {Tab(
+      {Endpoint(
         classes,
         <BarChartIcon />,
         "Network Traffic",

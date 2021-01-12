@@ -13,7 +13,7 @@ import List from "@material-ui/core/List";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
-import Tabs from "./tabs";
+import Endpoints from "./endpoints";
 import { colors } from "./globals";
 
 const drawerWidth = 240;
@@ -209,7 +209,7 @@ export default function App() {
           </IconButton>
         </div>
         <List className={classes.tabList}>
-          <Tabs endpointSetter={setEndpoint} />
+          <Endpoints endpointSetter={setEndpoint} />
         </List>
       </Drawer>
       <main className={classes.content}>

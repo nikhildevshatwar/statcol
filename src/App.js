@@ -123,12 +123,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
+
+  // Drawer Hook
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  // Endpoint Hook
+  const [endpoint, setEndpoint] = React.useState("linux");
+
+  // IP Address Hook
+  const [address, setAddress] = React.useState("");
+  const handleAddressChange = (event) => {
+    setAddress(event.target.value);
+  };
+  const handleAddressSend = () => {
+    /* Add websocket creation code*/
   };
 
   return (
@@ -162,6 +176,7 @@ export default function App() {
           </Typography>
           <InputBase
             placeholder="Enter IP Address"
+            onChange={handleAddressChange}
             classes={{
               root: classes.inputRoot,
               input: classes.inputInput,
@@ -170,6 +185,7 @@ export default function App() {
           <IconButton
             edge="start"
             color="inherit"
+            onClick={handleAddressSend}
             aria-label="send ip address"
             className={classes.publishButton}
           >

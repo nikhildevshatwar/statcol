@@ -13,6 +13,7 @@ import List from "@material-ui/core/List";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
+import Tabs from "./tabs";
 import { colors } from "./globals";
 
 const drawerWidth = 240;
@@ -115,6 +116,9 @@ const useStyles = makeStyles((theme) => ({
       width: "20ch",
     },
   },
+  tabList: {
+    color: colors.text,
+  },
 }));
 
 export default function App() {
@@ -188,6 +192,9 @@ export default function App() {
             <ChevronLeftIcon />
           </IconButton>
         </div>
+        <List className={classes.tabList}>
+          <Tabs />
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

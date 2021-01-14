@@ -14,6 +14,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
+import { colors, endpoints } from "./globals";
+import WebSocketManager from "./WebSocketManager";
 
 const drawerWidth = 240;
 
@@ -122,6 +124,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
+  const webSocketManager = new WebSocketManager(endpoints);
 
   // IP Address Hook
   const [address, setAddress] = React.useState("");
@@ -181,6 +184,7 @@ export default function App() {
             color="inherit"
             aria-label="send ip address"
             className={classes.publishButton}
+            onClick={() => webSocketManager.connect(address)}
           >
             <PublishIcon />
           </IconButton>

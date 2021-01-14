@@ -5,3 +5,5 @@ export const colors = {
   input: "#203522",
   text: "#FFFFFF",
 };
+
+export const endpoints = ["linux"];

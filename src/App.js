@@ -14,8 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
-import { colors, endpoints } from "./globals";
-import WebSocketManager from "./WebSocketManager";
+import { colors } from "./globals";
 
 const drawerWidth = 240;
 
@@ -63,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   drawerPaper: {
-    backgroundColor: colors.drawer,
+    backgroundColor: colors.container,
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,

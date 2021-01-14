@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Tab(icon, text, endpoint, endpointSetter) {
+function Tab(icon, text) {
   const classes = useStyles();
 
   return (
@@ -30,10 +30,10 @@ function Tab(icon, text, endpoint, endpointSetter) {
 export default function Tabs() {
   return (
     <React.Fragment>
-      {Tab(<DashboardIcon />, "Linux", "linux")}
-      {Tab(<ShoppingCartIcon />, "RAM", "ram")}
-      {Tab(<PeopleIcon />, "Temperature", "temp")}
-      {Tab(<BarChartIcon />, "Network Traffic", "net_traffic")}
+      {Tab(<DashboardIcon />, "Linux")}
+      {Tab(<ShoppingCartIcon />, "RAM")}
+      {Tab(<PeopleIcon />, "Temperature")}
+      {Tab(<BarChartIcon />, "Network Traffic")}
     </React.Fragment>
   );
 }

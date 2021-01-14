@@ -27,7 +27,7 @@ function Tab(icon, text, endpoint, endpointSetter) {
   );
 }
 
-export default function Tab() {
+export default function Tabs() {
   return (
     <React.Fragment>
       {Tab(<DashboardIcon />, "Linux", "linux")}

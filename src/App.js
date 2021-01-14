@@ -184,7 +184,6 @@ export default function App() {
             color="inherit"
             aria-label="send ip address"
             className={classes.publishButton}
-            onClick={() => webSocketManager.connect(address)}
           >
             <PublishIcon />
           </IconButton>

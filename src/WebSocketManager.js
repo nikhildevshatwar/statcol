@@ -20,30 +20,31 @@ export default class WebSocketManager {
     return true;
   }
 
-  connect(address) {
-    const status = this.validateAddress(address);
+  connect(address, endpoint) {
+    const addressValidity = this.validateAddress(address);
 
-    if (!status) {
+    if (!addressValidity) {
       console.log("Invalid IP Address");
       return;
     }
 
-    for (let endpoint of this.endpoints) {
-      let socket = this.sockets.get(endpoint);
-      if (socket != null) {
-        socket.close();
-      }
-      const socketURL = ["ws://", address, ":", "8080", "/", endpoint].join("");
-      const newSocket = new WebSocket(socketURL);
-      newSocket.onmessage = (event) => {
-        console.log(event.data);
-      };
+    const endpointAvailablity = this.endpoints.includes(endpoint);
 
-      this.sockets.set(endpoint, newSocket);
+    if (!endpointAvailablity) {
+      console.log("Endpoint not found");
+      return;
     }
-  }
 
-  getWebSocket(endpoint) {
-    return this.sockets.get(endpoint);
+    let socket = this.sockets.get(endpoint);
+    if (socket != null) {
+      socket.close();
+    }
+    const socketURL = ["ws://", address, ":", "8080", "/", endpoint].join("");
+    const newSocket = new WebSocket(socketURL);
+    newSocket.onmessage = (event) => {
+      console.log(event.data);
+    };
+
+    this.sockets.set(endpoint, newSocket);
   }
 }

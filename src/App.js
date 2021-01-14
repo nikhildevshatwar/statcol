@@ -124,10 +124,6 @@ const useStyles = makeStyles((theme) => ({
 export default function App() {
   const classes = useStyles();
 
-  // Websocket Hook
-  const [socket, setSocket] = React.useState(null);
-  // Endpoint Hook
-  const [endpoint, setEndpoint] = React.useState("linux");
   // IP Address Hook
   const [address, setAddress] = React.useState("");
   // Drawer Hook
@@ -136,21 +132,6 @@ export default function App() {
   // Hook Callbacks
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
-  };
-  const handleSocketChange = () => {
-    if (socket != null) {
-      socket.close();
-    }
-    if (address === "") {
-      return;
-    }
-
-    const socketURL = ["ws://", address, ":", "8080", "/", endpoint].join("");
-    setSocket(new WebSocket(socketURL));
-  };
-  const handleEndpointChange = (endpoint) => {
-    setEndpoint(endpoint);
-    handleSocketChange();
   };
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -199,7 +180,6 @@ export default function App() {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={handleSocketChange}
             aria-label="send ip address"
             className={classes.publishButton}
           >
@@ -222,9 +202,7 @@ export default function App() {
             <ChevronLeftIcon />
           </IconButton>
         </div>
-        <List className={classes.tabList}>
-          <Endpoints endpointSetter={handleEndpointChange} />
-        </List>
+        <List className={classes.tabList}></List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

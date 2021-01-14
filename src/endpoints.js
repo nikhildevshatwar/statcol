@@ -16,29 +16,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Endpoint(icon, text, endpoint, endpointSetter) {
+function Tab(icon, text, endpoint, endpointSetter) {
   const classes = useStyles();
 
   return (
-    <ListItem button onClick={() => endpointSetter(endpoint)}>
+    <ListItem button>
       <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
       <ListItemText primary={text} />
     </ListItem>
   );
 }
 
-export default function Endpoints(props) {
+export default function Tab() {
   return (
     <React.Fragment>
-      {Endpoint(<DashboardIcon />, "Linux", "linux", props.endpointSetter)}
-      {Endpoint(<ShoppingCartIcon />, "RAM", "ram", props.endpointSetter)}
-      {Endpoint(<PeopleIcon />, "Temperature", "temp", props.endpointSetter)}
-      {Endpoint(
-        <BarChartIcon />,
-        "Network Traffic",
-        "net_traffic",
-        props.endpointSetter
-      )}
+      {Tab(<DashboardIcon />, "Linux", "linux")}
+      {Tab(<ShoppingCartIcon />, "RAM", "ram")}
+      {Tab(<PeopleIcon />, "Temperature", "temp")}
+      {Tab(<BarChartIcon />, "Network Traffic", "net_traffic")}
     </React.Fragment>
   );
 }

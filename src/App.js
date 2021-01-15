@@ -127,7 +127,14 @@ class App extends React.Component {
     this.state = {
       address: "",
       drawerOpen: true,
+      tabSelected: "Linux",
     };
+
+    this.handleTabChange = this.handleTabChange.bind(this);
+  }
+
+  handleTabChange(event) {
+    this.setState({ tabSelected: event.target.innerText });
   }
 
   render() {
@@ -212,7 +219,7 @@ class App extends React.Component {
             </IconButton>
           </div>
           <List className={classes.tabList}>
-            <Tabs />
+            <Tabs updateTab={this.handleTabChange} />
           </List>
         </Drawer>
         <main className={classes.content}>

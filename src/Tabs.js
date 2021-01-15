@@ -16,24 +16,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Tab(icon, text) {
+function Tab({ icon, text, onClick }) {
   const classes = useStyles();
 
   return (
-    <ListItem button>
+    <ListItem button onClick={onClick}>
       <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
       <ListItemText primary={text} />
     </ListItem>
   );
 }
 
-export default function Tabs() {
+export default function Tabs(props) {
   return (
     <React.Fragment>
-      {Tab(<DashboardIcon />, "Linux")}
-      {Tab(<ShoppingCartIcon />, "RAM")}
-      {Tab(<PeopleIcon />, "Temperature")}
-      {Tab(<BarChartIcon />, "Network Traffic")}
+      <Tab icon={<DashboardIcon />} text="Linux" onClick={props.updateTab} />
+      <Tab icon={<ShoppingCartIcon />} text="RAM" onClick={props.updateTab} />
+      <Tab icon={<PeopleIcon />} text="Temperature" onClick={props.updateTab} />
+      <Tab
+        icon={<BarChartIcon />}
+        text="Network Traffic"
+        onClick={props.updateTab}
+      />
     </React.Fragment>
   );
 }

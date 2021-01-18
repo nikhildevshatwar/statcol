@@ -131,7 +131,17 @@ class App extends React.Component {
       address: "",
       drawerOpen: true,
       tabSelected: "default",
-      appData: {},
+      appData: {
+        memData: {
+          total: 0,
+          free: 0,
+          used: 0,
+          buffCache: 0,
+          shared: 0,
+          available: 0,
+        },
+        swapData: { total: 0, free: 0, used: 0 },
+      },
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -202,10 +212,11 @@ class App extends React.Component {
                   "8080",
                   "linux",
                   (event) => {
-                    const output = parseFreeCommand(event);
+                    const parsedData = parseFreeCommand(event);
                     this.setState({
                       appData: {
-                        data: output,
+                        memData: parsedData.memData,
+                        swapData: parsedData.swapData,
                       },
                     });
                   }

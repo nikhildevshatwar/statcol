@@ -6,7 +6,6 @@ import { colors } from "../globals";
 const useStyles = makeStyles({
   root: {
     minWidth: 100,
-    maxWidth: 215,
     color: colors.text,
     backgroundColor: colors.container,
   },

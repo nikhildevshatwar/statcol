@@ -15,6 +15,9 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
 import { colors } from "./globals";
+import connectToWebSocket from "./websocket";
+import Visualization from "./Visualization";
+import { parseFreeCommand } from "./parsers";
 
 const drawerWidth = 240;
 
@@ -127,7 +130,8 @@ class App extends React.Component {
     this.state = {
       address: "",
       drawerOpen: true,
-      tabSelected: "Linux",
+      tabSelected: "default",
+      appData: {},
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -191,6 +195,22 @@ class App extends React.Component {
               color="inherit"
               aria-label="send ip address"
               className={classes.publishButton}
+              onClick={() => {
+                this.setState({ tabSelected: "Linux" });
+                connectToWebSocket(
+                  this.state.address,
+                  "8080",
+                  "linux",
+                  (event) => {
+                    const output = parseFreeCommand(event);
+                    this.setState({
+                      appData: {
+                        data: output,
+                      },
+                    });
+                  }
+                );
+              }}
             >
               <PublishIcon />
             </IconButton>
@@ -224,7 +244,12 @@ class App extends React.Component {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          <Container maxWidth="lg" className={classes.container}></Container>
+          <Container maxWidth="lg" className={classes.container}>
+            <Visualization
+              tabSelected={this.state.tabSelected}
+              appData={this.state.appData}
+            />
+          </Container>
         </main>
       </div>
     );

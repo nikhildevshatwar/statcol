@@ -7,6 +7,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { colors } from "./globals";
 import DataCard from "./components/DataCard";
+import TimeSeries from "./components/TimeSeries";
 
 const StyledTableCell = withStyles({
   head: {
@@ -68,15 +69,38 @@ function MemCard({ memData, swapData }) {
 
 export default function LinuxTab(props) {
   console.log(props);
+  let d11 = [],
+    d12 = [];
+  for (let i = 0; i < 100; i++) {
+    d11.push(i);
+    d12.push(i);
+  }
+  let d21 = [],
+    d22 = [];
+  for (let i = 0; i < 100; i++) {
+    d21.push(i);
+    d22.push(2 * i + 3);
+  }
 
   return (
-    <DataCard
-      data={
-        <MemCard
-          memData={props.appData.memData}
-          swapData={props.appData.swapData}
-        />
-      }
-    />
+    <React.Fragment>
+      <DataCard
+        data={
+          <MemCard
+            memData={props.appData.memData}
+            swapData={props.appData.swapData}
+          />
+        }
+      />
+      <TimeSeries
+        data={[
+          { name: "data1", xData: d11, yData: d12 },
+          { name: "data2", xData: d21, yData: d22 },
+        ]}
+        title="TITLE"
+        xAxisTitle="XAXIS"
+        yAxisTitle="YAXIS"
+      />
+    </React.Fragment>
   );
 }

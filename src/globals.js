@@ -4,6 +4,7 @@ export const colors = {
   container: "#3C403D",
   input: "#203522",
   text: "#FFFFFF",
+  plot: "#E5ECF6",
 };
 
 export const endpoints = ["linux"];

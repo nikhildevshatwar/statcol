@@ -17,7 +17,7 @@ import Tabs from "./Tabs";
 import { colors } from "./globals";
 import connectToWebSocket from "./websocket";
 import Visualization from "./Visualization";
-import { parseFreeCommand } from "./parsers";
+import { parseFreeCommand, parseCPU } from "./parsers";
 
 const drawerWidth = 240;
 
@@ -141,6 +141,13 @@ class App extends React.Component {
           available: 0,
         },
         swapData: { total: 0, free: 0, used: 0 },
+        cpuData: {
+          d: [],
+          c1: [],
+          c2: [],
+          c3: [],
+          c4: [],
+        },
       },
     };
 
@@ -218,6 +225,26 @@ class App extends React.Component {
                         ...state.appData,
                         memData: parsedData.memData,
                         swapData: parsedData.swapData,
+                      },
+                    }));
+                  }
+                );
+                connectToWebSocket(
+                  this.state.address,
+                  "8080",
+                  "cpu",
+                  (event) => {
+                    const parsedData = parseCPU(event);
+                    this.setState((state) => ({
+                      appData: {
+                        ...state.appData,
+                        cpuData: {
+                          d: [...state.appData.cpuData.d, new Date()],
+                          c1: [...state.appData.cpuData.c1, parsedData[0]],
+                          c2: [...state.appData.cpuData.c2, parsedData[1]],
+                          c3: [...state.appData.cpuData.c3, parsedData[2]],
+                          c4: [...state.appData.cpuData.c4, parsedData[3]],
+                        },
                       },
                     }));
                   }

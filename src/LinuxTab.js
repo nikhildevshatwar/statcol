@@ -68,20 +68,6 @@ function MemCard({ memData, swapData }) {
 }
 
 export default function LinuxTab(props) {
-  console.log(props);
-  let d11 = [],
-    d12 = [];
-  for (let i = 0; i < 100; i++) {
-    d11.push(i);
-    d12.push(i);
-  }
-  let d21 = [],
-    d22 = [];
-  for (let i = 0; i < 100; i++) {
-    d21.push(i);
-    d22.push(2 * i + 3);
-  }
-
   return (
     <React.Fragment>
       <DataCard
@@ -94,12 +80,30 @@ export default function LinuxTab(props) {
       />
       <TimeSeries
         data={[
-          { name: "data1", xData: d11, yData: d12 },
-          { name: "data2", xData: d21, yData: d22 },
+          {
+            name: "C1",
+            xData: props.appData.cpuData.d,
+            yData: props.appData.cpuData.c1,
+          },
+          {
+            name: "C2",
+            xData: props.appData.cpuData.d,
+            yData: props.appData.cpuData.c2,
+          },
+          {
+            name: "C3",
+            xData: props.appData.cpuData.d,
+            yData: props.appData.cpuData.c3,
+          },
+          {
+            name: "C4",
+            xData: props.appData.cpuData.d,
+            yData: props.appData.cpuData.c4,
+          },
         ]}
-        title="TITLE"
-        xAxisTitle="XAXIS"
-        yAxisTitle="YAXIS"
+        title="CPU Load"
+        xAxisTitle="Time"
+        yAxisTitle="Load"
       />
     </React.Fragment>
   );

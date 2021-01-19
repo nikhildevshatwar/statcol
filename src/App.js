@@ -213,12 +213,13 @@ class App extends React.Component {
                   "linux",
                   (event) => {
                     const parsedData = parseFreeCommand(event);
-                    this.setState({
+                    this.setState((state) => ({
                       appData: {
+                        ...state.appData,
                         memData: parsedData.memData,
                         swapData: parsedData.swapData,
                       },
-                    });
+                    }));
                   }
                 );
               }}

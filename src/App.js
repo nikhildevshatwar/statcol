@@ -108,6 +108,7 @@ const styles = (theme) => ({
     backgroundColor: colors.input,
     color: colors.text,
     borderRadius: "5ch",
+    margin: 5,
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -129,6 +130,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       address: window.location.hostname,
+      port: "",
       drawerOpen: true,
       tabSelected: "default",
       config: {
@@ -211,6 +213,14 @@ class App extends React.Component {
                 input: classes.inputInput,
               }}
             />
+            <InputBase
+              placeholder="Enter Port Number"
+              onChange={(event) => this.setState({ port: event.target.value })}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+            />
             <IconButton
               edge="start"
               color="inherit"
@@ -220,7 +230,7 @@ class App extends React.Component {
                 this.setState({ tabSelected: "Linux" });
                 connectToWebSocket(
                   this.state.address,
-                  "8080",
+                  this.state.port,
                   "linux",
                   (event) => {
                     const parsedData = parseFreeCommand(event);
@@ -235,7 +245,7 @@ class App extends React.Component {
                 );
                 connectToWebSocket(
                   this.state.address,
-                  "8080",
+                  this.state.port,
                   "cpu",
                   (event) => {
                     const parsedData = parseCPU(event);

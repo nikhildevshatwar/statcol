@@ -134,6 +134,7 @@ class App extends React.Component {
       drawerOpen: true,
       tabSelected: "default",
       config: {
+        samplingInterval: 0.3,
         clockCycle: 25,
       },
       appData: {
@@ -231,7 +232,7 @@ class App extends React.Component {
                 connectToWebSocket(
                   this.state.address,
                   this.state.port,
-                  "linux",
+                  "memory",
                   (event) => {
                     const parsedData = parseFreeCommand(event);
                     this.setState((state) => ({
@@ -241,7 +242,8 @@ class App extends React.Component {
                         swapData: parsedData.swapData,
                       },
                     }));
-                  }
+                  },
+                  { samplingInterval: this.state.config.samplingInterval }
                 );
                 connectToWebSocket(
                   this.state.address,

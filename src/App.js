@@ -128,7 +128,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: "",
+      address: window.location.hostname,
       drawerOpen: true,
       tabSelected: "default",
       appData: {
@@ -198,6 +198,7 @@ class App extends React.Component {
               Statistics Visualizer
             </Typography>
             <InputBase
+              defaultValue={window.location.hostname}
               placeholder="Enter IP Address"
               onChange={(event) =>
                 this.setState({ address: event.target.value })

@@ -1,7 +1,10 @@
 import ipRegex from "ip-regex";
 
 export default function connectToWebSocket(address, port, endpoint, parser) {
-  if (!ipRegex({ exact: true, includeBoundaries: true }).test(address)) {
+  if (
+    !ipRegex({ exact: true, includeBoundaries: true }).test(address) &&
+    address !== "localhost"
+  ) {
     console.log("Invalid IP address: " + address);
     return;
   }

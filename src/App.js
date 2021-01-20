@@ -131,6 +131,9 @@ class App extends React.Component {
       address: window.location.hostname,
       drawerOpen: true,
       tabSelected: "default",
+      config: {
+        clockCycle: 25,
+      },
       appData: {
         memData: {
           total: 0,
@@ -236,18 +239,52 @@ class App extends React.Component {
                   "cpu",
                   (event) => {
                     const parsedData = parseCPU(event);
-                    this.setState((state) => ({
-                      appData: {
-                        ...state.appData,
-                        cpuData: {
-                          d: [...state.appData.cpuData.d, new Date()],
-                          c1: [...state.appData.cpuData.c1, parsedData[0]],
-                          c2: [...state.appData.cpuData.c2, parsedData[1]],
-                          c3: [...state.appData.cpuData.c3, parsedData[2]],
-                          c4: [...state.appData.cpuData.c4, parsedData[3]],
+                    this.setState((state) => {
+                      if (
+                        state.appData.cpuData.d.length ===
+                        state.config.clockCycle
+                      ) {
+                        return {
+                          appData: {
+                            ...state.appData,
+                            cpuData: {
+                              d: [
+                                ...state.appData.cpuData.d,
+                                new Date(),
+                              ].splice(1),
+                              c1: [
+                                ...state.appData.cpuData.c1,
+                                parsedData[0],
+                              ].splice(1),
+                              c2: [
+                                ...state.appData.cpuData.c2,
+                                parsedData[1],
+                              ].splice(1),
+                              c3: [
+                                ...state.appData.cpuData.c3,
+                                parsedData[2],
+                              ].splice(1),
+                              c4: [
+                                ...state.appData.cpuData.c4,
+                                parsedData[3],
+                              ].splice(1),
+                            },
+                          },
+                        };
+                      }
+                      return {
+                        appData: {
+                          ...state.appData,
+                          cpuData: {
+                            d: [...state.appData.cpuData.d, new Date()],
+                            c1: [...state.appData.cpuData.c1, parsedData[0]],
+                            c2: [...state.appData.cpuData.c2, parsedData[1]],
+                            c3: [...state.appData.cpuData.c3, parsedData[2]],
+                            c4: [...state.appData.cpuData.c4, parsedData[3]],
+                          },
                         },
-                      },
-                    }));
+                      };
+                    });
                   }
                 );
               }}

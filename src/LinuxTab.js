@@ -20,8 +20,8 @@ const StyledTableCell = withStyles({
   },
 })(TableCell);
 
-function MemCard({ memData, swapData }) {
-  return (
+function MemCard(props) {
+  const data = (
     <React.Fragment>
       Memory (In MB):
       <Table size="small">
@@ -37,12 +37,12 @@ function MemCard({ memData, swapData }) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <StyledTableCell>{memData.total}</StyledTableCell>
-            <StyledTableCell>{memData.used}</StyledTableCell>
-            <StyledTableCell>{memData.free}</StyledTableCell>
-            <StyledTableCell>{memData.shared}</StyledTableCell>
-            <StyledTableCell>{memData.buffCache}</StyledTableCell>
-            <StyledTableCell>{memData.available}</StyledTableCell>
+            <StyledTableCell>{props.appData.memData.total}</StyledTableCell>
+            <StyledTableCell>{props.appData.memData.used}</StyledTableCell>
+            <StyledTableCell>{props.appData.memData.free}</StyledTableCell>
+            <StyledTableCell>{props.appData.memData.shared}</StyledTableCell>
+            <StyledTableCell>{props.appData.memData.buffCache}</StyledTableCell>
+            <StyledTableCell>{props.appData.memData.available}</StyledTableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -57,54 +57,55 @@ function MemCard({ memData, swapData }) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <StyledTableCell>{swapData.total}</StyledTableCell>
-            <StyledTableCell>{swapData.used}</StyledTableCell>
-            <StyledTableCell>{swapData.free}</StyledTableCell>
+            <StyledTableCell>{props.appData.swapData.total}</StyledTableCell>
+            <StyledTableCell>{props.appData.swapData.used}</StyledTableCell>
+            <StyledTableCell>{props.appData.swapData.free}</StyledTableCell>
           </TableRow>
         </TableBody>
       </Table>
     </React.Fragment>
+  );
+
+  return <DataCard data={data} />;
+}
+
+function CPUSeries(props) {
+  return (
+    <TimeSeries
+      data={[
+        {
+          name: "C1",
+          xData: props.appData.cpuData.d,
+          yData: props.appData.cpuData.c1,
+        },
+        {
+          name: "C2",
+          xData: props.appData.cpuData.d,
+          yData: props.appData.cpuData.c2,
+        },
+        {
+          name: "C3",
+          xData: props.appData.cpuData.d,
+          yData: props.appData.cpuData.c3,
+        },
+        {
+          name: "C4",
+          xData: props.appData.cpuData.d,
+          yData: props.appData.cpuData.c4,
+        },
+      ]}
+      title="CPU Load"
+      xAxisTitle="Time"
+      yAxisTitle="Load"
+    />
   );
 }
 
 export default function LinuxTab(props) {
   return (
     <React.Fragment>
-      <DataCard
-        data={
-          <MemCard
-            memData={props.appData.memData}
-            swapData={props.appData.swapData}
-          />
-        }
-      />
-      <TimeSeries
-        data={[
-          {
-            name: "C1",
-            xData: props.appData.cpuData.d,
-            yData: props.appData.cpuData.c1,
-          },
-          {
-            name: "C2",
-            xData: props.appData.cpuData.d,
-            yData: props.appData.cpuData.c2,
-          },
-          {
-            name: "C3",
-            xData: props.appData.cpuData.d,
-            yData: props.appData.cpuData.c3,
-          },
-          {
-            name: "C4",
-            xData: props.appData.cpuData.d,
-            yData: props.appData.cpuData.c4,
-          },
-        ]}
-        title="CPU Load"
-        xAxisTitle="Time"
-        yAxisTitle="Load"
-      />
+      <MemCard appData={props.appData} />
+      <CPUSeries appData={props.appData} />
     </React.Fragment>
   );
 }

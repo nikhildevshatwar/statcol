@@ -31,7 +31,7 @@ export default function Tabs(props) {
   return (
     <React.Fragment>
       <Tab icon={<DashboardIcon />} text="Linux" onClick={props.updateTab} />
-      <Tab icon={<ShoppingCartIcon />} text="RAM" onClick={props.updateTab} />
+      <Tab icon={<ShoppingCartIcon />} text="GPU" onClick={props.updateTab} />
       <Tab icon={<PeopleIcon />} text="Temperature" onClick={props.updateTab} />
       <Tab
         icon={<BarChartIcon />}

@@ -101,11 +101,59 @@ function CPUSeries(props) {
   );
 }
 
+function TempSeries(props) {
+  return (
+    <TimeSeries
+      data={[
+        {
+          name: "T1",
+          xData: props.appData.tempData.d,
+          yData: props.appData.tempData.t1,
+        },
+        {
+          name: "T2",
+          xData: props.appData.tempData.d,
+          yData: props.appData.tempData.t2,
+        },
+        {
+          name: "T3",
+          xData: props.appData.tempData.d,
+          yData: props.appData.tempData.t3,
+        },
+        {
+          name: "T4",
+          xData: props.appData.tempData.d,
+          yData: props.appData.tempData.t4,
+        },
+        {
+          name: "T5",
+          xData: props.appData.tempData.d,
+          yData: props.appData.tempData.t5,
+        },
+        {
+          name: "T6",
+          xData: props.appData.tempData.d,
+          yData: props.appData.tempData.t6,
+        },
+        {
+          name: "T7",
+          xData: props.appData.tempData.d,
+          yData: props.appData.tempData.t7,
+        },
+      ]}
+      title="Temperature (Celsius)"
+      xAxisTitle="Time"
+      yAxisTitle="Temperature (Celsius)"
+    />
+  );
+}
+
 export default function LinuxTab(props) {
   return (
     <React.Fragment>
       <MemCard appData={props.appData} />
       <CPUSeries appData={props.appData} />
+      <TempSeries appData={props.appData} />
     </React.Fragment>
   );
 }

@@ -39,3 +39,11 @@ export function parseFreeCommand(event) {
 export function parseCPU(event) {
   return event.data.split(" ").map((str) => parseInt(str));
 }
+
+export function parseTemp(event) {
+  return event.data.split(" ").map((str) => parseInt(str));
+}
+
+export function parseGPU(event) {
+  return event.data.split(" ").map((str) => parseInt(str));
+}

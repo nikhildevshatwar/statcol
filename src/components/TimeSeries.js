@@ -43,10 +43,12 @@ export default function TimeSeries(props) {
             text: props.xAxisTitle,
             color: colors.text,
           },
+          automargin: true,
         },
         yaxis: {
           color: colors.text,
           title: { text: props.yAxisTitle, color: colors.text },
+          automargin: true,
         },
         margin: {
           pad: 30,

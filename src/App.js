@@ -125,6 +125,12 @@ const styles = (theme) => ({
   },
 });
 
+const extractTimeString = (date) => {
+  const time = date.toLocaleTimeString().split(" ");
+  time[0] += [":", date.getMilliseconds()].join("");
+  return time.join(" ");
+};
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -134,8 +140,8 @@ class App extends React.Component {
       drawerOpen: true,
       tabSelected: "default",
       config: {
-        samplingInterval: 0.3,
-        clockCycle: 25,
+        samplingInterval: 0.5,
+        clockCycle: 10,
       },
       appData: {
         memData: {
@@ -262,7 +268,7 @@ class App extends React.Component {
                             cpuData: {
                               d: [
                                 ...state.appData.cpuData.d,
-                                new Date(),
+                                extractTimeString(new Date()),
                               ].splice(1),
                               c1: [
                                 ...state.appData.cpuData.c1,
@@ -288,7 +294,10 @@ class App extends React.Component {
                         appData: {
                           ...state.appData,
                           cpuData: {
-                            d: [...state.appData.cpuData.d, new Date()],
+                            d: [
+                              ...state.appData.cpuData.d,
+                              extractTimeString(new Date()),
+                            ],
                             c1: [...state.appData.cpuData.c1, parsedData[0]],
                             c2: [...state.appData.cpuData.c2, parsedData[1]],
                             c3: [...state.appData.cpuData.c3, parsedData[2]],
@@ -297,7 +306,8 @@ class App extends React.Component {
                         },
                       };
                     });
-                  }
+                  },
+                  { samplingInterval: this.state.config.samplingInterval }
                 );
               }}
             >

@@ -146,6 +146,7 @@ class App extends React.Component {
           temp: 1.0,
           gpu: 1.5,
           uptime: 1.0,
+          load: 1.0,
         },
         clockCycle: 10,
       },
@@ -182,6 +183,11 @@ class App extends React.Component {
           g2: [],
         },
         uptime: "",
+        load: {
+          past1Min: 0.0,
+          past5Min: 0.0,
+          past15Min: 0.0,
+        },
       },
     };
 
@@ -292,6 +298,24 @@ class App extends React.Component {
                     samplingInterval: this.state.config.samplingInterval.uptime,
                   }
                 );
+                connectToWebSocket(
+                  this.state.address,
+                  this.state.port,
+                  "average_load",
+                  (event) => {
+                    const parsedData = Parsers.parseLoad(event);
+                    this.setState((state) => ({
+                      appData: {
+                        ...state.appData,
+                        load: parsedData,
+                      },
+                    }));
+                  },
+                  {
+                    samplingInterval: this.state.config.samplingInterval.load,
+                  }
+                );
+
                 connectToWebSocket(
                   this.state.address,
                   this.state.port,

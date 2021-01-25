@@ -51,3 +51,17 @@ export function parseGPU(event) {
 export function parseUptime(event) {
   return event.data.substring(3);
 }
+
+export function parseLoad(event) {
+  const index = event.data.indexOf("load average: ");
+  const loadAverages = event.data
+    .substring(index + 14)
+    .split(", ")
+    .map((str) => parseFloat(str));
+
+  return {
+    past1Min: loadAverages[0],
+    past5Min: loadAverages[1],
+    past15Min: loadAverages[2],
+  };
+}

@@ -76,6 +76,24 @@ function UptimeCard(props) {
   return <DataCard data={data} />;
 }
 
+function LoadCard(props) {
+  const data = (
+    <React.Fragment>
+      <Typography>
+        Load Average for past 1 minute: {props.appData.load.past1Min}
+      </Typography>
+      <Typography>
+        Load Average for past 5 minute: {props.appData.load.past5Min}
+      </Typography>
+      <Typography>
+        Load Average for past 15 minute: {props.appData.load.past15Min}
+      </Typography>
+    </React.Fragment>
+  );
+
+  return <DataCard data={data} />;
+}
+
 function CPUSeries(props) {
   return (
     <TimeSeries
@@ -160,6 +178,7 @@ export default function LinuxTab(props) {
     <React.Fragment>
       <MemCard appData={props.appData} />
       <UptimeCard appData={props.appData} />
+      <LoadCard appData={props.appData} />
       <CPUSeries appData={props.appData} />
       <TempSeries appData={props.appData} />
     </React.Fragment>

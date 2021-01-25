@@ -47,3 +47,7 @@ export function parseTemp(event) {
 export function parseGPU(event) {
   return event.data.split(" ").map((str) => parseInt(str));
 }
+
+export function parseUptime(event) {
+  return event.data.substring(3);
+}

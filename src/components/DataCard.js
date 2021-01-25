@@ -8,6 +8,7 @@ const useStyles = makeStyles({
     minWidth: 100,
     color: colors.text,
     backgroundColor: colors.container,
+    margin: 10,
   },
 });
 

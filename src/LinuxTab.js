@@ -8,6 +8,7 @@ import TableCell from "@material-ui/core/TableCell";
 import { colors } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
+import { Typography } from "@material-ui/core";
 
 const StyledTableCell = withStyles({
   head: {
@@ -65,6 +66,12 @@ function MemCard(props) {
       </Table>
     </React.Fragment>
   );
+
+  return <DataCard data={data} />;
+}
+
+function UptimeCard(props) {
+  const data = <Typography>Active Since: {props.appData.uptime}</Typography>;
 
   return <DataCard data={data} />;
 }
@@ -152,6 +159,7 @@ export default function LinuxTab(props) {
   return (
     <React.Fragment>
       <MemCard appData={props.appData} />
+      <UptimeCard appData={props.appData} />
       <CPUSeries appData={props.appData} />
       <TempSeries appData={props.appData} />
     </React.Fragment>

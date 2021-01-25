@@ -17,7 +17,7 @@ import Tabs from "./Tabs";
 import { colors } from "./globals";
 import connectToWebSocket from "./websocket";
 import Visualization from "./Visualization";
-import { parseFreeCommand, parseCPU, parseTemp, parseGPU } from "./parsers";
+import * as Parsers from "./parsers";
 
 const drawerWidth = 240;
 
@@ -260,7 +260,7 @@ class App extends React.Component {
                   this.state.port,
                   "memory",
                   (event) => {
-                    const parsedData = parseFreeCommand(event);
+                    const parsedData = Parsers.parseFreeCommand(event);
                     this.setState((state) => ({
                       appData: {
                         ...state.appData,
@@ -278,7 +278,7 @@ class App extends React.Component {
                   this.state.port,
                   "cpu",
                   (event) => {
-                    const parsedData = parseCPU(event);
+                    const parsedData = Parsers.parseCPU(event);
                     this.setState((state) => {
                       if (
                         state.appData.cpuData.d.length ===
@@ -336,7 +336,7 @@ class App extends React.Component {
                   this.state.port,
                   "temp",
                   (event) => {
-                    const parsedData = parseTemp(event);
+                    const parsedData = Parsers.parseTemp(event);
                     this.setState((state) => {
                       if (
                         state.appData.tempData.d.length ===
@@ -409,7 +409,7 @@ class App extends React.Component {
                   this.state.port,
                   "gpu",
                   (event) => {
-                    const parsedData = parseGPU(event);
+                    const parsedData = Parsers.parseGPU(event);
                     this.setState((state) => {
                       if (
                         state.appData.gpuData.d.length ===

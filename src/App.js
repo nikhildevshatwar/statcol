@@ -148,7 +148,7 @@ class App extends React.Component {
           uptime: 1.0,
           load: 1.0,
         },
-        clockCycle: 10,
+        clockCycle: 1000,
       },
       appData: {
         memData: {

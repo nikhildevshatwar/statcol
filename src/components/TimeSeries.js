@@ -20,7 +20,7 @@ export default function TimeSeries(props) {
         x: xData,
         y: yData,
         type: "scatter",
-        mode: "lines+markers",
+        mode: "lines",
       }))}
       layout={{
         title: {
@@ -30,7 +30,6 @@ export default function TimeSeries(props) {
           },
         },
         legend: {
-          x: 0,
           bgcolor: colors.container,
           borderwidth: 2,
           font: {
@@ -38,6 +37,7 @@ export default function TimeSeries(props) {
           },
         },
         xaxis: {
+          visible: false,
           color: colors.text,
           title: {
             text: props.xAxisTitle,

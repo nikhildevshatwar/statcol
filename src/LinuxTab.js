@@ -8,6 +8,7 @@ import TableCell from "@material-ui/core/TableCell";
 import { colors } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
+import PieChart from "./components/PieChart";
 import { Typography } from "@material-ui/core";
 
 const StyledTableCell = withStyles({
@@ -68,6 +69,36 @@ function MemCard(props) {
   );
 
   return <DataCard data={data} />;
+}
+
+function MemChart(props) {
+  return (
+    <React.Fragment>
+      <PieChart
+        data={[
+          {
+            name: "Main Memory",
+            values: [
+              props.appData.memData.free,
+              props.appData.memData.used,
+              props.appData.memData.buffCache,
+              props.appData.memData.shared,
+            ],
+            labels: ["Free", "Used", "Buffer and Cache", "Shared"],
+          },
+        ]}
+      />
+      <PieChart
+        data={[
+          {
+            name: "Swap Memory",
+            values: [props.appData.swapData.free, props.appData.swapData.used],
+            labels: ["Free Swap Memory", "Used Swap Memory"],
+          },
+        ]}
+      />
+    </React.Fragment>
+  );
 }
 
 function UptimeCard(props) {
@@ -177,6 +208,7 @@ export default function LinuxTab(props) {
   return (
     <React.Fragment>
       <MemCard appData={props.appData} />
+      <MemChart appData={props.appData} />
       <UptimeCard appData={props.appData} />
       <LoadCard appData={props.appData} />
       <CPUSeries appData={props.appData} />

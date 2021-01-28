@@ -15,9 +15,8 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
 import { colors } from "./globals";
-import connectToWebSocket from "./websocket";
 import Visualization from "./Visualization";
-import * as Parsers from "./parsers";
+import * as Sockets from "./websocket";
 
 const drawerWidth = 240;
 
@@ -125,10 +124,13 @@ const styles = (theme) => ({
   },
 });
 
-const extractTimeString = (date) => {
-  const time = date.toLocaleTimeString().split(" ");
-  time[0] += [":", date.getMilliseconds()].join("");
-  return time.join(" ");
+const sockets = {
+  memory: null,
+  uptime: null,
+  average_load: null,
+  cpu: null,
+  temp: null,
+  gpu: null,
 };
 
 class App extends React.Component {
@@ -263,238 +265,12 @@ class App extends React.Component {
               className={classes.publishButton}
               onClick={() => {
                 this.setState({ tabSelected: "Linux" });
-                connectToWebSocket(
-                  this.state.address,
-                  this.state.port,
-                  "memory",
-                  (event) => {
-                    const parsedData = Parsers.parseFreeCommand(event);
-                    this.setState((state) => ({
-                      appData: {
-                        ...state.appData,
-                        memData: parsedData.memData,
-                        swapData: parsedData.swapData,
-                      },
-                    }));
-                  },
-                  {
-                    samplingInterval: this.state.config.samplingInterval.memory,
-                  }
-                );
-                connectToWebSocket(
-                  this.state.address,
-                  this.state.port,
-                  "uptime",
-                  (event) => {
-                    const parsedData = Parsers.parseUptime(event);
-                    this.setState((state) => ({
-                      appData: {
-                        ...state.appData,
-                        uptime: parsedData,
-                      },
-                    }));
-                  },
-                  {
-                    samplingInterval: this.state.config.samplingInterval.uptime,
-                  }
-                );
-                connectToWebSocket(
-                  this.state.address,
-                  this.state.port,
-                  "average_load",
-                  (event) => {
-                    const parsedData = Parsers.parseLoad(event);
-                    this.setState((state) => ({
-                      appData: {
-                        ...state.appData,
-                        load: parsedData,
-                      },
-                    }));
-                  },
-                  {
-                    samplingInterval: this.state.config.samplingInterval.load,
-                  }
-                );
-
-                connectToWebSocket(
-                  this.state.address,
-                  this.state.port,
-                  "cpu",
-                  (event) => {
-                    const parsedData = Parsers.parseCPU(event);
-                    this.setState((state) => {
-                      if (
-                        state.appData.cpuData.d.length ===
-                        state.config.clockCycle
-                      ) {
-                        return {
-                          appData: {
-                            ...state.appData,
-                            cpuData: {
-                              d: [
-                                ...state.appData.cpuData.d,
-                                extractTimeString(new Date()),
-                              ].splice(1),
-                              c1: [
-                                ...state.appData.cpuData.c1,
-                                parsedData[0],
-                              ].splice(1),
-                              c2: [
-                                ...state.appData.cpuData.c2,
-                                parsedData[1],
-                              ].splice(1),
-                              c3: [
-                                ...state.appData.cpuData.c3,
-                                parsedData[2],
-                              ].splice(1),
-                              c4: [
-                                ...state.appData.cpuData.c4,
-                                parsedData[3],
-                              ].splice(1),
-                            },
-                          },
-                        };
-                      }
-                      return {
-                        appData: {
-                          ...state.appData,
-                          cpuData: {
-                            d: [
-                              ...state.appData.cpuData.d,
-                              extractTimeString(new Date()),
-                            ],
-                            c1: [...state.appData.cpuData.c1, parsedData[0]],
-                            c2: [...state.appData.cpuData.c2, parsedData[1]],
-                            c3: [...state.appData.cpuData.c3, parsedData[2]],
-                            c4: [...state.appData.cpuData.c4, parsedData[3]],
-                          },
-                        },
-                      };
-                    });
-                  },
-                  { samplingInterval: this.state.config.samplingInterval.cpu }
-                );
-                connectToWebSocket(
-                  this.state.address,
-                  this.state.port,
-                  "temp",
-                  (event) => {
-                    const parsedData = Parsers.parseTemp(event);
-                    this.setState((state) => {
-                      if (
-                        state.appData.tempData.d.length ===
-                        state.config.clockCycle
-                      ) {
-                        return {
-                          appData: {
-                            ...state.appData,
-                            tempData: {
-                              d: [
-                                ...state.appData.tempData.d,
-                                extractTimeString(new Date()),
-                              ].splice(1),
-                              t1: [
-                                ...state.appData.tempData.t1,
-                                parsedData[0],
-                              ].splice(1),
-                              t2: [
-                                ...state.appData.tempData.t2,
-                                parsedData[1],
-                              ].splice(1),
-                              t3: [
-                                ...state.appData.tempData.t3,
-                                parsedData[2],
-                              ].splice(1),
-                              t4: [
-                                ...state.appData.tempData.t4,
-                                parsedData[3],
-                              ].splice(1),
-                              t5: [
-                                ...state.appData.tempData.t5,
-                                parsedData[4],
-                              ].splice(1),
-                              t6: [
-                                ...state.appData.tempData.t6,
-                                parsedData[5],
-                              ].splice(1),
-                              t7: [
-                                ...state.appData.tempData.t7,
-                                parsedData[6],
-                              ].splice(1),
-                            },
-                          },
-                        };
-                      }
-                      return {
-                        appData: {
-                          ...state.appData,
-                          tempData: {
-                            d: [
-                              ...state.appData.tempData.d,
-                              extractTimeString(new Date()),
-                            ],
-                            t1: [...state.appData.tempData.t1, parsedData[0]],
-                            t2: [...state.appData.tempData.t2, parsedData[1]],
-                            t3: [...state.appData.tempData.t3, parsedData[2]],
-                            t4: [...state.appData.tempData.t4, parsedData[3]],
-                            t5: [...state.appData.tempData.t5, parsedData[4]],
-                            t6: [...state.appData.tempData.t6, parsedData[5]],
-                            t7: [...state.appData.tempData.t7, parsedData[6]],
-                          },
-                        },
-                      };
-                    });
-                  },
-                  { samplingInterval: this.state.config.samplingInterval.temp }
-                );
-                connectToWebSocket(
-                  this.state.address,
-                  this.state.port,
-                  "gpu",
-                  (event) => {
-                    const parsedData = Parsers.parseGPU(event);
-                    this.setState((state) => {
-                      if (
-                        state.appData.gpuData.d.length ===
-                        state.config.clockCycle
-                      ) {
-                        return {
-                          appData: {
-                            ...state.appData,
-                            gpuData: {
-                              d: [
-                                ...state.appData.gpuData.d,
-                                extractTimeString(new Date()),
-                              ].splice(1),
-                              g1: [
-                                ...state.appData.gpuData.g1,
-                                parsedData[0],
-                              ].splice(1),
-                              g2: [
-                                ...state.appData.gpuData.g2,
-                                parsedData[1],
-                              ].splice(1),
-                            },
-                          },
-                        };
-                      }
-                      return {
-                        appData: {
-                          ...state.appData,
-                          gpuData: {
-                            d: [
-                              ...state.appData.gpuData.d,
-                              extractTimeString(new Date()),
-                            ],
-                            g1: [...state.appData.gpuData.g1, parsedData[0]],
-                            g2: [...state.appData.gpuData.g2, parsedData[1]],
-                          },
-                        },
-                      };
-                    });
-                  },
-                  { samplingInterval: this.state.config.samplingInterval.gpu }
-                );
+                sockets.memory = Sockets.connectToMemory(this);
+                sockets.uptime = Sockets.connectToUptime(this);
+                sockets.average_load = Sockets.connectToLoad(this);
+                sockets.cpu = Sockets.connectToCPU(this);
+                sockets.temp = Sockets.connectToTemp(this);
+                sockets.gpu = Sockets.connectToGPU(this);
               }}
             >
               <PublishIcon />

@@ -8,3 +8,12 @@ export const colors = {
 };
 
 export const endpoints = ["linux"];
+
+export const sockets = {
+  memory: null,
+  uptime: null,
+  average_load: null,
+  cpu: null,
+  temp: null,
+  gpu: null,
+};

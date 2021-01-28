@@ -14,7 +14,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
-import { colors } from "./globals";
+import { colors, sockets } from "./globals";
 import Visualization from "./Visualization";
 import * as Sockets from "./websocket";
 
@@ -123,15 +123,6 @@ const styles = (theme) => ({
     color: colors.text,
   },
 });
-
-const sockets = {
-  memory: null,
-  uptime: null,
-  average_load: null,
-  cpu: null,
-  temp: null,
-  gpu: null,
-};
 
 class App extends React.Component {
   constructor(props) {

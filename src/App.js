@@ -131,7 +131,7 @@ class App extends React.Component {
       address: window.location.hostname,
       port: "",
       drawerOpen: true,
-      tabSelected: "default",
+      tabSelected: "Linux",
       config: {
         samplingInterval: {
           memory: 0.3,
@@ -262,12 +262,83 @@ class App extends React.Component {
               aria-label="send ip address"
               className={classes.publishButton}
               onClick={() => {
-                this.setState({ tabSelected: "Linux" });
+                if (sockets.memory !== null) {
+                  sockets.memory.close();
+                  this.updateAppData({
+                    memData: {
+                      total: 0,
+                      free: 0,
+                      used: 0,
+                      buffCache: 0,
+                      shared: 0,
+                      available: 0,
+                    },
+                    swapData: { total: 0, free: 0, used: 0 },
+                  });
+                }
                 sockets.memory = Sockets.connectToMemory(this);
+
+                if (sockets.uptime !== null) {
+                  sockets.uptime.close();
+                  this.updateAppData({
+                    uptime: "",
+                  });
+                }
                 sockets.uptime = Sockets.connectToUptime(this);
+
+                if (sockets.average_load !== null) {
+                  sockets.average_load.close();
+                  this.updateAppData({
+                    load: {
+                      past1Min: 0.0,
+                      past5Min: 0.0,
+                      past15Min: 0.0,
+                    },
+                  });
+                }
                 sockets.average_load = Sockets.connectToLoad(this);
+
+                /*if (sockets.cpu !== null) {
+                  sockets.cpu.close();
+                  this.updateAppData({
+                    cpuData: {
+                      d: [],
+                      c1: [],
+                      c2: [],
+                      c3: [],
+                      c4: [],
+                    },
+                  });
+                }*/
                 sockets.cpu = Sockets.connectToCPU(this);
+
+                if (sockets.temp !== null) {
+                  sockets.temp.close();
+                  this.updateAppData({
+                    tempData: {
+                      d: [],
+                      t1: [],
+                      t2: [],
+                      t3: [],
+                      t4: [],
+                      t5: [],
+                      t6: [],
+                      t7: [],
+                    },
+                  });
+                }
                 sockets.temp = Sockets.connectToTemp(this);
+
+                if (sockets.gpu !== null) {
+                  sockets.gpu.close();
+                  this.updateAppData({
+                    gpuData: {
+                      d: [],
+                      g1: [],
+                      g2: [],
+                    },
+                  });
+                }
                 sockets.gpu = Sockets.connectToGPU(this);
               }}
             >

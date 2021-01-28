@@ -1,0 +1,10 @@
+#!/bin/bash
+
+ARRAY=(${QUERY_STRING//[=&&]/ })
+
+while true; do
+	X=$((20 + $RANDOM % 10))
+	Y=$((55 + $RANDOM % 5))
+	echo $X $Y
+	sleep ${ARRAY[1]:=0.3}
+done

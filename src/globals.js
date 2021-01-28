@@ -7,8 +7,6 @@ export const colors = {
   plot: "#E5ECF6",
 };
 
-export const endpoints = ["linux"];
-
 export const sockets = {
   memory: null,
   uptime: null,

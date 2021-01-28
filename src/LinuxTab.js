@@ -68,7 +68,15 @@ function MemCard(props) {
     </React.Fragment>
   );
 
-  return <DataCard data={data} />;
+  return (
+    <DataCard
+      data={data}
+      resetHandler={() => {
+        sockets.memory.close();
+        sockets.memory = connectToMemory();
+      }}
+    />
+  );
 }
 
 function MemChart(props) {

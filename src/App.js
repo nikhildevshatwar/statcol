@@ -185,10 +185,17 @@ class App extends React.Component {
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleReset = this.updateAppData.bind(this);
   }
 
   handleTabChange(event) {
     this.setState({ tabSelected: event.target.innerText });
+  }
+
+  updateAppData(data) {
+    this.setState((state) => ({
+      appData: { ...state.appData, ...data },
+    }));
   }
 
   render() {
@@ -300,6 +307,7 @@ class App extends React.Component {
             <Visualization
               tabSelected={this.state.tabSelected}
               appData={this.state.appData}
+              appRef={this}
             />
           </Container>
         </main>

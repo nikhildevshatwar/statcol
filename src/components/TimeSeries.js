@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { colors } from "../globals";
 import Plot from "react-plotly.js";
+import Generic from "./Generic";
 
 const useStyles = makeStyles({
   root: {
@@ -11,8 +12,7 @@ const useStyles = makeStyles({
 
 export default function TimeSeries(props) {
   const classes = useStyles();
-
-  return (
+  const content = (
     <Plot
       className={classes.root}
       data={props.data.map(({ name, xData, yData }) => ({
@@ -61,4 +61,6 @@ export default function TimeSeries(props) {
       config={{ displayLogo: false, scrollZoom: true }}
     />
   );
+
+  return <Generic innerComponent={content} resetHandler={props.resetHandler} />;
 }

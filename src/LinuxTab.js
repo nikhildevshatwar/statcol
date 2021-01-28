@@ -5,11 +5,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { colors } from "./globals";
+import { colors, sockets } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
 import { Typography } from "@material-ui/core";
+import * as Sockets from "./websocket";
 
 const StyledTableCell = withStyles({
   head: {
@@ -68,7 +69,26 @@ function MemCard(props) {
     </React.Fragment>
   );
 
-  return <DataCard data={data} resetHandler={() => {}} />;
+  return (
+    <DataCard
+      data={data}
+      resetHandler={() => {
+        sockets.memory.close();
+        props.appRef.updateAppData({
+          memData: {
+            total: 0,
+            free: 0,
+            used: 0,
+            buffCache: 0,
+            shared: 0,
+            available: 0,
+          },
+          swapData: { total: 0, free: 0, used: 0 },
+        });
+        sockets.memory = Sockets.connectToMemory(props.appRef);
+      }}
+    />
+  );
 }
 
 function MemChart(props) {
@@ -87,6 +107,21 @@ function MemChart(props) {
             labels: ["Free", "Used", "Buffer and Cache", "Shared"],
           },
         ]}
+        resetHandler={() => {
+          sockets.memory.close();
+          props.appRef.updateAppData({
+            memData: {
+              total: 0,
+              free: 0,
+              used: 0,
+              buffCache: 0,
+              shared: 0,
+              available: 0,
+            },
+            swapData: { total: 0, free: 0, used: 0 },
+          });
+          sockets.memory = Sockets.connectToMemory(props.appRef);
+        }}
       />
       <PieChart
         data={[
@@ -96,6 +131,21 @@ function MemChart(props) {
             labels: ["Free Swap Memory", "Used Swap Memory"],
           },
         ]}
+        resetHandler={() => {
+          sockets.memory.close();
+          props.appRef.updateAppData({
+            memData: {
+              total: 0,
+              free: 0,
+              used: 0,
+              buffCache: 0,
+              shared: 0,
+              available: 0,
+            },
+            swapData: { total: 0, free: 0, used: 0 },
+          });
+          sockets.memory = Sockets.connectToMemory(props.appRef);
+        }}
       />
     </React.Fragment>
   );
@@ -104,7 +154,18 @@ function MemChart(props) {
 function UptimeCard(props) {
   const data = <Typography>Active Since: {props.appData.uptime}</Typography>;
 
-  return <DataCard data={data} />;
+  return (
+    <DataCard
+      data={data}
+      resetHandler={() => {
+        sockets.uptime.close();
+        props.appRef.updateAppData({
+          uptime: "",
+        });
+        sockets.uptime = Sockets.connectToUptime(props.appRef);
+      }}
+    />
+  );
 }
 
 function LoadCard(props) {
@@ -122,7 +183,22 @@ function LoadCard(props) {
     </React.Fragment>
   );
 
-  return <DataCard data={data} />;
+  return (
+    <DataCard
+      data={data}
+      resetHandler={() => {
+        sockets.average_load.close();
+        props.appRef.updateAppData({
+          load: {
+            past1Min: 0.0,
+            past5Min: 0.0,
+            past15Min: 0.0,
+          },
+        });
+        sockets.average_load = Sockets.connectToLoad(props.appRef);
+      }}
+    />
+  );
 }
 
 function CPUSeries(props) {
@@ -153,6 +229,19 @@ function CPUSeries(props) {
       title="CPU Load"
       xAxisTitle="Time"
       yAxisTitle="Load"
+      resetHandler={() => {
+        sockets.cpu.close();
+        props.appRef.updateAppData({
+          cpuData: {
+            d: [],
+            c1: [],
+            c2: [],
+            c3: [],
+            c4: [],
+          },
+        });
+        sockets.cpu = Sockets.connectToCPU(props.appRef);
+      }}
     />
   );
 }
@@ -200,19 +289,35 @@ function TempSeries(props) {
       title="Temperature (Celsius)"
       xAxisTitle="Time"
       yAxisTitle="Temperature (Celsius)"
+      resetHandler={() => {
+        sockets.temp.close();
+        props.appRef.updateAppData({
+          tempData: {
+            d: [],
+            t1: [],
+            t2: [],
+            t3: [],
+            t4: [],
+            t5: [],
+            t6: [],
+            t7: [],
+          },
+        });
+        sockets.temp = Sockets.connectToTemp(props.appRef);
+      }}
     />
   );
 }
 
-export default function LinuxTab(props) {
+export default function LinuxTab({ ...props }) {
   return (
     <React.Fragment>
-      <MemCard appData={props.appData} />
-      <MemChart appData={props.appData} />
-      <UptimeCard appData={props.appData} />
-      <LoadCard appData={props.appData} />
-      <CPUSeries appData={props.appData} />
-      <TempSeries appData={props.appData} />
+      <MemCard {...props} />
+      <MemChart {...props} />
+      <UptimeCard {...props} />
+      <LoadCard {...props} />
+      <CPUSeries {...props} />
+      <TempSeries {...props} />
     </React.Fragment>
   );
 }

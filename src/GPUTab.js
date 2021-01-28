@@ -1,5 +1,7 @@
 import React from "react";
 import TimeSeries from "./components/TimeSeries";
+import { sockets } from "./globals";
+import * as Sockets from "./websocket";
 
 function GPUSeries(props) {
   return (
@@ -19,14 +21,25 @@ function GPUSeries(props) {
       title="GPU Load"
       xAxisTitle="Time"
       yAxisTitle="Load"
+      resetHandler={() => {
+        sockets.gpu.close();
+        props.appRef.updateAppData({
+          gpuData: {
+            d: [],
+            g1: [],
+            g2: [],
+          },
+        });
+        sockets.gpu = Sockets.connectToGPU(props.appRef);
+      }}
     />
   );
 }
 
-export default function GPUTab(props) {
+export default function GPUTab({ ...props }) {
   return (
     <React.Fragment>
-      <GPUSeries appData={props.appData} />
+      <GPUSeries {...props} />
     </React.Fragment>
   );
 }

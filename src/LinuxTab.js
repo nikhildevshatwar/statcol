@@ -151,7 +151,7 @@ function MemChart(props) {
   );
 }
 
-function UptimeCard(props) {
+/*function UptimeCard(props) {
   const data = <Typography>Active Since: {props.appData.uptime}</Typography>;
 
   return (
@@ -160,7 +160,7 @@ function UptimeCard(props) {
       resetHandler={() => {
         sockets.uptime.close();
         props.appRef.updateAppData({
-          uptime: "",
+          uptime: "Invalid",
         });
         sockets.uptime = Sockets.connectToUptime(props.appRef);
       }}
@@ -199,7 +199,7 @@ function LoadCard(props) {
       }}
     />
   );
-}
+}*/
 
 function CPUSeries(props) {
   return (
@@ -314,8 +314,6 @@ export default function LinuxTab({ ...props }) {
     <React.Fragment>
       <MemCard {...props} />
       <MemChart {...props} />
-      <UptimeCard {...props} />
-      <LoadCard {...props} />
       <CPUSeries {...props} />
       <TempSeries {...props} />
     </React.Fragment>

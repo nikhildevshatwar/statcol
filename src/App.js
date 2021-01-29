@@ -5,6 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
@@ -122,6 +123,16 @@ const styles = (theme) => ({
   tabList: {
     color: colors.text,
   },
+  statusBar: {
+    display: "flex",
+    backgroundColor: colors.input,
+    color: colors.text,
+    borderRadius: "5ch",
+    margin: 5,
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    width: "100%",
+  },
 });
 
 class App extends React.Component {
@@ -175,7 +186,7 @@ class App extends React.Component {
           g1: [],
           g2: [],
         },
-        uptime: "",
+        uptime: "Invalid",
         load: {
           past1Min: 0.0,
           past5Min: 0.0,
@@ -237,6 +248,24 @@ class App extends React.Component {
             >
               Statistics Visualizer
             </Typography>
+            <Typography className={classes.statusBar}>
+              Load:&nbsp;
+              <Tooltip title={this.state.appData.load.past1Min}>
+                <div>1 min &nbsp;</div>
+              </Tooltip>
+              | &nbsp;
+              <Tooltip title={this.state.appData.load.past5Min}>
+                <div>5 min &nbsp;</div>
+              </Tooltip>
+              | &nbsp;
+              <Tooltip title={this.state.appData.load.past15Min}>
+                <div>15 min &nbsp;</div>
+              </Tooltip>
+              | &nbsp;
+              <Tooltip title={this.state.appData.uptime}>
+                <div>Active &nbsp;</div>
+              </Tooltip>
+            </Typography>
             <InputBase
               defaultValue={window.location.hostname}
               placeholder="Enter IP Address"
@@ -281,7 +310,7 @@ class App extends React.Component {
                 if (sockets.uptime !== null) {
                   sockets.uptime.close();
                   this.updateAppData({
-                    uptime: "",
+                    uptime: "Invalid",
                   });
                 }
                 sockets.uptime = Sockets.connectToUptime(this);

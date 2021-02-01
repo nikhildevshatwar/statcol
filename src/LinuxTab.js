@@ -9,7 +9,6 @@ import { colors, sockets } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
-import { Typography } from "@material-ui/core";
 import * as Sockets from "./websocket";
 
 const StyledTableCell = withStyles({

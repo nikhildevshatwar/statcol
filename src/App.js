@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import PublishIcon from "@material-ui/icons/Publish";
+import SettingsModal from "./SettingsModal";
 import List from "@material-ui/core/List";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -59,6 +60,9 @@ const styles = (theme) => ({
     display: "none",
   },
   publishButton: {
+    marginLeft: 8,
+  },
+  settingsButton: {
     marginLeft: 8,
   },
   title: {
@@ -239,15 +243,6 @@ class App extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              className={classes.title}
-            >
-              Statistics Visualizer
-            </Typography>
             <Typography className={classes.statusBar}>
               Load:&nbsp;
               <Tooltip title={this.state.appData.load.past1Min}>
@@ -373,6 +368,7 @@ class App extends React.Component {
             >
               <PublishIcon />
             </IconButton>
+            <SettingsModal />
           </Toolbar>
         </AppBar>
         <Drawer

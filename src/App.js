@@ -200,11 +200,113 @@ class App extends React.Component {
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
-    this.handleReset = this.updateAppData.bind(this);
+    this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+    this.handleDrawerClose = this.handleDrawerClose.bind(this);
+    this.handleIPAddressChange = this.handleIPAddressChange.bind(this);
+    this.handlePortChange = this.handlePortChange.bind(this);
+    this.sendIPAddress = this.sendIPAddress.bind(this);
+    this.updateAppData = this.updateAppData.bind(this);
   }
 
   handleTabChange(event) {
     this.setState({ tabSelected: event.target.innerText });
+  }
+
+  handleDrawerOpen(event) {
+    this.setState({ drawerOpen: true });
+  }
+
+  handleDrawerClose(event) {
+    this.setState({ drawerOpen: false });
+  }
+
+  handleIPAddressChange(event) {
+    this.setState({ address: event.target.value });
+  }
+
+  handlePortChange(event) {
+    this.setState({ port: event.target.value });
+  }
+
+  sendIPAddress() {
+    if (sockets.memory !== null) {
+      sockets.memory.close();
+      this.updateAppData({
+        memData: {
+          total: 0,
+          free: 0,
+          used: 0,
+          buffCache: 0,
+          shared: 0,
+          available: 0,
+        },
+        swapData: { total: 0, free: 0, used: 0 },
+      });
+    }
+    sockets.memory = Sockets.connectToMemory(this);
+
+    if (sockets.uptime !== null) {
+      sockets.uptime.close();
+      this.updateAppData({
+        uptime: "Invalid",
+      });
+    }
+    sockets.uptime = Sockets.connectToUptime(this);
+
+    if (sockets.average_load !== null) {
+      sockets.average_load.close();
+      this.updateAppData({
+        load: {
+          past1Min: 0.0,
+          past5Min: 0.0,
+          past15Min: 0.0,
+        },
+      });
+    }
+    sockets.average_load = Sockets.connectToLoad(this);
+
+    /*if (sockets.cpu !== null) {
+                  sockets.cpu.close();
+                  this.updateAppData({
+                    cpuData: {
+                      d: [],
+                      c1: [],
+                      c2: [],
+                      c3: [],
+                      c4: [],
+                    },
+                  });
+                }*/
+    sockets.cpu = Sockets.connectToCPU(this);
+
+    if (sockets.temp !== null) {
+      sockets.temp.close();
+      this.updateAppData({
+        tempData: {
+          d: [],
+          t1: [],
+          t2: [],
+          t3: [],
+          t4: [],
+          t5: [],
+          t6: [],
+          t7: [],
+        },
+      });
+    }
+    sockets.temp = Sockets.connectToTemp(this);
+
+    if (sockets.gpu !== null) {
+      sockets.gpu.close();
+      this.updateAppData({
+        gpuData: {
+          d: [],
+          g1: [],
+          g2: [],
+        },
+      });
+    }
+    sockets.gpu = Sockets.connectToGPU(this);
   }
 
   updateAppData(data) {
@@ -231,11 +333,7 @@ class App extends React.Component {
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              onClick={() =>
-                this.setState({
-                  drawerOpen: true,
-                })
-              }
+              onClick={this.handleDrawerOpen}
               className={clsx(
                 classes.menuButton,
                 this.state.drawerOpen && classes.menuButtonHidden
@@ -264,9 +362,7 @@ class App extends React.Component {
             <InputBase
               defaultValue={window.location.hostname}
               placeholder="Enter IP Address"
-              onChange={(event) =>
-                this.setState({ address: event.target.value })
-              }
+              onChange={this.handleIPAddressChange}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -274,7 +370,7 @@ class App extends React.Component {
             />
             <InputBase
               placeholder="Enter Port Number"
-              onChange={(event) => this.setState({ port: event.target.value })}
+              onChange={this.handlePortChange}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -285,86 +381,7 @@ class App extends React.Component {
               color="inherit"
               aria-label="send ip address"
               className={classes.publishButton}
-              onClick={() => {
-                if (sockets.memory !== null) {
-                  sockets.memory.close();
-                  this.updateAppData({
-                    memData: {
-                      total: 0,
-                      free: 0,
-                      used: 0,
-                      buffCache: 0,
-                      shared: 0,
-                      available: 0,
-                    },
-                    swapData: { total: 0, free: 0, used: 0 },
-                  });
-                }
-                sockets.memory = Sockets.connectToMemory(this);
-
-                if (sockets.uptime !== null) {
-                  sockets.uptime.close();
-                  this.updateAppData({
-                    uptime: "Invalid",
-                  });
-                }
-                sockets.uptime = Sockets.connectToUptime(this);
-
-                if (sockets.average_load !== null) {
-                  sockets.average_load.close();
-                  this.updateAppData({
-                    load: {
-                      past1Min: 0.0,
-                      past5Min: 0.0,
-                      past15Min: 0.0,
-                    },
-                  });
-                }
-                sockets.average_load = Sockets.connectToLoad(this);
-
-                /*if (sockets.cpu !== null) {
-                  sockets.cpu.close();
-                  this.updateAppData({
-                    cpuData: {
-                      d: [],
-                      c1: [],
-                      c2: [],
-                      c3: [],
-                      c4: [],
-                    },
-                  });
-                }*/
-                sockets.cpu = Sockets.connectToCPU(this);
-
-                if (sockets.temp !== null) {
-                  sockets.temp.close();
-                  this.updateAppData({
-                    tempData: {
-                      d: [],
-                      t1: [],
-                      t2: [],
-                      t3: [],
-                      t4: [],
-                      t5: [],
-                      t6: [],
-                      t7: [],
-                    },
-                  });
-                }
-                sockets.temp = Sockets.connectToTemp(this);
-
-                if (sockets.gpu !== null) {
-                  sockets.gpu.close();
-                  this.updateAppData({
-                    gpuData: {
-                      d: [],
-                      g1: [],
-                      g2: [],
-                    },
-                  });
-                }
-                sockets.gpu = Sockets.connectToGPU(this);
-              }}
+              onClick={this.sendIPAddress}
             >
               <PublishIcon />
             </IconButton>
@@ -383,11 +400,7 @@ class App extends React.Component {
         >
           <div className={classes.toolbarIcon}>
             <IconButton
-              onClick={() =>
-                this.setState({
-                  drawerOpen: false,
-                })
-              }
+              onClick={this.handleDrawerClose}
               className={classes.drawerButton}
             >
               <ChevronLeftIcon />

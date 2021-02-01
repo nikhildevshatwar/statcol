@@ -343,16 +343,16 @@ class App extends React.Component {
             </IconButton>
             <Typography className={classes.statusBar}>
               Load:&nbsp;
-              <Tooltip title={this.state.appData.load.past1Min}>
-                <div>1 min &nbsp;</div>
+              <Tooltip title="1 Min">
+                <div>{this.state.appData.load.past1Min} &nbsp;</div>
               </Tooltip>
               | &nbsp;
-              <Tooltip title={this.state.appData.load.past5Min}>
-                <div>5 min &nbsp;</div>
+              <Tooltip title="5 Min">
+                <div>{this.state.appData.load.past5Min} &nbsp;</div>
               </Tooltip>
               | &nbsp;
-              <Tooltip title={this.state.appData.load.past15Min}>
-                <div>15 min &nbsp;</div>
+              <Tooltip title="15 Min">
+                <div>{this.state.appData.load.past15Min} &nbsp;</div>
               </Tooltip>
               | &nbsp;
               <Tooltip title={this.state.appData.uptime}>

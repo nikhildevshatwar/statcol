@@ -23,7 +23,7 @@ export default function PieChart(props) {
         type: "pie",
       }))}
       layout={{
-        legend: { bgcolor: colors.container },
+        showlegend: false,
         font: { color: colors.text },
         margin: {
           pad: 30,

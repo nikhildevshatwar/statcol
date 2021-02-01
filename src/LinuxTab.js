@@ -68,29 +68,42 @@ function MemCard(props) {
     </React.Fragment>
   );
 
-  return (
-    <DataCard
-      data={data}
-      resetHandler={() => {
-        sockets.memory.close();
-        props.appRef.updateAppData({
-          memData: {
-            total: 0,
-            free: 0,
-            used: 0,
-            buffCache: 0,
-            shared: 0,
-            available: 0,
-          },
-          swapData: { total: 0, free: 0, used: 0 },
-        });
-        sockets.memory = Sockets.connectToMemory(props.appRef);
-      }}
-    />
-  );
+  function reset() {
+    sockets.memory.close();
+    props.appRef.updateAppData({
+      memData: {
+        total: 0,
+        free: 0,
+        used: 0,
+        buffCache: 0,
+        shared: 0,
+        available: 0,
+      },
+      swapData: { total: 0, free: 0, used: 0 },
+    });
+    sockets.memory = Sockets.connectToMemory(props.appRef);
+  }
+
+  return <DataCard data={data} resetHandler={reset} />;
 }
 
 function MemChart(props) {
+  function reset() {
+    sockets.memory.close();
+    props.appRef.updateAppData({
+      memData: {
+        total: 0,
+        free: 0,
+        used: 0,
+        buffCache: 0,
+        shared: 0,
+        available: 0,
+      },
+      swapData: { total: 0, free: 0, used: 0 },
+    });
+    sockets.memory = Sockets.connectToMemory(props.appRef);
+  }
+
   return (
     <React.Fragment>
       <PieChart
@@ -106,45 +119,7 @@ function MemChart(props) {
             labels: ["Free", "Used", "Buffer and Cache", "Shared"],
           },
         ]}
-        resetHandler={() => {
-          sockets.memory.close();
-          props.appRef.updateAppData({
-            memData: {
-              total: 0,
-              free: 0,
-              used: 0,
-              buffCache: 0,
-              shared: 0,
-              available: 0,
-            },
-            swapData: { total: 0, free: 0, used: 0 },
-          });
-          sockets.memory = Sockets.connectToMemory(props.appRef);
-        }}
-      />
-      <PieChart
-        data={[
-          {
-            name: "Swap Memory",
-            values: [props.appData.swapData.free, props.appData.swapData.used],
-            labels: ["Free Swap Memory", "Used Swap Memory"],
-          },
-        ]}
-        resetHandler={() => {
-          sockets.memory.close();
-          props.appRef.updateAppData({
-            memData: {
-              total: 0,
-              free: 0,
-              used: 0,
-              buffCache: 0,
-              shared: 0,
-              available: 0,
-            },
-            swapData: { total: 0, free: 0, used: 0 },
-          });
-          sockets.memory = Sockets.connectToMemory(props.appRef);
-        }}
+        resetHandler={reset}
       />
     </React.Fragment>
   );
@@ -201,6 +176,20 @@ function LoadCard(props) {
 }*/
 
 function CPUSeries(props) {
+  function reset() {
+    sockets.cpu.close();
+    props.appRef.updateAppData({
+      cpuData: {
+        d: [],
+        c1: [],
+        c2: [],
+        c3: [],
+        c4: [],
+      },
+    });
+    sockets.cpu = Sockets.connectToCPU(props.appRef);
+  }
+
   return (
     <TimeSeries
       data={[
@@ -228,24 +217,29 @@ function CPUSeries(props) {
       title="CPU Load"
       xAxisTitle="Time"
       yAxisTitle="Load"
-      resetHandler={() => {
-        sockets.cpu.close();
-        props.appRef.updateAppData({
-          cpuData: {
-            d: [],
-            c1: [],
-            c2: [],
-            c3: [],
-            c4: [],
-          },
-        });
-        sockets.cpu = Sockets.connectToCPU(props.appRef);
-      }}
+      resetHandler={reset}
     />
   );
 }
 
 function TempSeries(props) {
+  function reset() {
+    sockets.temp.close();
+    props.appRef.updateAppData({
+      tempData: {
+        d: [],
+        t1: [],
+        t2: [],
+        t3: [],
+        t4: [],
+        t5: [],
+        t6: [],
+        t7: [],
+      },
+    });
+    sockets.temp = Sockets.connectToTemp(props.appRef);
+  }
+
   return (
     <TimeSeries
       data={[
@@ -288,22 +282,7 @@ function TempSeries(props) {
       title="Temperature (Celsius)"
       xAxisTitle="Time"
       yAxisTitle="Temperature (Celsius)"
-      resetHandler={() => {
-        sockets.temp.close();
-        props.appRef.updateAppData({
-          tempData: {
-            d: [],
-            t1: [],
-            t2: [],
-            t3: [],
-            t4: [],
-            t5: [],
-            t6: [],
-            t7: [],
-          },
-        });
-        sockets.temp = Sockets.connectToTemp(props.appRef);
-      }}
+      resetHandler={reset}
     />
   );
 }

@@ -32,6 +32,7 @@ function GPUSeries(props) {
         });
         sockets.gpu = Sockets.connectToGPU(props.appRef);
       }}
+      resetHandlerName="gpuReset"
     />
   );
 }

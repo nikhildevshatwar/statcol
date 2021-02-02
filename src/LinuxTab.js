@@ -84,7 +84,9 @@ function MemCard(props) {
     sockets.memory = Sockets.connectToMemory(props.appRef);
   }
 
-  return <DataCard data={data} resetHandler={reset} />;
+  return (
+    <DataCard data={data} resetHandler={reset} resetHandlerName="memReset" />
+  );
 }
 
 function MemChart(props) {
@@ -120,6 +122,7 @@ function MemChart(props) {
           },
         ]}
         resetHandler={reset}
+        resetHandlerName="memReset2"
       />
     </React.Fragment>
   );
@@ -218,6 +221,7 @@ function CPUSeries(props) {
       xAxisTitle="Time"
       yAxisTitle="Load"
       resetHandler={reset}
+      resetHandlerName="cpuReset"
     />
   );
 }

@@ -106,7 +106,7 @@ export const connectToLoad = (app) => {
   return connectToWebSocket(
     app.state.address,
     app.state.port,
-    "average_load",
+    "load",
     (event) => {
       const parsedData = Parsers.parseLoad(event);
       app.setState((state) => ({

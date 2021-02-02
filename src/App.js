@@ -243,8 +243,8 @@ class App extends React.Component {
     }
     sockets.uptime = Sockets.connectToUptime(this);
 
-    if (sockets.average_load !== null) {
-      sockets.average_load.close();
+    if (sockets.load !== null) {
+      sockets.load.close();
       this.updateAppData({
         load: {
           past1Min: 0.0,
@@ -253,7 +253,7 @@ class App extends React.Component {
         },
       });
     }
-    sockets.average_load = Sockets.connectToLoad(this);
+    sockets.load = Sockets.connectToLoad(this);
 
     /*if (sockets.cpu !== null) {
                   sockets.cpu.close();

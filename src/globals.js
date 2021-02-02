@@ -10,7 +10,7 @@ export const colors = {
 export const sockets = {
   memory: null,
   uptime: null,
-  average_load: null,
+  load: null,
   cpu: null,
   temp: null,
   gpu: null,

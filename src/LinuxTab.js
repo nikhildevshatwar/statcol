@@ -128,56 +128,6 @@ function MemChart(props) {
   );
 }
 
-/*function UptimeCard(props) {
-  const data = <Typography>Active Since: {props.appData.uptime}</Typography>;
-
-  return (
-    <DataCard
-      data={data}
-      resetHandler={() => {
-        sockets.uptime.close();
-        props.appRef.updateAppData({
-          uptime: "Invalid",
-        });
-        sockets.uptime = Sockets.connectToUptime(props.appRef);
-      }}
-    />
-  );
-}
-
-function LoadCard(props) {
-  const data = (
-    <React.Fragment>
-      <Typography>
-        Load Average for past 1 minute: {props.appData.load.past1Min}
-      </Typography>
-      <Typography>
-        Load Average for past 5 minute: {props.appData.load.past5Min}
-      </Typography>
-      <Typography>
-        Load Average for past 15 minute: {props.appData.load.past15Min}
-      </Typography>
-    </React.Fragment>
-  );
-
-  return (
-    <DataCard
-      data={data}
-      resetHandler={() => {
-        sockets.average_load.close();
-        props.appRef.updateAppData({
-          load: {
-            past1Min: 0.0,
-            past5Min: 0.0,
-            past15Min: 0.0,
-          },
-        });
-        sockets.average_load = Sockets.connectToLoad(props.appRef);
-      }}
-    />
-  );
-}*/
-
 function CPUSeries(props) {
   function reset() {
     sockets.cpu.close();

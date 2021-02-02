@@ -147,17 +147,7 @@ class App extends React.Component {
       port: "",
       drawerOpen: true,
       tabSelected: "Linux",
-      config: {
-        samplingInterval: {
-          memory: 0.3,
-          cpu: 0.5,
-          temp: 1.0,
-          gpu: 1.5,
-          uptime: 1.0,
-          load: 1.0,
-        },
-        clockCycle: 1000,
-      },
+
       appData: {
         memData: {
           total: 0,

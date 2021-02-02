@@ -15,3 +15,15 @@ export const sockets = {
   temp: null,
   gpu: null,
 };
+
+export const config = {
+  samplingInterval: {
+    memory: 0.3,
+    cpu: 0.5,
+    temp: 1.0,
+    gpu: 1.5,
+    uptime: 1.0,
+    load: 1.0,
+  },
+  clockCycle: 1000,
+};

@@ -1,4 +1,5 @@
 import ipRegex from "ip-regex";
+import { config } from "./globals";
 import * as Parsers from "./parsers";
 
 function argsToString(args) {
@@ -76,7 +77,7 @@ export const connectToMemory = (app) => {
       }));
     },
     {
-      samplingInterval: app.state.config.samplingInterval.memory,
+      samplingInterval: config.samplingInterval.memory,
     }
   );
 };
@@ -96,7 +97,7 @@ export const connectToUptime = (app) => {
       }));
     },
     {
-      samplingInterval: app.state.config.samplingInterval.uptime,
+      samplingInterval: config.samplingInterval.uptime,
     }
   );
 };
@@ -116,7 +117,7 @@ export const connectToLoad = (app) => {
       }));
     },
     {
-      samplingInterval: app.state.config.samplingInterval.load,
+      samplingInterval: config.samplingInterval.load,
     }
   );
 };
@@ -129,7 +130,7 @@ export const connectToCPU = (app) => {
     (event) => {
       const parsedData = Parsers.parseCPU(event);
       app.setState((state) => {
-        if (state.appData.cpuData.d.length === state.config.clockCycle) {
+        if (state.appData.cpuData.d.length === config.clockCycle) {
           return {
             appData: {
               ...state.appData,
@@ -160,7 +161,7 @@ export const connectToCPU = (app) => {
         };
       });
     },
-    { samplingInterval: app.state.config.samplingInterval.cpu }
+    { samplingInterval: config.samplingInterval.cpu }
   );
 };
 
@@ -172,7 +173,7 @@ export const connectToTemp = (app) => {
     (event) => {
       const parsedData = Parsers.parseTemp(event);
       app.setState((state) => {
-        if (state.appData.tempData.d.length === state.config.clockCycle) {
+        if (state.appData.tempData.d.length === config.clockCycle) {
           return {
             appData: {
               ...state.appData,
@@ -209,7 +210,7 @@ export const connectToTemp = (app) => {
         };
       });
     },
-    { samplingInterval: app.state.config.samplingInterval.temp }
+    { samplingInterval: config.samplingInterval.temp }
   );
 };
 
@@ -221,7 +222,7 @@ export const connectToGPU = (app) => {
     (event) => {
       const parsedData = Parsers.parseGPU(event);
       app.setState((state) => {
-        if (state.appData.gpuData.d.length === state.config.clockCycle) {
+        if (state.appData.gpuData.d.length === config.clockCycle) {
           return {
             appData: {
               ...state.appData,
@@ -248,6 +249,6 @@ export const connectToGPU = (app) => {
         };
       });
     },
-    { samplingInterval: app.state.config.samplingInterval.gpu }
+    { samplingInterval: config.samplingInterval.gpu }
   );
 };

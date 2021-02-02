@@ -77,7 +77,7 @@ export const connectToMemory = (app) => {
       }));
     },
     {
-      samplingInterval: config.samplingInterval.memory,
+      samplingInterval: config.getByType("memory").samplingInterval,
     }
   );
 };
@@ -97,7 +97,7 @@ export const connectToUptime = (app) => {
       }));
     },
     {
-      samplingInterval: config.samplingInterval.uptime,
+      samplingInterval: config.getByType("uptime").samplingInterval,
     }
   );
 };
@@ -117,12 +117,14 @@ export const connectToLoad = (app) => {
       }));
     },
     {
-      samplingInterval: config.samplingInterval.load,
+      samplingInterval: config.getByType("load").samplingInterval,
     }
   );
 };
 
 export const connectToCPU = (app) => {
+  const cpuConfig = config.getByType("cpu");
+
   return connectToWebSocket(
     app.state.address,
     app.state.port,
@@ -130,7 +132,7 @@ export const connectToCPU = (app) => {
     (event) => {
       const parsedData = Parsers.parseCPU(event);
       app.setState((state) => {
-        if (state.appData.cpuData.d.length === config.clockCycle) {
+        if (state.appData.cpuData.d.length === cpuConfig.clockCycle) {
           return {
             appData: {
               ...state.appData,
@@ -161,11 +163,13 @@ export const connectToCPU = (app) => {
         };
       });
     },
-    { samplingInterval: config.samplingInterval.cpu }
+    { samplingInterval: cpuConfig.samplingInterval }
   );
 };
 
 export const connectToTemp = (app) => {
+  const tempConfig = config.getByType("temp");
+
   return connectToWebSocket(
     app.state.address,
     app.state.port,
@@ -173,7 +177,7 @@ export const connectToTemp = (app) => {
     (event) => {
       const parsedData = Parsers.parseTemp(event);
       app.setState((state) => {
-        if (state.appData.tempData.d.length === config.clockCycle) {
+        if (state.appData.tempData.d.length === tempConfig.clockCycle) {
           return {
             appData: {
               ...state.appData,
@@ -210,11 +214,13 @@ export const connectToTemp = (app) => {
         };
       });
     },
-    { samplingInterval: config.samplingInterval.temp }
+    { samplingInterval: tempConfig.samplingInterval }
   );
 };
 
 export const connectToGPU = (app) => {
+  const gpuConfig = config.getByType("gpu");
+
   return connectToWebSocket(
     app.state.address,
     app.state.port,
@@ -222,7 +228,7 @@ export const connectToGPU = (app) => {
     (event) => {
       const parsedData = Parsers.parseGPU(event);
       app.setState((state) => {
-        if (state.appData.gpuData.d.length === config.clockCycle) {
+        if (state.appData.gpuData.d.length === gpuConfig.clockCycle) {
           return {
             appData: {
               ...state.appData,
@@ -249,6 +255,6 @@ export const connectToGPU = (app) => {
         };
       });
     },
-    { samplingInterval: config.samplingInterval.gpu }
+    { samplingInterval: gpuConfig.samplingInterval }
   );
 };

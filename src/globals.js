@@ -16,14 +16,19 @@ export const sockets = {
   gpu: null,
 };
 
-export const config = {
-  samplingInterval: {
-    memory: 0.3,
-    cpu: 0.5,
-    temp: 1.0,
-    gpu: 1.5,
-    uptime: 1.0,
-    load: 1.0,
-  },
-  clockCycle: 1000,
+export const config = [
+  { type: "memory", samplingInterval: 0.3 },
+  { type: "cpu", samplingInterval: 0.5, clockCycle: 1000 },
+  { type: "temp", samplingInterval: 1.0, clockCycle: 1000 },
+  { type: "gpu", samplingInterval: 1.5, clockCycle: 1000 },
+  { type: "uptime", samplingInterval: 1.0 },
+  { type: "load", samplingInterval: 1.0 },
+];
+
+config.getByType = (type) => {
+  for (let configObj of config) {
+    if (configObj.type === type) {
+      return configObj;
+    }
+  }
 };

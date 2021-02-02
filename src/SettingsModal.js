@@ -74,7 +74,9 @@ export default function SettingsModal() {
         minValue={0.1}
         maxValue={10}
         onChange={(event) => {
-          config.samplingInterval.temp = parseFloat(event.target.textContent);
+          config.getByType("temp").samplingInterval = parseFloat(
+            event.target.textContent
+          );
         }}
       />
     </div>

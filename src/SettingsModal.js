@@ -32,6 +32,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function ConfigSlider(props) {
+  return (
+    <Slider
+      defaultValue={props.defaultValue}
+      aria-labelledby="discrete-slider"
+      valueLabelDisplay="auto"
+      step={props.stepValue}
+      min={props.minValue}
+      max={props.maxValue}
+      onChange={props.onChange}
+    />
+  );
+}
+
 export default function SettingsModal() {
   const classes = useStyles();
 
@@ -54,13 +68,11 @@ export default function SettingsModal() {
       <Typography id="discrete-slider" gutterBottom>
         Temperature
       </Typography>
-      <Slider
+      <ConfigSlider
         defaultValue={config.samplingInterval.temp}
-        aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
-        step={0.1}
-        min={0.1}
-        max={10}
+        stepValue={0.1}
+        minValue={0.1}
+        maxValue={10}
         onChange={(event) => {
           config.samplingInterval.temp = parseFloat(event.target.textContent);
         }}

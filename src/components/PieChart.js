@@ -36,5 +36,11 @@ export default function PieChart(props) {
     ></Plot>
   );
 
-  return <Generic innerComponent={content} resetHandler={props.resetHandler} />;
+  return (
+    <Generic
+      innerComponent={content}
+      resetHandler={props.resetHandler}
+      resetHandlerName={props.resetHandlerName}
+    />
+  );
 }

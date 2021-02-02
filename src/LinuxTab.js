@@ -283,6 +283,7 @@ function TempSeries(props) {
       xAxisTitle="Time"
       yAxisTitle="Temperature (Celsius)"
       resetHandler={reset}
+      resetHandlerName="tempReset"
     />
   );
 }

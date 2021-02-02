@@ -1,7 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { colors } from "./globals";
+import { colors, config } from "./globals";
+import Slider from "@material-ui/core/Slider";
+import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import SettingsIcon from "@material-ui/icons/Settings";
 
@@ -43,14 +45,26 @@ export default function SettingsModal() {
 
   const handleClose = () => {
     setOpen(false);
+    document.querySelector("#tempReset").click();
   };
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">Settings</h2>
-      <p id="simple-modal-description">
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
+      <Typography id="discrete-slider" gutterBottom>
+        Temperature
+      </Typography>
+      <Slider
+        defaultValue={config.samplingInterval.temp}
+        aria-labelledby="discrete-slider"
+        valueLabelDisplay="auto"
+        step={0.1}
+        min={0.1}
+        max={10}
+        onChange={(event) => {
+          config.samplingInterval.temp = parseFloat(event.target.textContent);
+        }}
+      />
     </div>
   );
 

@@ -62,5 +62,11 @@ export default function TimeSeries(props) {
     />
   );
 
-  return <Generic innerComponent={content} resetHandler={props.resetHandler} />;
+  return (
+    <Generic
+      innerComponent={content}
+      resetHandler={props.resetHandler}
+      resetHandlerName={props.resetHandlerName}
+    />
+  );
 }

@@ -123,7 +123,7 @@ export const connectToLoad = (app) => {
 };
 
 export const connectToCPU = (app) => {
-  connectToWebSocket(
+  return connectToWebSocket(
     app.state.address,
     app.state.port,
     "cpu",

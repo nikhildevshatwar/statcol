@@ -1,11 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { colors, config } from "./globals";
-import Slider from "@material-ui/core/Slider";
+import { colors } from "./globals";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import SettingsIcon from "@material-ui/icons/Settings";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -23,6 +22,15 @@ function getModalStyle() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: 5,
+  },
+  textField: {
+    color: "inherit",
+  },
+  label: {
+    color: "inherit",
+  },
   paper: {
     position: "absolute",
     width: 400,
@@ -32,21 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ConfigSlider(props) {
-  return (
-    <Slider
-      defaultValue={props.defaultValue}
-      aria-labelledby="discrete-slider"
-      valueLabelDisplay="auto"
-      step={props.stepValue}
-      min={props.minValue}
-      max={props.maxValue}
-      onChange={props.onChange}
-    />
-  );
-}
-
-export default function SettingsModal() {
+export default function SettingsModal(props) {
   const classes = useStyles();
 
   // getModalStyle is not a pure function, we roll the style only on the first render
@@ -59,39 +53,47 @@ export default function SettingsModal() {
 
   const handleClose = () => {
     setOpen(false);
-    document.querySelector("#tempReset").click();
+    props.onSettingsClose();
   };
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">Settings</h2>
-      <Typography id="discrete-slider" gutterBottom>
-        Temperature
+      <Typography id="discrete-slider" variant="h6" gutterBottom>
+        {props.name}
       </Typography>
-      <ConfigSlider
-        defaultValue={config.samplingInterval.temp}
-        stepValue={0.1}
-        minValue={0.1}
-        maxValue={10}
-        onChange={(event) => {
-          config.getByType("temp").samplingInterval = parseFloat(
-            event.target.textContent
+      <form noValidate autoComplete="off">
+        {props.configOptions.map((configOption) => {
+          return (
+            <React.Fragment>
+              <TextField
+                InputProps={{ className: classes.textField }}
+                InputLabelProps={{
+                  className: classes.label,
+                }}
+                color="secondary"
+                label={configOption.name}
+                defaultValue={configOption.defaultValue}
+                onChange={configOption.onChange}
+                variant="outlined"
+              />
+            </React.Fragment>
           );
-        }}
-      />
+        })}
+      </form>
     </div>
   );
 
   return (
     <div>
-      <IconButton
-        edge="start"
-        color="inherit"
-        className={classes.settingsButton}
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="primary"
         onClick={handleOpen}
       >
-        <SettingsIcon />
-      </IconButton>
+        Settings
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}

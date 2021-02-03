@@ -10,7 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
 import PublishIcon from "@material-ui/icons/Publish";
-import SettingsModal from "./SettingsModal";
 import List from "@material-ui/core/List";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -375,7 +374,6 @@ class App extends React.Component {
             >
               <PublishIcon />
             </IconButton>
-            <SettingsModal />
           </Toolbar>
         </AppBar>
         <Drawer

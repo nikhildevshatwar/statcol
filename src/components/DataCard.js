@@ -26,6 +26,7 @@ export default function DataCard(props) {
       innerComponent={content}
       resetHandler={props.resetHandler}
       resetHandlerName={props.resetHandlerName}
+      settings={props.settings}
     />
   );
 }

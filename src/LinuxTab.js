@@ -5,7 +5,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { colors, sockets } from "./globals";
+import { colors, config, sockets } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
@@ -85,7 +85,25 @@ function MemCard(props) {
   }
 
   return (
-    <DataCard data={data} resetHandler={reset} resetHandlerName="memReset" />
+    <DataCard
+      data={data}
+      resetHandler={reset}
+      resetHandlerName="memReset"
+      settings={{
+        name: "Memory",
+        configOptions: [
+          {
+            name: "Sampling Interval",
+            defaultValue: config.getByType("memory").samplingInterval,
+            onChange: (event) => {
+              config.getByType("memory").samplingInterval = parseFloat(
+                event.target.value
+              );
+            },
+          },
+        ],
+      }}
+    />
   );
 }
 
@@ -123,6 +141,20 @@ function MemChart(props) {
         ]}
         resetHandler={reset}
         resetHandlerName="memReset2"
+        settings={{
+          name: "Memory",
+          configOptions: [
+            {
+              name: "Sampling Interval",
+              defaultValue: config.getByType("memory").samplingInterval,
+              onChange: (event) => {
+                config.getByType("memory").samplingInterval = parseFloat(
+                  event.target.value
+                );
+              },
+            },
+          ],
+        }}
       />
     </React.Fragment>
   );
@@ -172,6 +204,27 @@ function CPUSeries(props) {
       yAxisTitle="Load"
       resetHandler={reset}
       resetHandlerName="cpuReset"
+      settings={{
+        name: "CPU",
+        configOptions: [
+          {
+            name: "Sampling Interval",
+            defaultValue: config.getByType("cpu").samplingInterval,
+            onChange: (event) => {
+              config.getByType("cpu").samplingInterval = parseFloat(
+                event.target.value
+              );
+            },
+          },
+          {
+            name: "Clock Cycle",
+            defaultValue: config.getByType("cpu").clockCycle,
+            onChange: (event) => {
+              config.getByType("cpu").clockCycle = parseInt(event.target.value);
+            },
+          },
+        ],
+      }}
     />
   );
 }
@@ -238,6 +291,29 @@ function TempSeries(props) {
       yAxisTitle="Temperature (Celsius)"
       resetHandler={reset}
       resetHandlerName="tempReset"
+      settings={{
+        name: "Temperature",
+        configOptions: [
+          {
+            name: "Sampling Interval",
+            defaultValue: config.getByType("temp").samplingInterval,
+            onChange: (event) => {
+              config.getByType("temp").samplingInterval = parseFloat(
+                event.target.value
+              );
+            },
+          },
+          {
+            name: "Clock Cycle",
+            defaultValue: config.getByType("temp").clockCycle,
+            onChange: (event) => {
+              config.getByType("temp").clockCycle = parseInt(
+                event.target.value
+              );
+            },
+          },
+        ],
+      }}
     />
   );
 }

@@ -40,6 +40,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function validateInputValue(valueString) {
+  const parsedInput = parseFloat(valueString);
+
+  if (parsedInput !== "NaN" && parsedInput > 0.0) {
+    return parsedInput;
+  }
+
+  return null;
+}
+
 export default function SettingsModal(props) {
   const classes = useStyles();
 
@@ -62,7 +72,24 @@ export default function SettingsModal(props) {
       <Typography id="discrete-slider" variant="h6" gutterBottom>
         {props.name}
       </Typography>
-      <form noValidate autoComplete="off">
+      <form
+        noValidate
+        autoComplete="off"
+        onSubmit={(event) => {
+          event.preventDefault();
+          props.configOptions.forEach((configOption) => {
+            const parsedInput = validateInputValue(
+              document.querySelector(`#${configOption.id}`).value
+            );
+
+            if (parsedInput !== null) {
+              configOption.update(parsedInput);
+            } else {
+              console.log("Invalid Input"); // TODO: Replace with Alert
+            }
+          });
+        }}
+      >
         {props.configOptions.map((configOption) => {
           return (
             <React.Fragment>
@@ -72,14 +99,22 @@ export default function SettingsModal(props) {
                   className: classes.label,
                 }}
                 color="secondary"
+                id={configOption.id}
                 label={configOption.name}
                 defaultValue={configOption.defaultValue}
-                onChange={configOption.onChange}
                 variant="outlined"
               />
             </React.Fragment>
           );
         })}
+        <Button
+          type="submit"
+          className={classes.button}
+          variant="contained"
+          color="primary"
+        >
+          Save Changes
+        </Button>
       </form>
     </div>
   );

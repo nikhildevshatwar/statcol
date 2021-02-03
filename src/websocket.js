@@ -40,7 +40,7 @@ function connectToWebSocket(address, port, endpoint, parser, args = {}) {
     !ipRegex({ exact: true, includeBoundaries: true }).test(address) &&
     address !== "localhost"
   ) {
-    console.log("Invalid IP address: " + address);
+    console.log("Invalid IP address: " + address); // TODO: Replace with Alert
     return;
   }
 

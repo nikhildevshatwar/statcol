@@ -97,12 +97,11 @@ function MemCard(props) {
         name: "Memory",
         configOptions: [
           {
+            id: "samplingInterval",
             name: "Sampling Interval",
             defaultValue: config.getByType("memory").samplingInterval,
-            onChange: (event) => {
-              config.getByType("memory").samplingInterval = parseFloat(
-                event.target.value
-              );
+            update: (newValue) => {
+              config.getByType("memory").samplingInterval = newValue;
             },
           },
         ],
@@ -153,12 +152,11 @@ function MemChart(props) {
           name: "Memory",
           configOptions: [
             {
+              id: "samplingInterval",
               name: "Sampling Interval",
               defaultValue: config.getByType("memory").samplingInterval,
-              onChange: (event) => {
-                config.getByType("memory").samplingInterval = parseFloat(
-                  event.target.value
-                );
+              update: (newValue) => {
+                config.getByType("memory").samplingInterval = newValue;
               },
             },
           ],
@@ -220,19 +218,19 @@ function CPUSeries(props) {
         name: "CPU",
         configOptions: [
           {
+            id: "samplingInterval",
             name: "Sampling Interval",
             defaultValue: config.getByType("cpu").samplingInterval,
-            onChange: (event) => {
-              config.getByType("cpu").samplingInterval = parseFloat(
-                event.target.value
-              );
+            update: (newValue) => {
+              config.getByType("cpu").samplingInterval = newValue;
             },
           },
           {
+            id: "clockCycle",
             name: "Clock Cycle",
             defaultValue: config.getByType("cpu").clockCycle,
-            onChange: (event) => {
-              config.getByType("cpu").clockCycle = parseInt(event.target.value);
+            update: (newValue) => {
+              config.getByType("cpu").clockCycle = parseInt(newValue);
             },
           },
         ],
@@ -311,21 +309,19 @@ function TempSeries(props) {
         name: "Temperature",
         configOptions: [
           {
+            id: "samplingInterval",
             name: "Sampling Interval",
             defaultValue: config.getByType("temp").samplingInterval,
-            onChange: (event) => {
-              config.getByType("temp").samplingInterval = parseFloat(
-                event.target.value
-              );
+            update: (newValue) => {
+              config.getByType("temp").samplingInterval = newValue;
             },
           },
           {
+            id: "clockCycle",
             name: "Clock Cycle",
             defaultValue: config.getByType("temp").clockCycle,
-            onChange: (event) => {
-              config.getByType("temp").clockCycle = parseInt(
-                event.target.value
-              );
+            update: (newValue) => {
+              config.getByType("temp").clockCycle = parseInt(newValue);
             },
           },
         ],

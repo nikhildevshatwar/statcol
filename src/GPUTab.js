@@ -43,19 +43,19 @@ function GPUSeries(props) {
         name: "GPU",
         configOptions: [
           {
+            id: "samplingInterval",
             name: "Sampling Interval",
             defaultValue: config.getByType("gpu").samplingInterval,
-            onChange: (event) => {
-              config.getByType("gpu").samplingInterval = parseFloat(
-                event.target.value
-              );
+            update: (newValue) => {
+              config.getByType("gpu").samplingInterval = newValue;
             },
           },
           {
+            id: "clockCycle",
             name: "Clock Cycle",
             defaultValue: config.getByType("gpu").clockCycle,
-            onChange: (event) => {
-              config.getByType("gpu").clockCycle = parseInt(event.target.value);
+            update: (newValue) => {
+              config.getByType("gpu").clockCycle = parseInt(newValue);
             },
           },
         ],

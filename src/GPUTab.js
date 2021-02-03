@@ -4,6 +4,22 @@ import { sockets, config } from "./globals";
 import * as Sockets from "./websocket";
 
 function GPUSeries(props) {
+  function reset() {
+    if (sockets.gpu === null) {
+      return;
+    }
+
+    sockets.gpu.close();
+    props.appRef.updateAppData({
+      gpuData: {
+        d: [],
+        g1: [],
+        g2: [],
+      },
+    });
+    sockets.gpu = Sockets.connectToGPU(props.appRef);
+  }
+
   return (
     <TimeSeries
       data={[
@@ -21,17 +37,7 @@ function GPUSeries(props) {
       title="GPU Load"
       xAxisTitle="Time"
       yAxisTitle="Load"
-      resetHandler={() => {
-        sockets.gpu.close();
-        props.appRef.updateAppData({
-          gpuData: {
-            d: [],
-            g1: [],
-            g2: [],
-          },
-        });
-        sockets.gpu = Sockets.connectToGPU(props.appRef);
-      }}
+      resetHandler={reset}
       resetHandlerName="gpuReset"
       settings={{
         name: "GPU",

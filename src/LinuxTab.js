@@ -69,6 +69,10 @@ function MemCard(props) {
   );
 
   function reset() {
+    if (sockets.memory === null) {
+      return;
+    }
+
     sockets.memory.close();
     props.appRef.updateAppData({
       memData: {
@@ -109,6 +113,10 @@ function MemCard(props) {
 
 function MemChart(props) {
   function reset() {
+    if (sockets.memory === null) {
+      return;
+    }
+
     sockets.memory.close();
     props.appRef.updateAppData({
       memData: {
@@ -162,6 +170,10 @@ function MemChart(props) {
 
 function CPUSeries(props) {
   function reset() {
+    if (sockets.cpu === null) {
+      return;
+    }
+
     sockets.cpu.close();
     props.appRef.updateAppData({
       cpuData: {
@@ -231,6 +243,10 @@ function CPUSeries(props) {
 
 function TempSeries(props) {
   function reset() {
+    if (sockets.temp === null) {
+      return;
+    }
+
     sockets.temp.close();
     props.appRef.updateAppData({
       tempData: {

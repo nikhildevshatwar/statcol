@@ -17,6 +17,9 @@ import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
 import { colors, sockets } from "./globals";
 import Visualization from "./Visualization";
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import "animate.css/animate.min.css";
 import * as Sockets from "./websocket";
 
 const drawerWidth = 240;
@@ -308,107 +311,110 @@ class App extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <AppBar
-          position="absolute"
-          className={clsx(
-            classes.appBar,
-            this.state.drawerOpen && classes.appBarShift
-          )}
-        >
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.handleDrawerOpen}
-              className={clsx(
-                classes.menuButton,
-                this.state.drawerOpen && classes.menuButtonHidden
-              )}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography className={classes.statusBar}>
-              Load:&nbsp;
-              <Tooltip title="1 Min">
-                <div>{this.state.appData.load.past1Min} &nbsp;</div>
-              </Tooltip>
-              | &nbsp;
-              <Tooltip title="5 Min">
-                <div>{this.state.appData.load.past5Min} &nbsp;</div>
-              </Tooltip>
-              | &nbsp;
-              <Tooltip title="15 Min">
-                <div>{this.state.appData.load.past15Min} &nbsp;</div>
-              </Tooltip>
-              | &nbsp;
-              <Tooltip title={this.state.appData.uptime}>
-                <div>Active &nbsp;</div>
-              </Tooltip>
-            </Typography>
-            <InputBase
-              defaultValue={window.location.hostname}
-              placeholder="Enter IP Address"
-              onChange={this.handleIPAddressChange}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-            <InputBase
-              placeholder="Enter Port Number"
-              onChange={this.handlePortChange}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="send ip address"
-              className={classes.publishButton}
-              onClick={this.sendIPAddress}
-            >
-              <PublishIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(
-              classes.drawerPaper,
-              !this.state.drawerOpen && classes.drawerPaperClose
-            ),
-          }}
-          open={this.state.drawerOpen}
-        >
-          <div className={classes.toolbarIcon}>
-            <IconButton
-              onClick={this.handleDrawerClose}
-              className={classes.drawerButton}
-            >
-              <ChevronLeftIcon />
-            </IconButton>
-          </div>
-          <List className={classes.tabList}>
-            <Tabs updateTab={this.handleTabChange} />
-          </List>
-        </Drawer>
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container maxWidth="lg" className={classes.container}>
-            <Visualization
-              tabSelected={this.state.tabSelected}
-              appData={this.state.appData}
-              appRef={this}
-            />
-          </Container>
-        </main>
-      </div>
+      <React.Fragment>
+        <ReactNotification />
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar
+            position="absolute"
+            className={clsx(
+              classes.appBar,
+              this.state.drawerOpen && classes.appBarShift
+            )}
+          >
+            <Toolbar className={classes.toolbar}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={this.handleDrawerOpen}
+                className={clsx(
+                  classes.menuButton,
+                  this.state.drawerOpen && classes.menuButtonHidden
+                )}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography className={classes.statusBar}>
+                Load:&nbsp;
+                <Tooltip title="1 Min">
+                  <div>{this.state.appData.load.past1Min} &nbsp;</div>
+                </Tooltip>
+                | &nbsp;
+                <Tooltip title="5 Min">
+                  <div>{this.state.appData.load.past5Min} &nbsp;</div>
+                </Tooltip>
+                | &nbsp;
+                <Tooltip title="15 Min">
+                  <div>{this.state.appData.load.past15Min} &nbsp;</div>
+                </Tooltip>
+                | &nbsp;
+                <Tooltip title={this.state.appData.uptime}>
+                  <div>Active &nbsp;</div>
+                </Tooltip>
+              </Typography>
+              <InputBase
+                defaultValue={window.location.hostname}
+                placeholder="Enter IP Address"
+                onChange={this.handleIPAddressChange}
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+              />
+              <InputBase
+                placeholder="Enter Port Number"
+                onChange={this.handlePortChange}
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+              />
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="send ip address"
+                className={classes.publishButton}
+                onClick={this.sendIPAddress}
+              >
+                <PublishIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(
+                classes.drawerPaper,
+                !this.state.drawerOpen && classes.drawerPaperClose
+              ),
+            }}
+            open={this.state.drawerOpen}
+          >
+            <div className={classes.toolbarIcon}>
+              <IconButton
+                onClick={this.handleDrawerClose}
+                className={classes.drawerButton}
+              >
+                <ChevronLeftIcon />
+              </IconButton>
+            </div>
+            <List className={classes.tabList}>
+              <Tabs updateTab={this.handleTabChange} />
+            </List>
+          </Drawer>
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            <Container maxWidth="lg" className={classes.container}>
+              <Visualization
+                tabSelected={this.state.tabSelected}
+                appData={this.state.appData}
+                appRef={this}
+              />
+            </Container>
+          </main>
+        </div>
+      </React.Fragment>
     );
   }
 }

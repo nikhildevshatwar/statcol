@@ -1,6 +1,7 @@
 import ipRegex from "ip-regex";
 import { config } from "./globals";
 import * as Parsers from "./parsers";
+import { store } from "react-notifications-component";
 
 function argsToString(args) {
   /* 
@@ -40,8 +41,20 @@ function connectToWebSocket(address, port, endpoint, parser, args = {}) {
     !ipRegex({ exact: true, includeBoundaries: true }).test(address) &&
     address !== "localhost"
   ) {
-    console.log("Invalid IP address: " + address); // TODO: Replace with Alert
-    return;
+    store.addNotification({
+      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
+      message: `Invalid IP Address: ${address}`,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
+    return null;
   }
 
   const socketURL = [

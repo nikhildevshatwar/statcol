@@ -56,6 +56,22 @@ function connectToWebSocket(address, port, endpoint, parser, args = {}) {
     });
     return null;
   }
+  if (parseInt(port) === "NaN") {
+    store.addNotification({
+      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
+      message: `Invalid Port Number: ${port}`,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
+    return null;
+  }
 
   const socketURL = [
     "ws://",
@@ -70,6 +86,22 @@ function connectToWebSocket(address, port, endpoint, parser, args = {}) {
 
   const socket = new WebSocket(socketURL);
   socket.onmessage = parser;
+  socket.onerror = (event) => {
+    store.addNotification({
+      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
+      message: `URL: ${event.target.url}`,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
+    return null;
+  };
 
   return socket;
 }

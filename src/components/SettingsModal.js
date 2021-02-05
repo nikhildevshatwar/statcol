@@ -5,6 +5,7 @@ import { colors } from "../globals";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import { store } from "react-notifications-component";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -85,7 +86,21 @@ export default function SettingsModal(props) {
             if (parsedInput !== null) {
               configOption.update(parsedInput);
             } else {
-              console.log("Invalid Input"); // TODO: Replace with Alert
+              store.addNotification({
+                title: `Parsing Settings Input Failed!`,
+                message: `Invalid Input: ${
+                  document.querySelector(`#${configOption.id}`).value
+                }`,
+                type: "danger",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true,
+                },
+              });
             }
           });
         }}

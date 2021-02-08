@@ -1,5 +1,5 @@
 import ipRegex from "ip-regex";
-import { config, sockets, extractTimeString } from "./globals";
+import { config, sockets } from "./globals";
 import * as Parsers from "./parsers";
 import { store } from "react-notifications-component";
 
@@ -114,6 +114,28 @@ export const connectToCPU = (app) => {
   );
 };
 
+export const connectToTemp = (app) => {
+  return connectToWebSocket(
+    app.state.address,
+    app.state.port,
+    "temp",
+    sockets.temp,
+    Parsers.parseTemp,
+    { samplingInterval: config.getByType("temp").samplingInterval }
+  );
+};
+
+export const connectToGPU = (app) => {
+  return connectToWebSocket(
+    app.state.address,
+    app.state.port,
+    "gpu",
+    sockets.gpu,
+    Parsers.parseGPU,
+    { samplingInterval: config.getByType("gpu").samplingInterval }
+  );
+};
+
 export const connectToUptime = (app) => {
   return connectToWebSocket(
     app.state.address,
@@ -151,98 +173,6 @@ export const connectToLoad = (app) => {
     {
       samplingInterval: config.getByType("load").samplingInterval,
     }
-  );
-};
-
-export const connectToTemp = (app) => {
-  const tempConfig = config.getByType("temp");
-
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "temp",
-    (event) => {
-      const parsedData = Parsers.parseTemp(event);
-      app.setState((state) => {
-        if (state.appData.tempData.d.length === tempConfig.clockCycle) {
-          return {
-            appData: {
-              ...state.appData,
-              tempData: {
-                d: [
-                  ...state.appData.tempData.d,
-                  extractTimeString(new Date()),
-                ].splice(1),
-                t1: [...state.appData.tempData.t1, parsedData[0]].splice(1),
-                t2: [...state.appData.tempData.t2, parsedData[1]].splice(1),
-                t3: [...state.appData.tempData.t3, parsedData[2]].splice(1),
-                t4: [...state.appData.tempData.t4, parsedData[3]].splice(1),
-                t5: [...state.appData.tempData.t5, parsedData[4]].splice(1),
-                t6: [...state.appData.tempData.t6, parsedData[5]].splice(1),
-                t7: [...state.appData.tempData.t7, parsedData[6]].splice(1),
-              },
-            },
-          };
-        }
-        return {
-          appData: {
-            ...state.appData,
-            tempData: {
-              d: [...state.appData.tempData.d, extractTimeString(new Date())],
-              t1: [...state.appData.tempData.t1, parsedData[0]],
-              t2: [...state.appData.tempData.t2, parsedData[1]],
-              t3: [...state.appData.tempData.t3, parsedData[2]],
-              t4: [...state.appData.tempData.t4, parsedData[3]],
-              t5: [...state.appData.tempData.t5, parsedData[4]],
-              t6: [...state.appData.tempData.t6, parsedData[5]],
-              t7: [...state.appData.tempData.t7, parsedData[6]],
-            },
-          },
-        };
-      });
-    },
-    { samplingInterval: tempConfig.samplingInterval }
-  );
-};
-
-export const connectToGPU = (app) => {
-  const gpuConfig = config.getByType("gpu");
-
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "gpu",
-    (event) => {
-      const parsedData = Parsers.parseGPU(event);
-      app.setState((state) => {
-        if (state.appData.gpuData.d.length === gpuConfig.clockCycle) {
-          return {
-            appData: {
-              ...state.appData,
-              gpuData: {
-                d: [
-                  ...state.appData.gpuData.d,
-                  extractTimeString(new Date()),
-                ].splice(1),
-                g1: [...state.appData.gpuData.g1, parsedData[0]].splice(1),
-                g2: [...state.appData.gpuData.g2, parsedData[1]].splice(1),
-              },
-            },
-          };
-        }
-        return {
-          appData: {
-            ...state.appData,
-            gpuData: {
-              d: [...state.appData.gpuData.d, extractTimeString(new Date())],
-              g1: [...state.appData.gpuData.g1, parsedData[0]],
-              g2: [...state.appData.gpuData.g2, parsedData[1]],
-            },
-          },
-        };
-      });
-    },
-    { samplingInterval: gpuConfig.samplingInterval }
   );
 };
 

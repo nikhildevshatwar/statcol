@@ -1,23 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TimeSeries from "./components/TimeSeries";
-import { sockets, config } from "./globals";
+import { sockets, config, extractTimeString } from "./globals";
 import * as Sockets from "./websocket";
 
 function GPUSeries(props) {
-  function reset() {
-    if (sockets.gpu === null) {
-      return;
-    }
+  const [gpuData, setGPUData] = React.useState({
+    d: [],
+    g1: [],
+    g2: [],
+  });
 
-    sockets.gpu.close();
-    props.appRef.updateAppData({
-      gpuData: {
+  useEffect(() => {
+    const clockCycle = config.getByType("gpu").clockCycle;
+
+    sockets.gpu.updaters.push((parsedData) => {
+      setGPUData((gpuData) => ({
+        d: [...gpuData.d, extractTimeString(new Date())].splice(-clockCycle),
+        g1: [...gpuData.g1, parsedData[0]].splice(-clockCycle),
+        g2: [...gpuData.g2, parsedData[1]].splice(-clockCycle),
+      }));
+    });
+    sockets.gpu.closers.push((event) => {
+      setGPUData({
         d: [],
         g1: [],
         g2: [],
-      },
+      });
     });
-    sockets.gpu = Sockets.connectToGPU(props.appRef);
+  }, [config.getByType("gpu").clockCycle]);
+
+  function reset() {
+    if (sockets.gpu.handle !== null) {
+      sockets.gpu.handle.close();
+    }
+
+    sockets.gpu.handle = Sockets.connectToGPU(props.appRef);
   }
 
   return (
@@ -25,13 +42,13 @@ function GPUSeries(props) {
       data={[
         {
           name: "G1",
-          xData: props.appData.gpuData.d,
-          yData: props.appData.gpuData.g1,
+          xData: gpuData.d,
+          yData: gpuData.g1,
         },
         {
           name: "G2",
-          xData: props.appData.gpuData.d,
-          yData: props.appData.gpuData.g2,
+          xData: gpuData.d,
+          yData: gpuData.g2,
         },
       ]}
       title="GPU Load"

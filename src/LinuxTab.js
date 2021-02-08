@@ -294,14 +294,34 @@ function CPUSeries(props) {
 }
 
 function TempSeries(props) {
-  function reset() {
-    if (sockets.temp === null) {
-      return;
-    }
+  const [tempData, setTempData] = React.useState({
+    d: [],
+    t1: [],
+    t2: [],
+    t3: [],
+    t4: [],
+    t5: [],
+    t6: [],
+    t7: [],
+  });
 
-    sockets.temp.close();
-    props.appRef.updateAppData({
-      tempData: {
+  useEffect(() => {
+    const clockCycle = config.getByType("temp").clockCycle;
+
+    sockets.temp.updaters.push((parsedData) => {
+      setTempData((tempData) => ({
+        d: [...tempData.d, extractTimeString(new Date())].splice(-clockCycle),
+        t1: [...tempData.t1, parsedData[0]].splice(-clockCycle),
+        t2: [...tempData.t2, parsedData[1]].splice(-clockCycle),
+        t3: [...tempData.t3, parsedData[2]].splice(-clockCycle),
+        t4: [...tempData.t4, parsedData[3]].splice(-clockCycle),
+        t5: [...tempData.t5, parsedData[4]].splice(-clockCycle),
+        t6: [...tempData.t6, parsedData[5]].splice(-clockCycle),
+        t7: [...tempData.t7, parsedData[6]].splice(-clockCycle),
+      }));
+    });
+    sockets.temp.closers.push((event) => {
+      setTempData({
         d: [],
         t1: [],
         t2: [],
@@ -310,9 +330,15 @@ function TempSeries(props) {
         t5: [],
         t6: [],
         t7: [],
-      },
+      });
     });
-    sockets.temp = Sockets.connectToTemp(props.appRef);
+  }, [config.getByType("temp").clockCycle]);
+
+  function reset() {
+    if (sockets.temp.handle !== null) {
+      sockets.temp.handle.close();
+    }
+    sockets.temp.handle = Sockets.connectToTemp(props.appRef);
   }
 
   return (
@@ -320,38 +346,38 @@ function TempSeries(props) {
       data={[
         {
           name: "T1",
-          xData: props.appData.tempData.d,
-          yData: props.appData.tempData.t1,
+          xData: tempData.d,
+          yData: tempData.t1,
         },
         {
           name: "T2",
-          xData: props.appData.tempData.d,
-          yData: props.appData.tempData.t2,
+          xData: tempData.d,
+          yData: tempData.t2,
         },
         {
           name: "T3",
-          xData: props.appData.tempData.d,
-          yData: props.appData.tempData.t3,
+          xData: tempData.d,
+          yData: tempData.t3,
         },
         {
           name: "T4",
-          xData: props.appData.tempData.d,
-          yData: props.appData.tempData.t4,
+          xData: tempData.d,
+          yData: tempData.t4,
         },
         {
           name: "T5",
-          xData: props.appData.tempData.d,
-          yData: props.appData.tempData.t5,
+          xData: tempData.d,
+          yData: tempData.t5,
         },
         {
           name: "T6",
-          xData: props.appData.tempData.d,
-          yData: props.appData.tempData.t6,
+          xData: tempData.d,
+          yData: tempData.t6,
         },
         {
           name: "T7",
-          xData: props.appData.tempData.d,
-          yData: props.appData.tempData.t7,
+          xData: tempData.d,
+          yData: tempData.t7,
         },
       ]}
       title="Temperature (Celsius)"

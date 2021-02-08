@@ -10,10 +10,10 @@ export const colors = {
 export const sockets = {
   memory: { handle: null, updaters: [], closers: [] },
   cpu: { handle: null, updaters: [], closers: [] },
+  temp: { handle: null, updaters: [], closers: [] },
+  gpu: { handle: null, updaters: [], closers: [] },
   uptime: null,
   load: null,
-  temp: null,
-  gpu: null,
 };
 
 export const config = [

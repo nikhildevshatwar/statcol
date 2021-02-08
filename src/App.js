@@ -151,21 +151,6 @@ class App extends React.Component {
       tabSelected: "Linux",
 
       appData: {
-        tempData: {
-          d: [],
-          t1: [],
-          t2: [],
-          t3: [],
-          t4: [],
-          t5: [],
-          t6: [],
-          t7: [],
-        },
-        gpuData: {
-          d: [],
-          g1: [],
-          g2: [],
-        },
         uptime: "Invalid",
         load: {
           past1Min: 0.0,
@@ -214,6 +199,16 @@ class App extends React.Component {
       sockets.cpu.handle.close();
     }
     sockets.cpu.handle = Sockets.connectToCPU(this);
+
+    if (sockets.temp.handle !== null) {
+      sockets.temp.handle.close();
+    }
+    sockets.temp.handle = Sockets.connectToTemp(this);
+
+    if (sockets.gpu.handle !== null) {
+      sockets.gpu.handle.close();
+    }
+    sockets.gpu.handle = Sockets.connectToGPU(this);
 
     /*if (sockets.uptime !== null) {
       sockets.uptime.close();

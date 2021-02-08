@@ -7,13 +7,21 @@ export const colors = {
   plot: "#E5ECF6",
 };
 
-export const sockets = {
-  memory: { handle: null, updaters: [], closers: [] },
-  cpu: { handle: null, updaters: [], closers: [] },
-  temp: { handle: null, updaters: [], closers: [] },
-  gpu: { handle: null, updaters: [], closers: [] },
-  uptime: { handle: null, updaters: [], closers: [] },
-  load: { handle: null, updaters: [], closers: [] },
+export const sockets = [
+  { type: "memory", handle: null, updaters: [], closers: [] },
+  { type: "cpu", handle: null, updaters: [], closers: [] },
+  { type: "temp", handle: null, updaters: [], closers: [] },
+  { type: "gpu", handle: null, updaters: [], closers: [] },
+  { type: "uptime", handle: null, updaters: [], closers: [] },
+  { type: "load", handle: null, updaters: [], closers: [] },
+];
+
+sockets.getByType = (type) => {
+  for (let socketObj of sockets) {
+    if (socketObj.type === type) {
+      return socketObj;
+    }
+  }
 };
 
 export const config = [

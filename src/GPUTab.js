@@ -13,14 +13,14 @@ function GPUSeries(props) {
   useEffect(() => {
     const clockCycle = config.getByType("gpu").clockCycle;
 
-    sockets.gpu.updaters.push((parsedData) => {
+    sockets.getByType("gpu").updaters.push((parsedData) => {
       setGPUData((gpuData) => ({
         d: [...gpuData.d, extractTimeString(new Date())].splice(-clockCycle),
         g1: [...gpuData.g1, parsedData[0]].splice(-clockCycle),
         g2: [...gpuData.g2, parsedData[1]].splice(-clockCycle),
       }));
     });
-    sockets.gpu.closers.push((event) => {
+    sockets.getByType("gpu").closers.push((event) => {
       setGPUData({
         d: [],
         g1: [],
@@ -30,11 +30,11 @@ function GPUSeries(props) {
   }, [config.getByType("gpu").clockCycle]);
 
   function reset() {
-    if (sockets.gpu.handle !== null) {
-      sockets.gpu.handle.close();
+    if (sockets.getByType("gpu").handle !== null) {
+      sockets.getByType("gpu").handle.close();
     }
 
-    sockets.gpu.handle = Sockets.connectToGPU(props.appRef);
+    sockets.getByType("gpu").handle = Sockets.connectToGPU(props.appRef);
   }
 
   return (

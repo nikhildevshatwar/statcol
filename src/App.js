@@ -180,35 +180,35 @@ class App extends React.Component {
   }
 
   sendIPAddress() {
-    if (sockets.memory.handle !== null) {
-      sockets.memory.handle.close();
+    if (sockets.getByType("memory").handle !== null) {
+      sockets.getByType("memory").handle.close();
     }
-    sockets.memory.handle = Sockets.connectToMemory(this);
+    sockets.getByType("memory").handle = Sockets.connectToMemory(this);
 
-    if (sockets.cpu.handle !== null) {
-      sockets.cpu.handle.close();
+    if (sockets.getByType("cpu").handle !== null) {
+      sockets.getByType("cpu").handle.close();
     }
-    sockets.cpu.handle = Sockets.connectToCPU(this);
+    sockets.getByType("cpu").handle = Sockets.connectToCPU(this);
 
-    if (sockets.temp.handle !== null) {
-      sockets.temp.handle.close();
+    if (sockets.getByType("temp").handle !== null) {
+      sockets.getByType("temp").handle.close();
     }
-    sockets.temp.handle = Sockets.connectToTemp(this);
+    sockets.getByType("temp").handle = Sockets.connectToTemp(this);
 
-    if (sockets.gpu.handle !== null) {
-      sockets.gpu.handle.close();
+    if (sockets.getByType("gpu").handle !== null) {
+      sockets.getByType("gpu").handle.close();
     }
-    sockets.gpu.handle = Sockets.connectToGPU(this);
+    sockets.getByType("gpu").handle = Sockets.connectToGPU(this);
 
-    if (sockets.uptime.handle !== null) {
-      sockets.uptime.handle.close();
+    if (sockets.getByType("uptime").handle !== null) {
+      sockets.getByType("uptime").handle.close();
     }
-    sockets.uptime.handle = Sockets.connectToUptime(this);
+    sockets.getByType("uptime").handle = Sockets.connectToUptime(this);
 
-    if (sockets.load.handle !== null) {
-      sockets.load.handle.close();
+    if (sockets.getByType("load").handle !== null) {
+      sockets.getByType("load").handle.close();
     }
-    sockets.load.handle = Sockets.connectToLoad(this);
+    sockets.getByType("load").handle = Sockets.connectToLoad(this);
   }
 
   render() {
@@ -317,17 +317,17 @@ function StatusBar(props) {
   });
 
   useEffect(() => {
-    sockets.uptime.updaters.push((parsedData) => {
+    sockets.getByType("uptime").updaters.push((parsedData) => {
       setUptime(parsedData);
     });
-    sockets.uptime.closers.push((event) => {
+    sockets.getByType("uptime").closers.push((event) => {
       setUptime("Invalid");
     });
 
-    sockets.load.updaters.push((parsedData) => {
+    sockets.getByType("load").updaters.push((parsedData) => {
       setLoadData(parsedData);
     });
-    sockets.load.closers.push((event) => {
+    sockets.getByType("load").closers.push((event) => {
       setLoadData({
         past1Min: 0.0,
         past5Min: 0.0,

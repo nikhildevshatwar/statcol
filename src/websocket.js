@@ -95,7 +95,7 @@ export const connectToMemory = (app) => {
     app.state.address,
     app.state.port,
     "memory",
-    sockets.memory,
+    sockets.getByType("memory"),
     Parsers.parseFreeCommand,
     {
       samplingInterval: config.getByType("memory").samplingInterval,
@@ -108,7 +108,7 @@ export const connectToCPU = (app) => {
     app.state.address,
     app.state.port,
     "cpu",
-    sockets.cpu,
+    sockets.getByType("cpu"),
     Parsers.parseCPU,
     { samplingInterval: config.getByType("cpu").samplingInterval }
   );
@@ -119,7 +119,7 @@ export const connectToTemp = (app) => {
     app.state.address,
     app.state.port,
     "temp",
-    sockets.temp,
+    sockets.getByType("temp"),
     Parsers.parseTemp,
     { samplingInterval: config.getByType("temp").samplingInterval }
   );
@@ -130,7 +130,7 @@ export const connectToGPU = (app) => {
     app.state.address,
     app.state.port,
     "gpu",
-    sockets.gpu,
+    sockets.getByType("gpu"),
     Parsers.parseGPU,
     { samplingInterval: config.getByType("gpu").samplingInterval }
   );
@@ -141,7 +141,7 @@ export const connectToUptime = (app) => {
     app.state.address,
     app.state.port,
     "uptime",
-    sockets.uptime,
+    sockets.getByType("uptime"),
     Parsers.parseUptime,
     {
       samplingInterval: config.getByType("uptime").samplingInterval,
@@ -154,7 +154,7 @@ export const connectToLoad = (app) => {
     app.state.address,
     app.state.port,
     "load",
-    sockets.load,
+    sockets.getByType("load"),
     Parsers.parseLoad,
     {
       samplingInterval: config.getByType("load").samplingInterval,

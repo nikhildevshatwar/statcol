@@ -38,11 +38,11 @@ function MemCard(props) {
   });
 
   useEffect(() => {
-    sockets.memory.updaters.push((parsedData) => {
+    sockets.getByType("memory").updaters.push((parsedData) => {
       setMemData(parsedData.memData);
       setSwapData(parsedData.swapData);
     });
-    sockets.memory.closers.push((event) => {
+    sockets.getByType("memory").closers.push((event) => {
       setMemData({
         total: 0,
         free: 0,
@@ -101,11 +101,11 @@ function MemCard(props) {
   );
 
   function reset() {
-    if (sockets.memory.handle !== null) {
-      sockets.memory.handle.close();
+    if (sockets.getByType("memory").handle !== null) {
+      sockets.getByType("memory").handle.close();
     }
 
-    sockets.memory.handle = Sockets.connectToMemory(props.appRef);
+    sockets.getByType("memory").handle = Sockets.connectToMemory(props.appRef);
   }
 
   return (
@@ -141,10 +141,10 @@ function MemChart(props) {
   });
 
   useEffect(() => {
-    sockets.memory.updaters.push((parsedData) => {
+    sockets.getByType("memory").updaters.push((parsedData) => {
       setMemData(parsedData.memData);
     });
-    sockets.memory.closers.push((event) => {
+    sockets.getByType("memory").closers.push((event) => {
       setMemData({
         total: 0,
         free: 0,
@@ -157,11 +157,11 @@ function MemChart(props) {
   }, []);
 
   function reset() {
-    if (sockets.memory.handle !== null) {
-      sockets.memory.handle.close();
+    if (sockets.getByType("memory").handle !== null) {
+      sockets.getByType("memory").handle.close();
     }
 
-    sockets.memory.handle = Sockets.connectToMemory(props.appRef);
+    sockets.getByType("memory").handle = Sockets.connectToMemory(props.appRef);
   }
 
   return (
@@ -211,7 +211,7 @@ function CPUSeries(props) {
   useEffect(() => {
     const clockCycle = config.getByType("cpu").clockCycle;
 
-    sockets.cpu.updaters.push((parsedData) => {
+    sockets.getByType("cpu").updaters.push((parsedData) => {
       setCPUData((cpuData) => ({
         d: [...cpuData.d, extractTimeString(new Date())].splice(-clockCycle),
         c1: [...cpuData.c1, parsedData[0]].splice(-clockCycle),
@@ -220,7 +220,7 @@ function CPUSeries(props) {
         c4: [...cpuData.c4, parsedData[3]].splice(-clockCycle),
       }));
     });
-    sockets.cpu.closers.push((event) => {
+    sockets.getByType("cpu").closers.push((event) => {
       setCPUData({
         d: [],
         c1: [],
@@ -232,11 +232,11 @@ function CPUSeries(props) {
   }, [config.getByType("cpu").clockCycle]);
 
   function reset() {
-    if (sockets.cpu.handle !== null) {
-      sockets.cpu.handle.close();
+    if (sockets.getByType("cpu").handle !== null) {
+      sockets.getByType("cpu").handle.close();
     }
 
-    sockets.cpu.handle = Sockets.connectToCPU(props.appRef);
+    sockets.getByType("cpu").handle = Sockets.connectToCPU(props.appRef);
   }
 
   return (
@@ -308,7 +308,7 @@ function TempSeries(props) {
   useEffect(() => {
     const clockCycle = config.getByType("temp").clockCycle;
 
-    sockets.temp.updaters.push((parsedData) => {
+    sockets.getByType("temp").updaters.push((parsedData) => {
       setTempData((tempData) => ({
         d: [...tempData.d, extractTimeString(new Date())].splice(-clockCycle),
         t1: [...tempData.t1, parsedData[0]].splice(-clockCycle),
@@ -320,7 +320,7 @@ function TempSeries(props) {
         t7: [...tempData.t7, parsedData[6]].splice(-clockCycle),
       }));
     });
-    sockets.temp.closers.push((event) => {
+    sockets.getByType("temp").closers.push((event) => {
       setTempData({
         d: [],
         t1: [],
@@ -335,10 +335,10 @@ function TempSeries(props) {
   }, [config.getByType("temp").clockCycle]);
 
   function reset() {
-    if (sockets.temp.handle !== null) {
-      sockets.temp.handle.close();
+    if (sockets.getByType("temp").handle !== null) {
+      sockets.getByType("temp").handle.close();
     }
-    sockets.temp.handle = Sockets.connectToTemp(props.appRef);
+    sockets.getByType("temp").handle = Sockets.connectToTemp(props.appRef);
   }
 
   return (

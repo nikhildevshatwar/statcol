@@ -1,42 +1,16 @@
 import ipRegex from "ip-regex";
-import { config } from "./globals";
+import { config, sockets } from "./globals";
 import * as Parsers from "./parsers";
 import { store } from "react-notifications-component";
 
-function argsToString(args) {
-  /* 
-    argsToString expects args to be an Object of
-    key-value pairs where each value is either a
-    Number or a String.
-  */
-  if (args === {}) {
-    return "";
-  }
-
-  const pairToString = (key, value) => {
-    if (typeof value === "number") {
-      return `${key}=${value}`;
-    } else {
-      return `${key}=${value.replace(/\s+/g, " ").trim().replace(" ", "%20")}`;
-    }
-  };
-
-  let encodedString = "";
-  for (const [key, value] of Object.entries(args)) {
-    encodedString += pairToString(key, value);
-    encodedString += "&&";
-  }
-
-  return encodedString.substring(0, encodedString.length - 2);
-}
-
-const extractTimeString = (date) => {
-  const time = date.toLocaleTimeString().split(" ");
-  time[0] += [":", date.getMilliseconds()].join("");
-  return time.join(" ");
-};
-
-function connectToWebSocket(address, port, endpoint, parser, args = {}) {
+function connectToWebSocket(
+  address,
+  port,
+  endpoint,
+  socketRef,
+  parser,
+  args = {}
+) {
   if (
     !ipRegex({ exact: true, includeBoundaries: true }).test(address) &&
     address !== "localhost"
@@ -84,9 +58,19 @@ function connectToWebSocket(address, port, endpoint, parser, args = {}) {
     argsToString(args),
   ].join("");
 
-  const socket = new WebSocket(socketURL);
-  socket.onmessage = parser;
-  socket.onerror = (event) => {
+  const socketHandle = new WebSocket(socketURL);
+  socketHandle.onmessage = (event) => {
+    const parsedData = parser(event);
+    socketRef.updaters.forEach((updater) => {
+      updater(parsedData);
+    });
+  };
+  socketHandle.onclose = (event) => {
+    socketRef.closers.forEach((closer) => {
+      closer(event);
+    });
+  };
+  socketHandle.onerror = (event) => {
     store.addNotification({
       title: `Connection to ${address}:${port}/${endpoint} Failed!`,
       message: `URL: ${event.target.url}`,
@@ -103,7 +87,7 @@ function connectToWebSocket(address, port, endpoint, parser, args = {}) {
     return null;
   };
 
-  return socket;
+  return socketHandle;
 }
 
 export const connectToMemory = (app) => {
@@ -111,16 +95,8 @@ export const connectToMemory = (app) => {
     app.state.address,
     app.state.port,
     "memory",
-    (event) => {
-      const parsedData = Parsers.parseFreeCommand(event);
-      app.setState((state) => ({
-        appData: {
-          ...state.appData,
-          memData: parsedData.memData,
-          swapData: parsedData.swapData,
-        },
-      }));
-    },
+    sockets.memory,
+    Parsers.parseFreeCommand,
     {
       samplingInterval: config.getByType("memory").samplingInterval,
     }
@@ -302,4 +278,37 @@ export const connectToGPU = (app) => {
     },
     { samplingInterval: gpuConfig.samplingInterval }
   );
+};
+
+function argsToString(args) {
+  /* 
+    argsToString expects args to be an Object of
+    key-value pairs where each value is either a
+    Number or a String.
+  */
+  if (args === {}) {
+    return "";
+  }
+
+  const pairToString = (key, value) => {
+    if (typeof value === "number") {
+      return `${key}=${value}`;
+    } else {
+      return `${key}=${value.replace(/\s+/g, " ").trim().replace(" ", "%20")}`;
+    }
+  };
+
+  let encodedString = "";
+  for (const [key, value] of Object.entries(args)) {
+    encodedString += pairToString(key, value);
+    encodedString += "&&";
+  }
+
+  return encodedString.substring(0, encodedString.length - 2);
+}
+
+const extractTimeString = (date) => {
+  const time = date.toLocaleTimeString().split(" ");
+  time[0] += [":", date.getMilliseconds()].join("");
+  return time.join(" ");
 };

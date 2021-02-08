@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -23,6 +23,38 @@ const StyledTableCell = withStyles({
 })(TableCell);
 
 function MemCard(props) {
+  const [memData, setMemData] = React.useState({
+    total: 0,
+    free: 0,
+    used: 0,
+    buffCache: 0,
+    shared: 0,
+    available: 0,
+  });
+  const [swapData, setSwapData] = React.useState({
+    total: 0,
+    free: 0,
+    used: 0,
+  });
+
+  useEffect(() => {
+    sockets.memory.updaters.push((parsedData) => {
+      setMemData(parsedData.memData);
+      setSwapData(parsedData.swapData);
+    });
+    sockets.memory.closers.push((event) => {
+      setMemData({
+        total: 0,
+        free: 0,
+        used: 0,
+        buffCache: 0,
+        shared: 0,
+        available: 0,
+      });
+      setSwapData({ total: 0, free: 0, used: 0 });
+    });
+  }, []);
+
   const data = (
     <React.Fragment>
       Memory (In MB):
@@ -39,12 +71,12 @@ function MemCard(props) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <StyledTableCell>{props.appData.memData.total}</StyledTableCell>
-            <StyledTableCell>{props.appData.memData.used}</StyledTableCell>
-            <StyledTableCell>{props.appData.memData.free}</StyledTableCell>
-            <StyledTableCell>{props.appData.memData.shared}</StyledTableCell>
-            <StyledTableCell>{props.appData.memData.buffCache}</StyledTableCell>
-            <StyledTableCell>{props.appData.memData.available}</StyledTableCell>
+            <StyledTableCell>{memData.total}</StyledTableCell>
+            <StyledTableCell>{memData.used}</StyledTableCell>
+            <StyledTableCell>{memData.free}</StyledTableCell>
+            <StyledTableCell>{memData.shared}</StyledTableCell>
+            <StyledTableCell>{memData.buffCache}</StyledTableCell>
+            <StyledTableCell>{memData.available}</StyledTableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -59,9 +91,9 @@ function MemCard(props) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <StyledTableCell>{props.appData.swapData.total}</StyledTableCell>
-            <StyledTableCell>{props.appData.swapData.used}</StyledTableCell>
-            <StyledTableCell>{props.appData.swapData.free}</StyledTableCell>
+            <StyledTableCell>{swapData.total}</StyledTableCell>
+            <StyledTableCell>{swapData.used}</StyledTableCell>
+            <StyledTableCell>{swapData.free}</StyledTableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -69,23 +101,11 @@ function MemCard(props) {
   );
 
   function reset() {
-    if (sockets.memory === null) {
-      return;
+    if (sockets.memory.handle !== null) {
+      sockets.memory.handle.close();
     }
 
-    sockets.memory.close();
-    props.appRef.updateAppData({
-      memData: {
-        total: 0,
-        free: 0,
-        used: 0,
-        buffCache: 0,
-        shared: 0,
-        available: 0,
-      },
-      swapData: { total: 0, free: 0, used: 0 },
-    });
-    sockets.memory = Sockets.connectToMemory(props.appRef);
+    sockets.memory.handle = Sockets.connectToMemory(props.appRef);
   }
 
   return (
@@ -111,24 +131,37 @@ function MemCard(props) {
 }
 
 function MemChart(props) {
-  function reset() {
-    if (sockets.memory === null) {
-      return;
-    }
+  const [memData, setMemData] = React.useState({
+    total: 0,
+    free: 0,
+    used: 0,
+    buffCache: 0,
+    shared: 0,
+    available: 0,
+  });
 
-    sockets.memory.close();
-    props.appRef.updateAppData({
-      memData: {
+  useEffect(() => {
+    sockets.memory.updaters.push((parsedData) => {
+      setMemData(parsedData.memData);
+    });
+    sockets.memory.closers.push((event) => {
+      setMemData({
         total: 0,
         free: 0,
         used: 0,
         buffCache: 0,
         shared: 0,
         available: 0,
-      },
-      swapData: { total: 0, free: 0, used: 0 },
+      });
     });
-    sockets.memory = Sockets.connectToMemory(props.appRef);
+  }, []);
+
+  function reset() {
+    if (sockets.memory.handle !== null) {
+      sockets.memory.handle.close();
+    }
+
+    sockets.memory.handle = Sockets.connectToMemory(props.appRef);
   }
 
   return (
@@ -138,10 +171,10 @@ function MemChart(props) {
           {
             name: "Main Memory",
             values: [
-              props.appData.memData.free,
-              props.appData.memData.used,
-              props.appData.memData.buffCache,
-              props.appData.memData.shared,
+              memData.free,
+              memData.used,
+              memData.buffCache,
+              memData.shared,
             ],
             labels: ["Free", "Used", "Buffer and Cache", "Shared"],
           },

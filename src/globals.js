@@ -8,7 +8,7 @@ export const colors = {
 };
 
 export const sockets = {
-  memory: null,
+  memory: { handle: null, updaters: [], closers: [] },
   uptime: null,
   load: null,
   cpu: null,

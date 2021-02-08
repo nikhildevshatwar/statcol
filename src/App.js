@@ -151,15 +151,6 @@ class App extends React.Component {
       tabSelected: "Linux",
 
       appData: {
-        memData: {
-          total: 0,
-          free: 0,
-          used: 0,
-          buffCache: 0,
-          shared: 0,
-          available: 0,
-        },
-        swapData: { total: 0, free: 0, used: 0 },
         cpuData: {
           d: [],
           c1: [],
@@ -221,23 +212,12 @@ class App extends React.Component {
   }
 
   sendIPAddress() {
-    if (sockets.memory !== null) {
-      sockets.memory.close();
-      this.updateAppData({
-        memData: {
-          total: 0,
-          free: 0,
-          used: 0,
-          buffCache: 0,
-          shared: 0,
-          available: 0,
-        },
-        swapData: { total: 0, free: 0, used: 0 },
-      });
+    if (sockets.memory.handle !== null) {
+      sockets.memory.handle.close();
     }
-    sockets.memory = Sockets.connectToMemory(this);
+    sockets.memory.handle = Sockets.connectToMemory(this);
 
-    if (sockets.uptime !== null) {
+    /*if (sockets.uptime !== null) {
       sockets.uptime.close();
       this.updateAppData({
         uptime: "Invalid",
@@ -257,7 +237,7 @@ class App extends React.Component {
     }
     sockets.load = Sockets.connectToLoad(this);
 
-    /*if (sockets.cpu !== null) {
+    if (sockets.cpu !== null) {
                   sockets.cpu.close();
                   this.updateAppData({
                     cpuData: {
@@ -268,7 +248,7 @@ class App extends React.Component {
                       c4: [],
                     },
                   });
-                }*/
+                }
     sockets.cpu = Sockets.connectToCPU(this);
 
     if (sockets.temp !== null) {
@@ -298,7 +278,7 @@ class App extends React.Component {
         },
       });
     }
-    sockets.gpu = Sockets.connectToGPU(this);
+    sockets.gpu = Sockets.connectToGPU(this);*/
   }
 
   updateAppData(data) {

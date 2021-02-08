@@ -141,15 +141,8 @@ export const connectToUptime = (app) => {
     app.state.address,
     app.state.port,
     "uptime",
-    (event) => {
-      const parsedData = Parsers.parseUptime(event);
-      app.setState((state) => ({
-        appData: {
-          ...state.appData,
-          uptime: parsedData,
-        },
-      }));
-    },
+    sockets.uptime,
+    Parsers.parseUptime,
     {
       samplingInterval: config.getByType("uptime").samplingInterval,
     }
@@ -161,15 +154,8 @@ export const connectToLoad = (app) => {
     app.state.address,
     app.state.port,
     "load",
-    (event) => {
-      const parsedData = Parsers.parseLoad(event);
-      app.setState((state) => ({
-        appData: {
-          ...state.appData,
-          load: parsedData,
-        },
-      }));
-    },
+    sockets.load,
+    Parsers.parseLoad,
     {
       samplingInterval: config.getByType("load").samplingInterval,
     }

@@ -12,8 +12,8 @@ export const sockets = {
   cpu: { handle: null, updaters: [], closers: [] },
   temp: { handle: null, updaters: [], closers: [] },
   gpu: { handle: null, updaters: [], closers: [] },
-  uptime: null,
-  load: null,
+  uptime: { handle: null, updaters: [], closers: [] },
+  load: { handle: null, updaters: [], closers: [] },
 };
 
 export const config = [

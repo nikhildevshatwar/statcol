@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
@@ -149,15 +149,6 @@ class App extends React.Component {
       port: "",
       drawerOpen: true,
       tabSelected: "Linux",
-
-      appData: {
-        uptime: "Invalid",
-        load: {
-          past1Min: 0.0,
-          past5Min: 0.0,
-          past15Min: 0.0,
-        },
-      },
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -166,7 +157,6 @@ class App extends React.Component {
     this.handleIPAddressChange = this.handleIPAddressChange.bind(this);
     this.handlePortChange = this.handlePortChange.bind(this);
     this.sendIPAddress = this.sendIPAddress.bind(this);
-    this.updateAppData = this.updateAppData.bind(this);
   }
 
   handleTabChange(event) {
@@ -210,74 +200,15 @@ class App extends React.Component {
     }
     sockets.gpu.handle = Sockets.connectToGPU(this);
 
-    /*if (sockets.uptime !== null) {
-      sockets.uptime.close();
-      this.updateAppData({
-        uptime: "Invalid",
-      });
+    if (sockets.uptime.handle !== null) {
+      sockets.uptime.handle.close();
     }
-    sockets.uptime = Sockets.connectToUptime(this);
+    sockets.uptime.handle = Sockets.connectToUptime(this);
 
-    if (sockets.load !== null) {
-      sockets.load.close();
-      this.updateAppData({
-        load: {
-          past1Min: 0.0,
-          past5Min: 0.0,
-          past15Min: 0.0,
-        },
-      });
+    if (sockets.load.handle !== null) {
+      sockets.load.handle.close();
     }
-    sockets.load = Sockets.connectToLoad(this);
-
-    if (sockets.cpu !== null) {
-                  sockets.cpu.close();
-                  this.updateAppData({
-                    cpuData: {
-                      d: [],
-                      c1: [],
-                      c2: [],
-                      c3: [],
-                      c4: [],
-                    },
-                  });
-                }
-    sockets.cpu = Sockets.connectToCPU(this);
-
-    if (sockets.temp !== null) {
-      sockets.temp.close();
-      this.updateAppData({
-        tempData: {
-          d: [],
-          t1: [],
-          t2: [],
-          t3: [],
-          t4: [],
-          t5: [],
-          t6: [],
-          t7: [],
-        },
-      });
-    }
-    sockets.temp = Sockets.connectToTemp(this);
-
-    if (sockets.gpu !== null) {
-      sockets.gpu.close();
-      this.updateAppData({
-        gpuData: {
-          d: [],
-          g1: [],
-          g2: [],
-        },
-      });
-    }
-    sockets.gpu = Sockets.connectToGPU(this);*/
-  }
-
-  updateAppData(data) {
-    this.setState((state) => ({
-      appData: { ...state.appData, ...data },
-    }));
+    sockets.load.handle = Sockets.connectToLoad(this);
   }
 
   render() {
@@ -308,24 +239,7 @@ class App extends React.Component {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography className={classes.statusBar}>
-                Load:&nbsp;
-                <Tooltip title="1 Min">
-                  <div>{this.state.appData.load.past1Min} &nbsp;</div>
-                </Tooltip>
-                | &nbsp;
-                <Tooltip title="5 Min">
-                  <div>{this.state.appData.load.past5Min} &nbsp;</div>
-                </Tooltip>
-                | &nbsp;
-                <Tooltip title="15 Min">
-                  <div>{this.state.appData.load.past15Min} &nbsp;</div>
-                </Tooltip>
-                | &nbsp;
-                <Tooltip title={this.state.appData.uptime}>
-                  <div>Active &nbsp;</div>
-                </Tooltip>
-              </Typography>
+              <StatusBar />
               <InputBase
                 defaultValue={window.location.hostname}
                 placeholder="Enter IP Address"
@@ -390,6 +304,58 @@ class App extends React.Component {
       </React.Fragment>
     );
   }
+}
+
+function StatusBar(props) {
+  const classes = makeStyles(styles)();
+
+  const [uptime, setUptime] = React.useState("Invalid");
+  const [loadData, setLoadData] = React.useState({
+    past1Min: 0.0,
+    past5Min: 0.0,
+    past15Min: 0.0,
+  });
+
+  useEffect(() => {
+    sockets.uptime.updaters.push((parsedData) => {
+      setUptime(parsedData);
+    });
+    sockets.uptime.closers.push((event) => {
+      setUptime("Invalid");
+    });
+
+    sockets.load.updaters.push((parsedData) => {
+      setLoadData(parsedData);
+    });
+    sockets.load.closers.push((event) => {
+      setLoadData({
+        past1Min: 0.0,
+        past5Min: 0.0,
+        past15Min: 0.0,
+      });
+    });
+  }, []);
+
+  return (
+    <Typography className={classes.statusBar}>
+      Load:&nbsp;
+      <Tooltip title="1 Min">
+        <div>{loadData.past1Min} &nbsp;</div>
+      </Tooltip>
+      | &nbsp;
+      <Tooltip title="5 Min">
+        <div>{loadData.past5Min} &nbsp;</div>
+      </Tooltip>
+      | &nbsp;
+      <Tooltip title="15 Min">
+        <div>{loadData.past15Min} &nbsp;</div>
+      </Tooltip>
+      | &nbsp;
+      <Tooltip title={uptime}>
+        <div>Active &nbsp;</div>
+      </Tooltip>
+    </Typography>
+  );
 }
 
 export default withStyles(styles)(App);

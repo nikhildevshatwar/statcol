@@ -9,9 +9,9 @@ export const colors = {
 
 export const sockets = {
   memory: { handle: null, updaters: [], closers: [] },
+  cpu: { handle: null, updaters: [], closers: [] },
   uptime: null,
   load: null,
-  cpu: null,
   temp: null,
   gpu: null,
 };
@@ -31,4 +31,10 @@ config.getByType = (type) => {
       return configObj;
     }
   }
+};
+
+export const extractTimeString = (date) => {
+  const time = date.toLocaleTimeString().split(" ");
+  time[0] += [":", date.getMilliseconds()].join("");
+  return time.join(" ");
 };

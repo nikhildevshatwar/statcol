@@ -1,5 +1,5 @@
 import ipRegex from "ip-regex";
-import { config, sockets } from "./globals";
+import { config, sockets, extractTimeString } from "./globals";
 import * as Parsers from "./parsers";
 import { store } from "react-notifications-component";
 
@@ -103,6 +103,17 @@ export const connectToMemory = (app) => {
   );
 };
 
+export const connectToCPU = (app) => {
+  return connectToWebSocket(
+    app.state.address,
+    app.state.port,
+    "cpu",
+    sockets.cpu,
+    Parsers.parseCPU,
+    { samplingInterval: config.getByType("cpu").samplingInterval }
+  );
+};
+
 export const connectToUptime = (app) => {
   return connectToWebSocket(
     app.state.address,
@@ -140,51 +151,6 @@ export const connectToLoad = (app) => {
     {
       samplingInterval: config.getByType("load").samplingInterval,
     }
-  );
-};
-
-export const connectToCPU = (app) => {
-  const cpuConfig = config.getByType("cpu");
-
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "cpu",
-    (event) => {
-      const parsedData = Parsers.parseCPU(event);
-      app.setState((state) => {
-        if (state.appData.cpuData.d.length === cpuConfig.clockCycle) {
-          return {
-            appData: {
-              ...state.appData,
-              cpuData: {
-                d: [
-                  ...state.appData.cpuData.d,
-                  extractTimeString(new Date()),
-                ].splice(1),
-                c1: [...state.appData.cpuData.c1, parsedData[0]].splice(1),
-                c2: [...state.appData.cpuData.c2, parsedData[1]].splice(1),
-                c3: [...state.appData.cpuData.c3, parsedData[2]].splice(1),
-                c4: [...state.appData.cpuData.c4, parsedData[3]].splice(1),
-              },
-            },
-          };
-        }
-        return {
-          appData: {
-            ...state.appData,
-            cpuData: {
-              d: [...state.appData.cpuData.d, extractTimeString(new Date())],
-              c1: [...state.appData.cpuData.c1, parsedData[0]],
-              c2: [...state.appData.cpuData.c2, parsedData[1]],
-              c3: [...state.appData.cpuData.c3, parsedData[2]],
-              c4: [...state.appData.cpuData.c4, parsedData[3]],
-            },
-          },
-        };
-      });
-    },
-    { samplingInterval: cpuConfig.samplingInterval }
   );
 };
 
@@ -306,9 +272,3 @@ function argsToString(args) {
 
   return encodedString.substring(0, encodedString.length - 2);
 }
-
-const extractTimeString = (date) => {
-  const time = date.toLocaleTimeString().split(" ");
-  time[0] += [":", date.getMilliseconds()].join("");
-  return time.join(" ");
-};

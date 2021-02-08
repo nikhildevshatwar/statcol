@@ -151,13 +151,6 @@ class App extends React.Component {
       tabSelected: "Linux",
 
       appData: {
-        cpuData: {
-          d: [],
-          c1: [],
-          c2: [],
-          c3: [],
-          c4: [],
-        },
         tempData: {
           d: [],
           t1: [],
@@ -216,6 +209,11 @@ class App extends React.Component {
       sockets.memory.handle.close();
     }
     sockets.memory.handle = Sockets.connectToMemory(this);
+
+    if (sockets.cpu.handle !== null) {
+      sockets.cpu.handle.close();
+    }
+    sockets.cpu.handle = Sockets.connectToCPU(this);
 
     /*if (sockets.uptime !== null) {
       sockets.uptime.close();

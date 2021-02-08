@@ -5,7 +5,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { colors, config, sockets } from "./globals";
+import { colors, config, sockets, extractTimeString } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
@@ -200,22 +200,43 @@ function MemChart(props) {
 }
 
 function CPUSeries(props) {
-  function reset() {
-    if (sockets.cpu === null) {
-      return;
-    }
+  const [cpuData, setCPUData] = React.useState({
+    d: [],
+    c1: [],
+    c2: [],
+    c3: [],
+    c4: [],
+  });
 
-    sockets.cpu.close();
-    props.appRef.updateAppData({
-      cpuData: {
+  useEffect(() => {
+    const clockCycle = config.getByType("cpu").clockCycle;
+
+    sockets.cpu.updaters.push((parsedData) => {
+      setCPUData((cpuData) => ({
+        d: [...cpuData.d, extractTimeString(new Date())].splice(-clockCycle),
+        c1: [...cpuData.c1, parsedData[0]].splice(-clockCycle),
+        c2: [...cpuData.c2, parsedData[1]].splice(-clockCycle),
+        c3: [...cpuData.c3, parsedData[2]].splice(-clockCycle),
+        c4: [...cpuData.c4, parsedData[3]].splice(-clockCycle),
+      }));
+    });
+    sockets.cpu.closers.push((event) => {
+      setCPUData({
         d: [],
         c1: [],
         c2: [],
         c3: [],
         c4: [],
-      },
+      });
     });
-    sockets.cpu = Sockets.connectToCPU(props.appRef);
+  }, [config.getByType("cpu").clockCycle]);
+
+  function reset() {
+    if (sockets.cpu.handle !== null) {
+      sockets.cpu.handle.close();
+    }
+
+    sockets.cpu.handle = Sockets.connectToCPU(props.appRef);
   }
 
   return (
@@ -223,23 +244,23 @@ function CPUSeries(props) {
       data={[
         {
           name: "C1",
-          xData: props.appData.cpuData.d,
-          yData: props.appData.cpuData.c1,
+          xData: cpuData.d,
+          yData: cpuData.c1,
         },
         {
           name: "C2",
-          xData: props.appData.cpuData.d,
-          yData: props.appData.cpuData.c2,
+          xData: cpuData.d,
+          yData: cpuData.c2,
         },
         {
           name: "C3",
-          xData: props.appData.cpuData.d,
-          yData: props.appData.cpuData.c3,
+          xData: cpuData.d,
+          yData: cpuData.c3,
         },
         {
           name: "C4",
-          xData: props.appData.cpuData.d,
-          yData: props.appData.cpuData.c4,
+          xData: cpuData.d,
+          yData: cpuData.c4,
         },
       ]}
       title="CPU Load"

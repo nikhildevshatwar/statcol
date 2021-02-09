@@ -419,10 +419,7 @@ function TempSeries(props) {
 export default function LinuxTab({ ...props }) {
   return (
     <React.Fragment>
-      <MemCard {...props} />
-      <MemChart {...props} />
       <CPUSeries {...props} />
-      <TempSeries {...props} />
     </React.Fragment>
   );
 }

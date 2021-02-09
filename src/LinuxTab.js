@@ -204,95 +204,15 @@ function MemChart(props) {
 }
 
 function CPUSeries(props) {
-  const [cpuData, setCPUData] = React.useState({
-    d: [],
-    c1: [],
-    c2: [],
-    c3: [],
-    c4: [],
-  });
-
-  useEffect(() => {
-    const clockCycle = config.getByType("cpu").clockCycle;
-
-    sockets.getByType("cpu").updaters.push((parsedData) => {
-      setCPUData((cpuData) => ({
-        d: [...cpuData.d, extractTimeString(new Date())].splice(-clockCycle),
-        c1: [...cpuData.c1, parsedData[0]].splice(-clockCycle),
-        c2: [...cpuData.c2, parsedData[1]].splice(-clockCycle),
-        c3: [...cpuData.c3, parsedData[2]].splice(-clockCycle),
-        c4: [...cpuData.c4, parsedData[3]].splice(-clockCycle),
-      }));
-    });
-    sockets.getByType("cpu").closers.push((event) => {
-      setCPUData({
-        d: [],
-        c1: [],
-        c2: [],
-        c3: [],
-        c4: [],
-      });
-    });
-  }, [config.getByType("cpu").clockCycle]);
-
-  function reset() {
-    if (sockets.getByType("cpu").handle !== null) {
-      sockets.getByType("cpu").handle.close();
-    }
-
-    sockets.getByType("cpu").handle = Sockets.connectToCPU(props.appRef);
-  }
-
   return (
     <TimeSeries
-      data={[
-        {
-          name: "C1",
-          xData: cpuData.d,
-          yData: cpuData.c1,
-        },
-        {
-          name: "C2",
-          xData: cpuData.d,
-          yData: cpuData.c2,
-        },
-        {
-          name: "C3",
-          xData: cpuData.d,
-          yData: cpuData.c3,
-        },
-        {
-          name: "C4",
-          xData: cpuData.d,
-          yData: cpuData.c4,
-        },
-      ]}
+      socket={sockets.getByType("cpu")}
+      config={config.getByType("cpu")}
+      seriesNames={["C1", "C2", "C3", "C4"]}
       title="CPU Load"
-      xAxisTitle="Time"
       yAxisTitle="Load"
-      resetHandler={reset}
       resetHandlerName="cpuReset"
-      settings={{
-        name: "CPU",
-        configOptions: [
-          {
-            id: "samplingInterval",
-            name: "Sampling Interval",
-            defaultValue: config.getByType("cpu").samplingInterval,
-            update: (newValue) => {
-              config.getByType("cpu").samplingInterval = newValue;
-            },
-          },
-          {
-            id: "clockCycle",
-            name: "Clock Cycle",
-            defaultValue: config.getByType("cpu").clockCycle,
-            update: (newValue) => {
-              config.getByType("cpu").clockCycle = parseInt(newValue);
-            },
-          },
-        ],
-      }}
+      settingsName="CPU"
     />
   );
 }

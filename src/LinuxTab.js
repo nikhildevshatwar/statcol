@@ -5,7 +5,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { colors, config, sockets, extractTimeString } from "./globals";
+import { colors, config, sockets } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
@@ -217,120 +217,14 @@ function CPUSeries(props) {
 }
 
 function TempSeries(props) {
-  const [tempData, setTempData] = React.useState({
-    d: [],
-    t1: [],
-    t2: [],
-    t3: [],
-    t4: [],
-    t5: [],
-    t6: [],
-    t7: [],
-  });
-
-  useEffect(() => {
-    const clockCycle = config.getByType("temp").clockCycle;
-
-    sockets.getByType("temp").updaters.push((parsedData) => {
-      setTempData((tempData) => ({
-        d: [...tempData.d, extractTimeString(new Date())].splice(-clockCycle),
-        t1: [...tempData.t1, parsedData[0]].splice(-clockCycle),
-        t2: [...tempData.t2, parsedData[1]].splice(-clockCycle),
-        t3: [...tempData.t3, parsedData[2]].splice(-clockCycle),
-        t4: [...tempData.t4, parsedData[3]].splice(-clockCycle),
-        t5: [...tempData.t5, parsedData[4]].splice(-clockCycle),
-        t6: [...tempData.t6, parsedData[5]].splice(-clockCycle),
-        t7: [...tempData.t7, parsedData[6]].splice(-clockCycle),
-      }));
-    });
-    sockets.getByType("temp").closers.push((event) => {
-      setTempData({
-        d: [],
-        t1: [],
-        t2: [],
-        t3: [],
-        t4: [],
-        t5: [],
-        t6: [],
-        t7: [],
-      });
-    });
-  }, [config.getByType("temp").clockCycle]);
-
-  function reset() {
-    if (sockets.getByType("temp").handle !== null) {
-      sockets.getByType("temp").handle.close();
-    }
-    sockets.getByType("temp").handle = Sockets.connectByType("temp")(
-      props.appRef
-    );
-  }
-
   return (
     <TimeSeries
-      data={[
-        {
-          name: "T1",
-          xData: tempData.d,
-          yData: tempData.t1,
-        },
-        {
-          name: "T2",
-          xData: tempData.d,
-          yData: tempData.t2,
-        },
-        {
-          name: "T3",
-          xData: tempData.d,
-          yData: tempData.t3,
-        },
-        {
-          name: "T4",
-          xData: tempData.d,
-          yData: tempData.t4,
-        },
-        {
-          name: "T5",
-          xData: tempData.d,
-          yData: tempData.t5,
-        },
-        {
-          name: "T6",
-          xData: tempData.d,
-          yData: tempData.t6,
-        },
-        {
-          name: "T7",
-          xData: tempData.d,
-          yData: tempData.t7,
-        },
-      ]}
-      title="Temperature (Celsius)"
-      xAxisTitle="Time"
-      yAxisTitle="Temperature (Celsius)"
-      resetHandler={reset}
+      socket={sockets.getByType("temp")}
+      seriesNames={["T1", "T2", "T3", "T4", "T5", "T6", "T7"]}
+      title="Temperature Load"
+      yAxisTitle="Load"
       resetHandlerName="tempReset"
-      settings={{
-        name: "Temperature",
-        configOptions: [
-          {
-            id: "samplingInterval",
-            name: "Sampling Interval",
-            defaultValue: config.getByType("temp").samplingInterval,
-            update: (newValue) => {
-              config.getByType("temp").samplingInterval = newValue;
-            },
-          },
-          {
-            id: "clockCycle",
-            name: "Clock Cycle",
-            defaultValue: config.getByType("temp").clockCycle,
-            update: (newValue) => {
-              config.getByType("temp").clockCycle = parseInt(newValue);
-            },
-          },
-        ],
-      }}
+      settingsName="Temperature"
     />
   );
 }

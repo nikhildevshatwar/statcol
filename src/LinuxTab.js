@@ -5,7 +5,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { colors, config, sockets } from "./globals";
+import { colors, sockets } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
@@ -105,9 +105,11 @@ function MemCard(props) {
       sockets.getByType("memory").handle.close();
     }
 
-    sockets.getByType("memory").handle = Sockets.connectByType("memory")(
-      props.appRef
-    );
+    sockets.getByType("memory").handle = Sockets.connectByType(
+      "memory",
+      this.props.address,
+      this.props.port
+    )(props.appRef);
   }
 
   return (
@@ -121,9 +123,9 @@ function MemCard(props) {
           {
             id: "samplingInterval",
             name: "Sampling Interval",
-            defaultValue: config.getByType("memory").samplingInterval,
+            defaultValue: sockets.getByType("memory").samplingInterval,
             update: (newValue) => {
-              config.getByType("memory").samplingInterval = newValue;
+              sockets.getByType("memory").samplingInterval = newValue;
             },
           },
         ],
@@ -191,9 +193,9 @@ function MemChart(props) {
             {
               id: "samplingInterval",
               name: "Sampling Interval",
-              defaultValue: config.getByType("memory").samplingInterval,
+              defaultValue: sockets.getByType("memory").samplingInterval,
               update: (newValue) => {
-                config.getByType("memory").samplingInterval = newValue;
+                sockets.getByType("memory").samplingInterval = newValue;
               },
             },
           ],

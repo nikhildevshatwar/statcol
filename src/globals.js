@@ -11,6 +11,8 @@ export const sockets = [
   {
     type: "memory",
     handle: null,
+    address: "",
+    port: "",
     updaters: [],
     closers: [],
     samplingInterval: 0.3,
@@ -18,6 +20,8 @@ export const sockets = [
   {
     type: "cpu",
     handle: null,
+    address: "",
+    port: "",
     updaters: [],
     closers: [],
     samplingInterval: 0.5,
@@ -25,6 +29,8 @@ export const sockets = [
   {
     type: "temp",
     handle: null,
+    address: "",
+    port: "",
     updaters: [],
     closers: [],
     samplingInterval: 1.0,
@@ -32,6 +38,8 @@ export const sockets = [
   {
     type: "gpu",
     handle: null,
+    address: "",
+    port: "",
     updaters: [],
     closers: [],
     samplingInterval: 1.5,
@@ -39,6 +47,8 @@ export const sockets = [
   {
     type: "uptime",
     handle: null,
+    address: "",
+    port: "",
     updaters: [],
     closers: [],
     samplingInterval: 1.0,
@@ -46,6 +56,8 @@ export const sockets = [
   {
     type: "load",
     handle: null,
+    address: "",
+    port: "",
     updaters: [],
     closers: [],
     samplingInterval: 1.0,
@@ -56,18 +68,6 @@ sockets.getByType = (type) => {
   for (let socketObj of sockets) {
     if (socketObj.type === type) {
       return socketObj;
-    }
-  }
-};
-
-export const config = [
-  { type: "app", address: window.location.hostname, port: "" },
-];
-
-config.getByType = (type) => {
-  for (let configObj of config) {
-    if (configObj.type === type) {
-      return configObj;
     }
   }
 };

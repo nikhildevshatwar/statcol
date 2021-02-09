@@ -1,73 +1,88 @@
 import ipRegex from "ip-regex";
-import { config, sockets } from "./globals";
+import { sockets } from "./globals";
 import * as Parsers from "./parsers";
 import { store } from "react-notifications-component";
 
-export function connectByType(type) {
+export function connectByType(type, address, port) {
   switch (type) {
     case "memory":
       return connectToWebSocket(
+        address,
+        port,
         "memory",
         sockets.getByType("memory"),
         Parsers.parseFreeCommand,
         {
-          samplingInterval: config.getByType("memory").samplingInterval,
+          samplingInterval: sockets.getByType("memory").samplingInterval,
         }
       );
     case "cpu":
       return connectToWebSocket(
+        address,
+        port,
         "cpu",
         sockets.getByType("cpu"),
         Parsers.parseCPU,
-        { samplingInterval: config.getByType("cpu").samplingInterval }
+        { samplingInterval: sockets.getByType("cpu").samplingInterval }
       );
     case "temp":
       return connectToWebSocket(
+        address,
+        port,
         "temp",
         sockets.getByType("temp"),
         Parsers.parseTemp,
-        { samplingInterval: config.getByType("temp").samplingInterval }
+        { samplingInterval: sockets.getByType("temp").samplingInterval }
       );
     case "gpu":
       return connectToWebSocket(
+        address,
+        port,
         "gpu",
         sockets.getByType("gpu"),
         Parsers.parseGPU,
-        { samplingInterval: config.getByType("gpu").samplingInterval }
+        { samplingInterval: sockets.getByType("gpu").samplingInterval }
       );
     case "uptime":
       return connectToWebSocket(
+        address,
+        port,
         "uptime",
         sockets.getByType("uptime"),
         Parsers.parseUptime,
         {
-          samplingInterval: config.getByType("uptime").samplingInterval,
+          samplingInterval: sockets.getByType("uptime").samplingInterval,
         }
       );
     case "load":
       return connectToWebSocket(
+        address,
+        port,
         "load",
         sockets.getByType("load"),
         Parsers.parseLoad,
         {
-          samplingInterval: config.getByType("load").samplingInterval,
+          samplingInterval: sockets.getByType("load").samplingInterval,
         }
       );
   }
 }
 
-function connectToWebSocket(endpoint, socketRef, parser, args = {}) {
-  const appConfig = config.getByType("app");
-
+function connectToWebSocket(
+  address,
+  port,
+  endpoint,
+  socketRef,
+  parser,
+  args = {}
+) {
   if (
-    !ipRegex({ exact: true, includeBoundaries: true }).test(
-      appConfig.address
-    ) &&
-    appConfig.address !== "localhost"
+    !ipRegex({ exact: true, includeBoundaries: true }).test(address) &&
+    address !== "localhost"
   ) {
     store.addNotification({
-      title: `Connection to ${appConfig.address}:${appConfig.port}/${endpoint} Failed!`,
-      message: `Invalid IP Address: ${appConfig.address}`,
+      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
+      message: `Invalid IP Address: ${address}`,
       type: "danger",
       insert: "top",
       container: "top-right",
@@ -80,10 +95,10 @@ function connectToWebSocket(endpoint, socketRef, parser, args = {}) {
     });
     return null;
   }
-  if (parseInt(appConfig.port) === "NaN") {
+  if (parseInt(port) === "NaN") {
     store.addNotification({
-      title: `Connection to ${appConfig.address}:${appConfig.port}/${endpoint} Failed!`,
-      message: `Invalid Port Number: ${appConfig.port}`,
+      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
+      message: `Invalid Port Number: ${port}`,
       type: "danger",
       insert: "top",
       container: "top-right",
@@ -96,12 +111,15 @@ function connectToWebSocket(endpoint, socketRef, parser, args = {}) {
     });
     return null;
   }
+
+  socketRef.address = address;
+  socketRef.port = port;
 
   const socketURL = [
     "ws://",
-    appConfig.address,
+    address,
     ":",
-    appConfig.port,
+    port,
     "/",
     endpoint,
     "?",
@@ -119,10 +137,11 @@ function connectToWebSocket(endpoint, socketRef, parser, args = {}) {
     socketRef.closers.forEach((closer) => {
       closer(event);
     });
+    socketRef.handle = null;
   };
   socketHandle.onerror = (event) => {
     store.addNotification({
-      title: `Connection to ${appConfig.address}:${appConfig.port}/${endpoint} Failed!`,
+      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
       message: `URL: ${event.target.url}`,
       type: "danger",
       insert: "top",

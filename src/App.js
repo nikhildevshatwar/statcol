@@ -15,7 +15,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
-import { colors, sockets, config } from "./globals";
+import { colors, sockets } from "./globals";
 import Visualization from "./Visualization";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
@@ -147,6 +147,8 @@ class App extends React.Component {
     this.state = {
       drawerOpen: true,
       tabSelected: "Linux",
+      address: window.location.hostname,
+      port: "",
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -170,11 +172,11 @@ class App extends React.Component {
   }
 
   handleIPAddressChange(event) {
-    config.getByType("app").address = event.target.value;
+    this.setState({ address: event.target.value });
   }
 
   handlePortChange(event) {
-    config.getByType("app").port = event.target.value;
+    this.setState({ port: event.target.value });
   }
 
   sendIPAddress() {
@@ -184,7 +186,11 @@ class App extends React.Component {
         socket.handle = null;
       }
 
-      socket.handle = Sockets.connectByType(socket.type);
+      socket.handle = Sockets.connectByType(
+        socket.type,
+        this.state.address,
+        this.state.port
+      );
     });
   }
 
@@ -218,7 +224,7 @@ class App extends React.Component {
               </IconButton>
               <StatusBar />
               <InputBase
-                defaultValue={config.getByType("app").address}
+                defaultValue={this.state.address}
                 placeholder="Enter IP Address"
                 onChange={this.handleIPAddressChange}
                 classes={{
@@ -272,7 +278,6 @@ class App extends React.Component {
             <Container maxWidth="lg" className={classes.container}>
               <Visualization
                 tabSelected={this.state.tabSelected}
-                appData={this.state.appData}
                 appRef={this}
               />
             </Container>

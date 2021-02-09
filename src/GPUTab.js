@@ -34,7 +34,9 @@ function GPUSeries(props) {
       sockets.getByType("gpu").handle.close();
     }
 
-    sockets.getByType("gpu").handle = Sockets.connectToGPU(props.appRef);
+    sockets.getByType("gpu").handle = Sockets.connectByType("gpu")(
+      props.appRef
+    );
   }
 
   return (

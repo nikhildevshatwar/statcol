@@ -3,21 +3,71 @@ import { config, sockets } from "./globals";
 import * as Parsers from "./parsers";
 import { store } from "react-notifications-component";
 
-function connectToWebSocket(
-  address,
-  port,
-  endpoint,
-  socketRef,
-  parser,
-  args = {}
-) {
+export function connectByType(type) {
+  switch (type) {
+    case "memory":
+      return connectToWebSocket(
+        "memory",
+        sockets.getByType("memory"),
+        Parsers.parseFreeCommand,
+        {
+          samplingInterval: config.getByType("memory").samplingInterval,
+        }
+      );
+    case "cpu":
+      return connectToWebSocket(
+        "cpu",
+        sockets.getByType("cpu"),
+        Parsers.parseCPU,
+        { samplingInterval: config.getByType("cpu").samplingInterval }
+      );
+    case "temp":
+      return connectToWebSocket(
+        "temp",
+        sockets.getByType("temp"),
+        Parsers.parseTemp,
+        { samplingInterval: config.getByType("temp").samplingInterval }
+      );
+    case "gpu":
+      return connectToWebSocket(
+        "gpu",
+        sockets.getByType("gpu"),
+        Parsers.parseGPU,
+        { samplingInterval: config.getByType("gpu").samplingInterval }
+      );
+    case "uptime":
+      return connectToWebSocket(
+        "uptime",
+        sockets.getByType("uptime"),
+        Parsers.parseUptime,
+        {
+          samplingInterval: config.getByType("uptime").samplingInterval,
+        }
+      );
+    case "load":
+      return connectToWebSocket(
+        "load",
+        sockets.getByType("load"),
+        Parsers.parseLoad,
+        {
+          samplingInterval: config.getByType("load").samplingInterval,
+        }
+      );
+  }
+}
+
+function connectToWebSocket(endpoint, socketRef, parser, args = {}) {
+  const appConfig = config.getByType("app");
+
   if (
-    !ipRegex({ exact: true, includeBoundaries: true }).test(address) &&
-    address !== "localhost"
+    !ipRegex({ exact: true, includeBoundaries: true }).test(
+      appConfig.address
+    ) &&
+    appConfig.address !== "localhost"
   ) {
     store.addNotification({
-      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
-      message: `Invalid IP Address: ${address}`,
+      title: `Connection to ${appConfig.address}:${appConfig.port}/${endpoint} Failed!`,
+      message: `Invalid IP Address: ${appConfig.address}`,
       type: "danger",
       insert: "top",
       container: "top-right",
@@ -30,10 +80,10 @@ function connectToWebSocket(
     });
     return null;
   }
-  if (parseInt(port) === "NaN") {
+  if (parseInt(appConfig.port) === "NaN") {
     store.addNotification({
-      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
-      message: `Invalid Port Number: ${port}`,
+      title: `Connection to ${appConfig.address}:${appConfig.port}/${endpoint} Failed!`,
+      message: `Invalid Port Number: ${appConfig.port}`,
       type: "danger",
       insert: "top",
       container: "top-right",
@@ -49,9 +99,9 @@ function connectToWebSocket(
 
   const socketURL = [
     "ws://",
-    address,
+    appConfig.address,
     ":",
-    port,
+    appConfig.port,
     "/",
     endpoint,
     "?",
@@ -72,7 +122,7 @@ function connectToWebSocket(
   };
   socketHandle.onerror = (event) => {
     store.addNotification({
-      title: `Connection to ${address}:${port}/${endpoint} Failed!`,
+      title: `Connection to ${appConfig.address}:${appConfig.port}/${endpoint} Failed!`,
       message: `URL: ${event.target.url}`,
       type: "danger",
       insert: "top",
@@ -89,78 +139,6 @@ function connectToWebSocket(
 
   return socketHandle;
 }
-
-export const connectToMemory = (app) => {
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "memory",
-    sockets.getByType("memory"),
-    Parsers.parseFreeCommand,
-    {
-      samplingInterval: config.getByType("memory").samplingInterval,
-    }
-  );
-};
-
-export const connectToCPU = (app) => {
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "cpu",
-    sockets.getByType("cpu"),
-    Parsers.parseCPU,
-    { samplingInterval: config.getByType("cpu").samplingInterval }
-  );
-};
-
-export const connectToTemp = (app) => {
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "temp",
-    sockets.getByType("temp"),
-    Parsers.parseTemp,
-    { samplingInterval: config.getByType("temp").samplingInterval }
-  );
-};
-
-export const connectToGPU = (app) => {
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "gpu",
-    sockets.getByType("gpu"),
-    Parsers.parseGPU,
-    { samplingInterval: config.getByType("gpu").samplingInterval }
-  );
-};
-
-export const connectToUptime = (app) => {
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "uptime",
-    sockets.getByType("uptime"),
-    Parsers.parseUptime,
-    {
-      samplingInterval: config.getByType("uptime").samplingInterval,
-    }
-  );
-};
-
-export const connectToLoad = (app) => {
-  return connectToWebSocket(
-    app.state.address,
-    app.state.port,
-    "load",
-    sockets.getByType("load"),
-    Parsers.parseLoad,
-    {
-      samplingInterval: config.getByType("load").samplingInterval,
-    }
-  );
-};
 
 function argsToString(args) {
   /* 

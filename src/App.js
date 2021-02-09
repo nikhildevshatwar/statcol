@@ -15,7 +15,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
-import { colors, sockets } from "./globals";
+import { colors, sockets, config } from "./globals";
 import Visualization from "./Visualization";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
@@ -145,8 +145,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: window.location.hostname,
-      port: "",
       drawerOpen: true,
       tabSelected: "Linux",
     };
@@ -172,43 +170,22 @@ class App extends React.Component {
   }
 
   handleIPAddressChange(event) {
-    this.setState({ address: event.target.value });
+    config.getByType("app").address = event.target.value;
   }
 
   handlePortChange(event) {
-    this.setState({ port: event.target.value });
+    config.getByType("app").port = event.target.value;
   }
 
   sendIPAddress() {
-    if (sockets.getByType("memory").handle !== null) {
-      sockets.getByType("memory").handle.close();
-    }
-    sockets.getByType("memory").handle = Sockets.connectToMemory(this);
+    sockets.forEach((socket) => {
+      if (socket.handle !== null) {
+        socket.handle.close();
+        socket.handle = null;
+      }
 
-    if (sockets.getByType("cpu").handle !== null) {
-      sockets.getByType("cpu").handle.close();
-    }
-    sockets.getByType("cpu").handle = Sockets.connectToCPU(this);
-
-    if (sockets.getByType("temp").handle !== null) {
-      sockets.getByType("temp").handle.close();
-    }
-    sockets.getByType("temp").handle = Sockets.connectToTemp(this);
-
-    if (sockets.getByType("gpu").handle !== null) {
-      sockets.getByType("gpu").handle.close();
-    }
-    sockets.getByType("gpu").handle = Sockets.connectToGPU(this);
-
-    if (sockets.getByType("uptime").handle !== null) {
-      sockets.getByType("uptime").handle.close();
-    }
-    sockets.getByType("uptime").handle = Sockets.connectToUptime(this);
-
-    if (sockets.getByType("load").handle !== null) {
-      sockets.getByType("load").handle.close();
-    }
-    sockets.getByType("load").handle = Sockets.connectToLoad(this);
+      socket.handle = Sockets.connectByType(socket.type);
+    });
   }
 
   render() {
@@ -241,7 +218,7 @@ class App extends React.Component {
               </IconButton>
               <StatusBar />
               <InputBase
-                defaultValue={window.location.hostname}
+                defaultValue={config.getByType("app").address}
                 placeholder="Enter IP Address"
                 onChange={this.handleIPAddressChange}
                 classes={{

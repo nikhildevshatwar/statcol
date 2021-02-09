@@ -25,6 +25,7 @@ sockets.getByType = (type) => {
 };
 
 export const config = [
+  { type: "app", address: window.location.hostname, port: "" },
   { type: "memory", samplingInterval: 0.3 },
   { type: "cpu", samplingInterval: 0.5, clockCycle: 1000 },
   { type: "temp", samplingInterval: 1.0, clockCycle: 1000 },

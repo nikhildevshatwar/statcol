@@ -105,7 +105,9 @@ function MemCard(props) {
       sockets.getByType("memory").handle.close();
     }
 
-    sockets.getByType("memory").handle = Sockets.connectToMemory(props.appRef);
+    sockets.getByType("memory").handle = Sockets.connectByType("memory")(
+      props.appRef
+    );
   }
 
   return (
@@ -161,7 +163,9 @@ function MemChart(props) {
       sockets.getByType("memory").handle.close();
     }
 
-    sockets.getByType("memory").handle = Sockets.connectToMemory(props.appRef);
+    sockets.getByType("memory").handle = Sockets.connectByType("memory")(
+      props.appRef
+    );
   }
 
   return (
@@ -338,7 +342,9 @@ function TempSeries(props) {
     if (sockets.getByType("temp").handle !== null) {
       sockets.getByType("temp").handle.close();
     }
-    sockets.getByType("temp").handle = Sockets.connectToTemp(props.appRef);
+    sockets.getByType("temp").handle = Sockets.connectByType("temp")(
+      props.appRef
+    );
   }
 
   return (

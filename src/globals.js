@@ -8,12 +8,48 @@ export const colors = {
 };
 
 export const sockets = [
-  { type: "memory", handle: null, updaters: [], closers: [] },
-  { type: "cpu", handle: null, updaters: [], closers: [] },
-  { type: "temp", handle: null, updaters: [], closers: [] },
-  { type: "gpu", handle: null, updaters: [], closers: [] },
-  { type: "uptime", handle: null, updaters: [], closers: [] },
-  { type: "load", handle: null, updaters: [], closers: [] },
+  {
+    type: "memory",
+    handle: null,
+    updaters: [],
+    closers: [],
+    samplingInterval: 0.3,
+  },
+  {
+    type: "cpu",
+    handle: null,
+    updaters: [],
+    closers: [],
+    samplingInterval: 0.5,
+  },
+  {
+    type: "temp",
+    handle: null,
+    updaters: [],
+    closers: [],
+    samplingInterval: 1.0,
+  },
+  {
+    type: "gpu",
+    handle: null,
+    updaters: [],
+    closers: [],
+    samplingInterval: 1.5,
+  },
+  {
+    type: "uptime",
+    handle: null,
+    updaters: [],
+    closers: [],
+    samplingInterval: 1.0,
+  },
+  {
+    type: "load",
+    handle: null,
+    updaters: [],
+    closers: [],
+    samplingInterval: 1.0,
+  },
 ];
 
 sockets.getByType = (type) => {
@@ -26,12 +62,6 @@ sockets.getByType = (type) => {
 
 export const config = [
   { type: "app", address: window.location.hostname, port: "" },
-  { type: "memory", samplingInterval: 0.3 },
-  { type: "cpu", samplingInterval: 0.5 },
-  { type: "temp", samplingInterval: 1.0 },
-  { type: "gpu", samplingInterval: 1.5 },
-  { type: "uptime", samplingInterval: 1.0 },
-  { type: "load", samplingInterval: 1.0 },
 ];
 
 config.getByType = (type) => {

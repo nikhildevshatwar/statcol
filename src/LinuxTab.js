@@ -207,7 +207,6 @@ function CPUSeries(props) {
   return (
     <TimeSeries
       socket={sockets.getByType("cpu")}
-      config={config.getByType("cpu")}
       seriesNames={["C1", "C2", "C3", "C4"]}
       title="CPU Load"
       yAxisTitle="Load"

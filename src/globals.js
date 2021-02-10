@@ -7,61 +7,26 @@ export const colors = {
   plot: "#E5ECF6",
 };
 
+function buildSocket(type, samplingInterval) {
+  return {
+    type: type,
+    handle: null,
+    address: "",
+    port: "",
+    updaters: [],
+    closers: [],
+    samplingInterval: samplingInterval,
+  };
+}
+
 export const sockets = [
-  {
-    type: "memory",
-    handle: null,
-    address: "",
-    port: "",
-    updaters: [],
-    closers: [],
-    samplingInterval: 0.3,
-  },
-  {
-    type: "cpu",
-    handle: null,
-    address: "",
-    port: "",
-    updaters: [],
-    closers: [],
-    samplingInterval: 0.5,
-  },
-  {
-    type: "temp",
-    handle: null,
-    address: "",
-    port: "",
-    updaters: [],
-    closers: [],
-    samplingInterval: 1.0,
-  },
-  {
-    type: "gpu",
-    handle: null,
-    address: "",
-    port: "",
-    updaters: [],
-    closers: [],
-    samplingInterval: 1.5,
-  },
-  {
-    type: "uptime",
-    handle: null,
-    address: "",
-    port: "",
-    updaters: [],
-    closers: [],
-    samplingInterval: 1.0,
-  },
-  {
-    type: "load",
-    handle: null,
-    address: "",
-    port: "",
-    updaters: [],
-    closers: [],
-    samplingInterval: 1.0,
-  },
+  buildSocket("memory", 0.3),
+  buildSocket("cpu", 0.5),
+  buildSocket("temp", 1.0),
+  buildSocket("gpu", 1.5),
+  buildSocket("uptime", 1.0),
+  buildSocket("load", 1.0),
+  buildSocket("random", 0.5),
 ];
 
 sockets.getByType = (type) => {

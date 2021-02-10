@@ -115,8 +115,8 @@ class PieChart extends React.Component {
           name: this.props.settingsName,
           configOptions: this.props.socketObjs.map((socketObj) => {
             return {
-              id: "samplingInterval",
-              name: "Sampling interval",
+              id: `${socketObj.socket.type}samplingInterval`,
+              name: `Sampling Interval: ${socketObj.socket.type}`,
               defaultValue: socketObj.socket.samplingInterval,
               update: (newValue) => {
                 socketObj.socket.samplingInterval = newValue;

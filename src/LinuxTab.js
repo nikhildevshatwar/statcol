@@ -153,7 +153,7 @@ function MemChart(props) {
       ]}
       titles={["Main Memory", "Random"]}
       resetHandlerName="memReset2"
-      settingsName="Memory"
+      settingsName="Memory and Random"
     />
   );
 }

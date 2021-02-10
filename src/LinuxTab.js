@@ -135,73 +135,26 @@ function MemCard(props) {
 }
 
 function MemChart(props) {
-  const [memData, setMemData] = React.useState({
-    total: 0,
-    free: 0,
-    used: 0,
-    buffCache: 0,
-    shared: 0,
-    available: 0,
-  });
-
-  useEffect(() => {
-    sockets.getByType("memory").updaters.push((parsedData) => {
-      setMemData(parsedData.memData);
-    });
-    sockets.getByType("memory").closers.push((event) => {
-      setMemData({
-        total: 0,
-        free: 0,
-        used: 0,
-        buffCache: 0,
-        shared: 0,
-        available: 0,
-      });
-    });
-  }, []);
-
-  function reset() {
-    if (sockets.getByType("memory").handle !== null) {
-      sockets.getByType("memory").handle.close();
-    }
-
-    sockets.getByType("memory").handle = Sockets.connectByType("memory")(
-      props.appRef
-    );
-  }
-
   return (
-    <React.Fragment>
-      <PieChart
-        data={[
-          {
-            name: "Main Memory",
-            values: [
-              memData.free,
-              memData.used,
-              memData.buffCache,
-              memData.shared,
-            ],
-            labels: ["Free", "Used", "Buffer and Cache", "Shared"],
-          },
-        ]}
-        resetHandler={reset}
-        resetHandlerName="memReset2"
-        settings={{
-          name: "Memory",
-          configOptions: [
-            {
-              id: "samplingInterval",
-              name: "Sampling Interval",
-              defaultValue: sockets.getByType("memory").samplingInterval,
-              update: (newValue) => {
-                sockets.getByType("memory").samplingInterval = newValue;
-              },
-            },
-          ],
-        }}
-      />
-    </React.Fragment>
+    <PieChart
+      socketObjs={[
+        {
+          socket: sockets.getByType("memory"),
+          parser: (parsedData) => parsedData.slice(2, 6),
+        },
+        {
+          socket: sockets.getByType("random"),
+          parser: (parsedData) => parsedData,
+        },
+      ]}
+      labelSets={[
+        ["Free", "Used", "Buffer and Cache", "Shared"],
+        ["X", "Y", "Z", "W"],
+      ]}
+      titles={["Main Memory", "Random"]}
+      resetHandlerName="memReset2"
+      settingsName="Memory"
+    />
   );
 }
 
@@ -234,6 +187,7 @@ function TempSeries(props) {
 export default function LinuxTab({ ...props }) {
   return (
     <React.Fragment>
+      <MemChart {...props} />
       <CPUSeries {...props} />
     </React.Fragment>
   );

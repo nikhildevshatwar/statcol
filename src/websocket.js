@@ -65,6 +65,15 @@ export function connectByType(type, address, port) {
           samplingInterval: sockets.getByType("load").samplingInterval,
         }
       );
+    case "random":
+      return connectToWebSocket(
+        address,
+        port,
+        "random",
+        sockets.getByType("random"),
+        Parsers.parseRandom,
+        { samplingInterval: sockets.getByType("random").samplingInterval }
+      );
   }
 }
 

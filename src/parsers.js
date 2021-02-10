@@ -14,26 +14,8 @@ export function parseFreeCommand(event) {
     .replace(/\s+/g, " ")
     .trim()
     .split(" ");
-  const swapData = parseFreeCommand.output[1]
-    .replace(/\s+/g, " ")
-    .trim()
-    .split(" ");
 
-  return {
-    memData: {
-      total: memData[1],
-      used: memData[2],
-      free: memData[3],
-      shared: memData[4],
-      buffCache: memData[5],
-      available: memData[6],
-    },
-    swapData: {
-      total: swapData[1],
-      used: swapData[2],
-      free: swapData[3],
-    },
-  };
+  return memData;
 }
 
 export function parseCPU(event) {
@@ -64,4 +46,8 @@ export function parseLoad(event) {
     past5Min: loadAverages[1],
     past15Min: loadAverages[2],
   };
+}
+
+export function parseRandom(event) {
+  return event.data.split(" ").map((str) => parseFloat(str));
 }

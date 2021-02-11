@@ -189,6 +189,7 @@ export default function LinuxTab({ ...props }) {
     <React.Fragment>
       <MemChart {...props} />
       <CPUSeries {...props} />
+      <TempSeries {...props} />
     </React.Fragment>
   );
 }

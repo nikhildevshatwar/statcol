@@ -16,5 +16,9 @@ function GPUSeries(props) {
 }
 
 export default function GPUTab({ ...props }) {
-  return <React.Fragment></React.Fragment>;
+  return (
+    <React.Fragment>
+      <GPUSeries {...props} />
+    </React.Fragment>
+  );
 }

@@ -74,6 +74,8 @@ export function connectByType(type, address, port) {
         Parsers.parseRandom,
         { samplingInterval: sockets.getByType("random").samplingInterval }
       );
+    default:
+      return undefined;
   }
 }
 

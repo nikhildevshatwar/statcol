@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -9,7 +9,6 @@ import { colors, sockets } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
-import * as Sockets from "./websocket";
 
 const StyledTableCell = withStyles({
   head: {
@@ -23,42 +22,10 @@ const StyledTableCell = withStyles({
 })(TableCell);
 
 function MemCard(props) {
-  const [memData, setMemData] = React.useState({
-    total: 0,
-    free: 0,
-    used: 0,
-    buffCache: 0,
-    shared: 0,
-    available: 0,
-  });
-  const [swapData, setSwapData] = React.useState({
-    total: 0,
-    free: 0,
-    used: 0,
-  });
-
-  useEffect(() => {
-    sockets.getByType("memory").updaters.push((parsedData) => {
-      setMemData(parsedData.memData);
-      setSwapData(parsedData.swapData);
-    });
-    sockets.getByType("memory").closers.push((event) => {
-      setMemData({
-        total: 0,
-        free: 0,
-        used: 0,
-        buffCache: 0,
-        shared: 0,
-        available: 0,
-      });
-      setSwapData({ total: 0, free: 0, used: 0 });
-    });
-  }, []);
-
-  const data = (
-    <React.Fragment>
-      Memory (In MB):
+  const content = (parsedData) => {
+    return (
       <Table size="small">
+        Memory (In MB):
         <TableHead>
           <TableRow color="white">
             <StyledTableCell>Total</StyledTableCell>
@@ -71,65 +38,24 @@ function MemCard(props) {
         </TableHead>
         <TableBody>
           <TableRow>
-            <StyledTableCell>{memData.total}</StyledTableCell>
-            <StyledTableCell>{memData.used}</StyledTableCell>
-            <StyledTableCell>{memData.free}</StyledTableCell>
-            <StyledTableCell>{memData.shared}</StyledTableCell>
-            <StyledTableCell>{memData.buffCache}</StyledTableCell>
-            <StyledTableCell>{memData.available}</StyledTableCell>
+            <StyledTableCell>{parsedData[0]}</StyledTableCell>
+            <StyledTableCell>{parsedData[1]}</StyledTableCell>
+            <StyledTableCell>{parsedData[2]}</StyledTableCell>
+            <StyledTableCell>{parsedData[3]}</StyledTableCell>
+            <StyledTableCell>{parsedData[4]}</StyledTableCell>
+            <StyledTableCell>{parsedData[5]}</StyledTableCell>
           </TableRow>
         </TableBody>
       </Table>
-      Swap Memory (In MB):
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Total</StyledTableCell>
-            <StyledTableCell>Used</StyledTableCell>
-            <StyledTableCell>Free</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <StyledTableCell>{swapData.total}</StyledTableCell>
-            <StyledTableCell>{swapData.used}</StyledTableCell>
-            <StyledTableCell>{swapData.free}</StyledTableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </React.Fragment>
-  );
-
-  function reset() {
-    if (sockets.getByType("memory").handle !== null) {
-      sockets.getByType("memory").handle.close();
-    }
-
-    sockets.getByType("memory").handle = Sockets.connectByType(
-      "memory",
-      this.props.address,
-      this.props.port
-    )(props.appRef);
-  }
+    );
+  };
 
   return (
     <DataCard
-      data={data}
-      resetHandler={reset}
+      socket={sockets.getByType("memory")}
+      content={content}
       resetHandlerName="memReset"
-      settings={{
-        name: "Memory",
-        configOptions: [
-          {
-            id: "samplingInterval",
-            name: "Sampling Interval",
-            defaultValue: sockets.getByType("memory").samplingInterval,
-            update: (newValue) => {
-              sockets.getByType("memory").samplingInterval = newValue;
-            },
-          },
-        ],
-      }}
+      settingsName="Memory"
     />
   );
 }
@@ -140,7 +66,7 @@ function MemChart(props) {
       socketObjs={[
         {
           socket: sockets.getByType("memory"),
-          parser: (parsedData) => parsedData.slice(2, 6),
+          parser: (parsedData) => parsedData.slice(1, 5),
         },
         {
           socket: sockets.getByType("random"),
@@ -187,6 +113,7 @@ function TempSeries(props) {
 export default function LinuxTab({ ...props }) {
   return (
     <React.Fragment>
+      <MemCard {...props} />
       <MemChart {...props} />
       <CPUSeries {...props} />
       <TempSeries {...props} />

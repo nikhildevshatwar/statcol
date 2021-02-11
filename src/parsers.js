@@ -10,12 +10,11 @@ export function parseFreeCommand(event) {
     parseFreeCommand.output[1] = event.data;
   }
 
-  const memData = parseFreeCommand.output[0]
+  return parseFreeCommand.output[0]
     .replace(/\s+/g, " ")
     .trim()
-    .split(" ");
-
-  return memData;
+    .split(" ")
+    .slice(1);
 }
 
 export function parseCPU(event) {

@@ -148,7 +148,7 @@ class App extends React.Component {
       drawerOpen: true,
       tabSelected: "Linux",
       address: window.location.hostname,
-      port: "",
+      port: window.location.port,
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -233,6 +233,7 @@ class App extends React.Component {
                 }}
               />
               <InputBase
+                defaultValue={this.state.port}
                 placeholder="Enter Port Number"
                 onChange={this.handlePortChange}
                 classes={{

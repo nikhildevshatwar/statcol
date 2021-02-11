@@ -2,7 +2,7 @@ import React from "react";
 import TimeSeries from "./components/TimeSeries";
 import { sockets } from "./globals";
 
-function GPUSeries(props) {
+function GPUSeries() {
   return (
     <TimeSeries
       socket={sockets.getByType("gpu")}
@@ -15,10 +15,10 @@ function GPUSeries(props) {
   );
 }
 
-export default function GPUTab({ ...props }) {
+export default function GPUTab() {
   return (
     <React.Fragment>
-      <GPUSeries {...props} />
+      <GPUSeries />
     </React.Fragment>
   );
 }

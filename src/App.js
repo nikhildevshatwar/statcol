@@ -277,10 +277,7 @@ class App extends React.Component {
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
-              <Visualization
-                tabSelected={this.state.tabSelected}
-                appRef={this}
-              />
+              <Visualization tabSelected={this.state.tabSelected} />
             </Container>
           </main>
         </div>

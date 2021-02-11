@@ -1,12 +1,12 @@
 import LinuxTab from "./LinuxTab";
 import GPUTab from "./GPUTab";
 
-export default function Visualization({ tabSelected, ...options }) {
+export default function Visualization({ tabSelected }) {
   switch (tabSelected) {
     case "Linux":
-      return <LinuxTab {...options} />;
+      return <LinuxTab />;
     case "GPU":
-      return <GPUTab {...options} />;
+      return <GPUTab />;
     default:
       return null;
   }

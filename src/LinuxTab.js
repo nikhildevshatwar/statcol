@@ -21,7 +21,7 @@ const StyledTableCell = withStyles({
   },
 })(TableCell);
 
-function MemCard(props) {
+function MemCard() {
   const content = (parsedData) => {
     return (
       <Table size="small">
@@ -60,7 +60,7 @@ function MemCard(props) {
   );
 }
 
-function MemChart(props) {
+function MemChart() {
   return (
     <PieChart
       socketObjs={[
@@ -84,7 +84,7 @@ function MemChart(props) {
   );
 }
 
-function CPUSeries(props) {
+function CPUSeries() {
   return (
     <TimeSeries
       socket={sockets.getByType("cpu")}
@@ -97,7 +97,7 @@ function CPUSeries(props) {
   );
 }
 
-function TempSeries(props) {
+function TempSeries() {
   return (
     <TimeSeries
       socket={sockets.getByType("temp")}
@@ -110,13 +110,13 @@ function TempSeries(props) {
   );
 }
 
-export default function LinuxTab({ ...props }) {
+export default function LinuxTab() {
   return (
     <React.Fragment>
-      <MemCard {...props} />
-      <MemChart {...props} />
-      <CPUSeries {...props} />
-      <TempSeries {...props} />
+      <MemCard />
+      <MemChart />
+      <CPUSeries />
+      <TempSeries />
     </React.Fragment>
   );
 }

@@ -107,19 +107,18 @@ export default function SettingsModal(props) {
       >
         {props.configOptions.map((configOption) => {
           return (
-            <React.Fragment>
-              <TextField
-                InputProps={{ className: classes.textField }}
-                InputLabelProps={{
-                  className: classes.label,
-                }}
-                color="secondary"
-                id={configOption.id}
-                label={configOption.name}
-                defaultValue={configOption.defaultValue}
-                variant="outlined"
-              />
-            </React.Fragment>
+            <TextField
+              key={configOption.id}
+              InputProps={{ className: classes.textField }}
+              InputLabelProps={{
+                className: classes.label,
+              }}
+              color="secondary"
+              id={configOption.id}
+              label={configOption.name}
+              defaultValue={configOption.defaultValue}
+              variant="outlined"
+            />
           );
         })}
         <Button

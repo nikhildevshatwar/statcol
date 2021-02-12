@@ -7,9 +7,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
 import IconButton from "@material-ui/core/IconButton";
-import PublishIcon from "@material-ui/icons/Publish";
 import List from "@material-ui/core/List";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -20,7 +18,7 @@ import Visualization from "./Visualization";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import "animate.css/animate.min.css";
-import * as Sockets from "./websocket";
+import ConnectModal from "./components/ConnectModal";
 
 const drawerWidth = 240;
 
@@ -147,16 +145,11 @@ class App extends React.Component {
     this.state = {
       drawerOpen: true,
       tabSelected: "Linux",
-      address: window.location.hostname,
-      port: window.location.port,
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
-    this.handleIPAddressChange = this.handleIPAddressChange.bind(this);
-    this.handlePortChange = this.handlePortChange.bind(this);
-    this.sendIPAddress = this.sendIPAddress.bind(this);
   }
 
   handleTabChange(event) {
@@ -171,27 +164,8 @@ class App extends React.Component {
     this.setState({ drawerOpen: false });
   }
 
-  handleIPAddressChange(event) {
-    this.setState({ address: event.target.value });
-  }
-
-  handlePortChange(event) {
-    this.setState({ port: event.target.value });
-  }
-
-  sendIPAddress() {
-    sockets.forEach((socket) => {
-      if (socket.handle !== null) {
-        socket.handle.close();
-        socket.handle = null;
-      }
-
-      socket.handle = Sockets.connectByType(
-        socket.type,
-        this.state.address,
-        this.state.port
-      );
-    });
+  componentDidMount() {
+    document.querySelector("#connectModal").click();
   }
 
   render() {
@@ -223,33 +197,7 @@ class App extends React.Component {
                 <MenuIcon />
               </IconButton>
               <StatusBar />
-              <InputBase
-                defaultValue={this.state.address}
-                placeholder="Enter IP Address"
-                onChange={this.handleIPAddressChange}
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-              <InputBase
-                defaultValue={this.state.port}
-                placeholder="Enter Port Number"
-                onChange={this.handlePortChange}
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="send ip address"
-                className={classes.publishButton}
-                onClick={this.sendIPAddress}
-              >
-                <PublishIcon />
-              </IconButton>
+              <ConnectModal />
             </Toolbar>
           </AppBar>
           <Drawer

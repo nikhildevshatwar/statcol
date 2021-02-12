@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,6 +20,13 @@ const StyledTableCell = withStyles({
     color: colors.text,
   },
 })(TableCell);
+
+const useStyles = makeStyles({
+  chart: {
+    display: "flex",
+    flexDirection: "row",
+  },
+});
 
 function MemCard() {
   const content = (parsedData) => {
@@ -111,12 +118,16 @@ function TempSeries() {
 }
 
 export default function LinuxTab() {
+  const classes = useStyles();
+
   return (
     <React.Fragment>
       <MemCard />
       <MemChart />
-      <CPUSeries />
-      <TempSeries />
+      <div className={classes.chart}>
+        <CPUSeries />
+        <TempSeries />
+      </div>
     </React.Fragment>
   );
 }

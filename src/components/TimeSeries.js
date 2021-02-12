@@ -75,6 +75,8 @@ class TimeSeries extends React.Component {
         className={classes.root}
         data={this.state.data}
         layout={{
+          width: 400,
+          height: 300,
           title: {
             text: this.props.title,
             font: {
@@ -105,7 +107,6 @@ class TimeSeries extends React.Component {
           margin: {
             pad: 30,
           },
-          autosize: true,
           paper_bgcolor: colors.container,
           plot_bgcolor: colors.plot,
           uirevision: 1,

@@ -1,3 +1,22 @@
 #!/bin/bash
+basepath=`dirname "$0"`
+
+running=1
+cleanup() {
+        running=0
+    # kill all processes whose parent is this process
+    pkill -P $$
+}
+
+for sig in INT QUIT HUP TERM; do
+  trap cleanup $sig
+done
+trap cleanup EXIT
+
+# Start here
 unbuffer statcol &
-unbuffer ./power_logger.sh
+unbuffer $basepath/power_logger.sh 1000
+
+while [ "$running" -ne "0" ]; do
+        sleep 1
+done

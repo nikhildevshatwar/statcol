@@ -1,2 +1,3 @@
 #!/bin/bash
-unbuffer statcol
+unbuffer statcol &
+unbuffer ./power_logger.sh

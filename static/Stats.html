@@ -47,7 +47,7 @@
 	<div style="display: flex; margin-bottom: -25px;">
 		<img src="https://www.ti.com/content/dam/ticom/images/identities/ti-brand/ti-stk-2c-pos-rgb-logo.png"
 			style="height: 100px;margin-top: -15px;"></img>
-		<h1 style="align-content: center">Statisitcs Visualization</h1>
+		<h1 style="align-content: center">Statistics Visualization</h1>
 	</div>
 	<hr style="border: rgb(0, 77, 165) solid 2px;"></hr>
 
@@ -365,6 +365,14 @@
 		tag = String(values[0]);
 
 		switch (tag) {
+			case "Temp:":
+				layout = {
+					yaxis: {
+						range: [0, 10],
+					},
+				};
+				handle_linegraph(values, 'power', "Power", "Power (Watts)", layout);
+				break;
 			case "WS-cpuload:":
 				layout = {
 					yaxis: {

@@ -5,10 +5,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import { colors, sockets } from "./globals";
+import { colors } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
+import { Sockets } from "./websocket";
 
 const StyledTableCell = withStyles({
   head: {
@@ -59,7 +60,7 @@ function MemCard() {
 
   return (
     <DataCard
-      socket={sockets.getByType("memory")}
+      socket={Sockets.getByType("memory")}
       content={content}
       resetHandlerName="memReset"
       settingsName="Memory"
@@ -72,11 +73,11 @@ function MemChart() {
     <PieChart
       socketObjs={[
         {
-          socket: sockets.getByType("memory"),
+          socket: Sockets.getByType("memory"),
           parser: (parsedData) => parsedData.slice(1, 5),
         },
         {
-          socket: sockets.getByType("random"),
+          socket: Sockets.getByType("random"),
           parser: (parsedData) => parsedData,
         },
       ]}
@@ -94,7 +95,7 @@ function MemChart() {
 function CPUSeries() {
   return (
     <TimeSeries
-      socket={sockets.getByType("cpu")}
+      socket={Sockets.getByType("cpu")}
       seriesNames={["C1", "C2", "C3", "C4"]}
       title="CPU Load"
       yAxisTitle="Load"
@@ -107,7 +108,7 @@ function CPUSeries() {
 function TempSeries() {
   return (
     <TimeSeries
-      socket={sockets.getByType("temp")}
+      socket={Sockets.getByType("temp")}
       seriesNames={["T1", "T2", "T3", "T4", "T5", "T6", "T7"]}
       title="Temperature Load"
       yAxisTitle="Load"

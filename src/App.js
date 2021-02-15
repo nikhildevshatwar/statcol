@@ -13,12 +13,13 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Container from "@material-ui/core/Container";
 import Tabs from "./Tabs";
-import { colors, sockets } from "./globals";
+import { colors } from "./globals";
 import Visualization from "./Visualization";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import "animate.css/animate.min.css";
 import ConnectModal from "./components/ConnectModal";
+import { Sockets } from "./websocket";
 
 const drawerWidth = 240;
 
@@ -245,17 +246,17 @@ function StatusBar(props) {
   });
 
   useEffect(() => {
-    sockets.getByType("uptime").updaters.push((parsedData) => {
+    Sockets.getByType("uptime").updaters.push((parsedData) => {
       setUptime(parsedData);
     });
-    sockets.getByType("uptime").closers.push((event) => {
+    Sockets.getByType("uptime").closers.push((event) => {
       setUptime("Invalid");
     });
 
-    sockets.getByType("load").updaters.push((parsedData) => {
+    Sockets.getByType("load").updaters.push((parsedData) => {
       setLoadData(parsedData);
     });
-    sockets.getByType("load").closers.push((event) => {
+    Sockets.getByType("load").closers.push((event) => {
       setLoadData({
         past1Min: 0.0,
         past5Min: 0.0,

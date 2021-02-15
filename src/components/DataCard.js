@@ -2,8 +2,7 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import { colors, sockets } from "../globals";
-import * as Sockets from "../websocket";
+import { colors } from "../globals";
 import Generic from "./Generic";
 
 const styles = {
@@ -41,15 +40,7 @@ class DataCard extends React.Component {
   }
 
   reset() {
-    if (this.props.socket.handle !== null) {
-      this.props.socket.handle.close();
-    }
-
-    this.props.socket.handle = Sockets.connectByType(
-      this.props.socket.type,
-      this.props.socket.address,
-      this.props.socket.port
-    );
+    this.props.socket.connect();
   }
 
   render() {
@@ -72,9 +63,9 @@ class DataCard extends React.Component {
             {
               id: "samplingInterval",
               name: "Sampling Interval",
-              defaultValue: sockets.getByType("memory").samplingInterval,
+              defaultValue: this.props.socket.samplingInterval,
               update: (newValue) => {
-                sockets.getByType("memory").samplingInterval = newValue;
+                this.props.socket.samplingInterval = newValue;
               },
             },
           ],

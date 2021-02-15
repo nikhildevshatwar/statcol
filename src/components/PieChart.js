@@ -1,5 +1,4 @@
 import React from "react";
-import * as Sockets from "../websocket";
 import { withStyles } from "@material-ui/core/styles";
 import { colors } from "../globals";
 import React from "react";
@@ -72,15 +71,7 @@ class PieChart extends React.Component {
 
   reset() {
     this.props.socketObjs.forEach((socketObj) => {
-      if (socketObj.socket.handle !== null) {
-        socketObj.socket.handle.close();
-      }
-
-      socketObj.socket.handle = Sockets.connectByType(
-        socketObj.socket.type,
-        socketObj.socket.address,
-        socketObj.socket.port
-      );
+      socketObj.socket.connect();
     });
   }
 

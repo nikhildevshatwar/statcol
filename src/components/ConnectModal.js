@@ -1,13 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
-import { colors, sockets } from "../globals";
+import { colors } from "../globals";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
 import Button from "@material-ui/core/Button";
-import * as Sockets from "../websocket";
+import { Sockets } from "../websocket";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -62,13 +62,9 @@ export default function ConnectModal(props) {
   };
 
   const sendIPAddress = (address, port) => {
-    sockets.forEach((socket) => {
-      if (socket.handle !== null) {
-        socket.handle.close();
-        socket.handle = null;
-      }
-
-      socket.handle = Sockets.connectByType(socket.type, address, port);
+    Sockets.forEach((socket) => {
+      socket.init(address, port);
+      socket.connect();
     });
     handleClose();
   };

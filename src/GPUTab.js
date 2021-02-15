@@ -1,11 +1,11 @@
 import React from "react";
 import TimeSeries from "./components/TimeSeries";
-import { sockets } from "./globals";
+import { Sockets } from "./websocket";
 
 function GPUSeries() {
   return (
     <TimeSeries
-      socket={sockets.getByType("gpu")}
+      socket={Sockets.getByType("gpu")}
       seriesNames={["G1", "G2"]}
       title="GPU Load"
       yAxisTitle="Load"

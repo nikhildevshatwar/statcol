@@ -1,5 +1,4 @@
 import React from "react";
-import * as Sockets from "../websocket";
 import { withStyles } from "@material-ui/core/styles";
 import { colors, extractTimeString } from "../globals";
 import Plot from "react-plotly.js";
@@ -56,15 +55,7 @@ class TimeSeries extends React.Component {
   }
 
   reset() {
-    if (this.props.socket.handle !== null) {
-      this.props.socket.handle.close();
-    }
-
-    this.props.socket.handle = Sockets.connectByType(
-      this.props.socket.type,
-      this.props.socket.address,
-      this.props.socket.port
-    );
+    this.props.socket.connect();
   }
 
   render() {

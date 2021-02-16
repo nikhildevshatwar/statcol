@@ -41,7 +41,7 @@ export default function Generic(props) {
         </Button>
         <SettingsModal
           className={classes.button}
-          name={props.settings.name}
+          name={props.settings.name || "Settings"}
           configOptions={props.settings.configOptions}
           onSettingsClose={() => {
             document.querySelector(`#${props.resetHandlerName}`).click();

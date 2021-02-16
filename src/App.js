@@ -18,6 +18,7 @@ import Visualization from "./Visualization";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import "animate.css/animate.min.css";
+import AlbumIcon from "@material-ui/icons/Album";
 import ConnectModal from "./components/ConnectModal";
 import { Sockets } from "./websocket";
 
@@ -244,10 +245,12 @@ function StatusBar(props) {
     past5Min: 0.0,
     past15Min: 0.0,
   });
+  const [deadAlive, setDeadAlive] = React.useState(false);
 
   useEffect(() => {
     const uptimeSocket = Sockets.getByType("uptime");
     const loadSocket = Sockets.getByType("load");
+    const deadAliveSocket = Sockets.getByType("dead_alive");
 
     uptimeSocket.updaters.push((parsedData) => {
       setUptime(parsedData);
@@ -266,27 +269,38 @@ function StatusBar(props) {
         past15Min: 0.0,
       });
     });
+    deadAliveSocket.updaters.push((parsedData) => {
+      setDeadAlive(parsedData);
+    });
+    deadAliveSocket.closers.push((event) => {
+      setDeadAlive(false);
+    });
   }, []);
 
   return (
-    <Typography className={classes.statusBar}>
-      Load:&nbsp;
-      <Tooltip title="1 Min">
-        <div>{loadData.past1Min} &nbsp;</div>
+    <React.Fragment>
+      <Typography className={classes.statusBar}>
+        Load:&nbsp;
+        <Tooltip title="1 Min">
+          <div>{loadData.past1Min} &nbsp;</div>
+        </Tooltip>
+        | &nbsp;
+        <Tooltip title="5 Min">
+          <div>{loadData.past5Min} &nbsp;</div>
+        </Tooltip>
+        | &nbsp;
+        <Tooltip title="15 Min">
+          <div>{loadData.past15Min} &nbsp;</div>
+        </Tooltip>
+        | &nbsp;
+        <Tooltip title={uptime}>
+          <div>Active &nbsp;</div>
+        </Tooltip>
+      </Typography>
+      <Tooltip title={`Component: ${deadAlive ? "Alive" : "Dead"}`}>
+        <AlbumIcon color={deadAlive ? undefined : "disabled"} />
       </Tooltip>
-      | &nbsp;
-      <Tooltip title="5 Min">
-        <div>{loadData.past5Min} &nbsp;</div>
-      </Tooltip>
-      | &nbsp;
-      <Tooltip title="15 Min">
-        <div>{loadData.past15Min} &nbsp;</div>
-      </Tooltip>
-      | &nbsp;
-      <Tooltip title={uptime}>
-        <div>Active &nbsp;</div>
-      </Tooltip>
-    </Typography>
+    </React.Fragment>
   );
 }
 

@@ -50,3 +50,7 @@ export function parseLoad(event) {
 export function parseRandom(event) {
   return event.data.split(" ").map((str) => parseFloat(str));
 }
+
+export function parseDeadAlive(event) {
+  return event.data === "1";
+}

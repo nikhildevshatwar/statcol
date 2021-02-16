@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ARRAY=(${QUERY_STRING//[=&&]/ })
+
+while true; do
+    X=$(($RANDOM > 16383))
+    echo $X
+    sleep ${ARRAY[1]:=0.3}
+done

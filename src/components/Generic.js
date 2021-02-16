@@ -25,15 +25,15 @@ export default function Generic(props) {
       {props.innerComponent}
       <div className={classes.buttonGroup}>
         <Button
-          id={props.resetHandlerName}
+          id={`${props.socket.type}Reset`}
           className={classes.button}
           variant="contained"
           color="primary"
           onClick={() => {
-            if (this.props.resetHandler === null) {
-              this.props.socket.connect();
+            if (props.resetHandler !== undefined) {
+              props.resetHandler();
             } else {
-              this.props.resetHandler();
+              props.socket.connect();
             }
           }}
         >
@@ -44,7 +44,7 @@ export default function Generic(props) {
           name={props.settings.name || "Settings"}
           configOptions={props.settings.configOptions}
           onSettingsClose={() => {
-            document.querySelector(`#${props.resetHandlerName}`).click();
+            document.querySelector(`#${props.socket.type}Reset`).click();
           }}
         />
       </div>

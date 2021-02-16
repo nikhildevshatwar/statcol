@@ -9,7 +9,6 @@ function GPUSeries() {
       seriesNames={["G1", "G2"]}
       title="GPU Load"
       yAxisTitle="Load"
-      resetHandlerName="gpuReset"
       settingsName="GPU"
     />
   );

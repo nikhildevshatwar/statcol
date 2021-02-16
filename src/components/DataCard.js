@@ -50,7 +50,6 @@ class DataCard extends React.Component {
       <Generic
         socket={this.props.socket}
         innerComponent={content}
-        resetHandlerName={this.props.resetHandlerName}
         settings={{
           name: this.props.settingsName,
           configOptions: [

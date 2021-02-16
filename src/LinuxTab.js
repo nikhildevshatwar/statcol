@@ -62,7 +62,6 @@ function MemCard() {
     <DataCard
       socket={Sockets.getByType("memory")}
       content={content}
-      resetHandlerName="memReset"
       settingsName="Memory"
     />
   );
@@ -86,7 +85,6 @@ function MemChart() {
         ["X", "Y", "Z", "W"],
       ]}
       titles={["Main Memory", "Random"]}
-      resetHandlerName="memReset2"
       settingsName="Memory and Random"
     />
   );
@@ -99,7 +97,6 @@ function CPUSeries() {
       seriesNames={["C1", "C2", "C3", "C4"]}
       title="CPU Load"
       yAxisTitle="Load"
-      resetHandlerName="cpuReset"
       settingsName="CPU"
     />
   );
@@ -112,7 +109,6 @@ function TempSeries() {
       seriesNames={["T1", "T2", "T3", "T4", "T5", "T6", "T7"]}
       title="Temperature Load"
       yAxisTitle="Load"
-      resetHandlerName="tempReset"
       settingsName="Temperature"
     />
   );

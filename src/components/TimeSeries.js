@@ -104,7 +104,6 @@ class TimeSeries extends React.Component {
       <Generic
         socket={this.props.socket}
         innerComponent={content}
-        resetHandler={this.props.resetHandler}
         settings={{
           name: this.props.settingsName,
           configOptions: [

@@ -25,8 +25,6 @@ class TimeSeries extends React.Component {
       samplingInterval: this.props.socket.samplingInterval,
       clockCycle: this.props.clockCycle || 1000,
     };
-
-    this.reset = this.reset.bind(this);
   }
 
   componentDidMount() {
@@ -52,10 +50,6 @@ class TimeSeries extends React.Component {
         })),
       }));
     });
-  }
-
-  reset() {
-    this.props.socket.connect();
   }
 
   render() {
@@ -108,9 +102,9 @@ class TimeSeries extends React.Component {
 
     return (
       <Generic
+        socket={this.props.socket}
         innerComponent={content}
-        resetHandler={this.reset}
-        resetHandlerName={this.props.resetHandlerName}
+        resetHandler={this.props.resetHandler}
         settings={{
           name: this.props.settingsName,
           configOptions: [

@@ -21,8 +21,6 @@ class DataCard extends React.Component {
       data: null,
       samplingInterval: this.props.socket.samplingInterval,
     };
-
-    this.reset = this.reset.bind(this);
   }
 
   componentDidMount() {
@@ -39,10 +37,6 @@ class DataCard extends React.Component {
     });
   }
 
-  reset() {
-    this.props.socket.connect();
-  }
-
   render() {
     const { classes } = this.props;
 
@@ -54,8 +48,8 @@ class DataCard extends React.Component {
 
     return (
       <Generic
+        socket={this.props.socket}
         innerComponent={content}
-        resetHandler={this.reset}
         resetHandlerName={this.props.resetHandlerName}
         settings={{
           name: this.props.settingsName,

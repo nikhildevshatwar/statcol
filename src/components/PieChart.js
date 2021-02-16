@@ -99,6 +99,7 @@ class PieChart extends React.Component {
 
     return (
       <Generic
+        socket={this.props.socket}
         innerComponent={content}
         resetHandler={this.reset}
         resetHandlerName={this.props.resetHandlerName}

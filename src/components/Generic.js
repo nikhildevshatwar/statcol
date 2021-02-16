@@ -29,7 +29,13 @@ export default function Generic(props) {
           className={classes.button}
           variant="contained"
           color="primary"
-          onClick={props.resetHandler}
+          onClick={() => {
+            if (this.props.resetHandler === null) {
+              this.props.socket.connect();
+            } else {
+              this.props.resetHandler();
+            }
+          }}
         >
           Reset
         </Button>

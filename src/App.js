@@ -246,17 +246,20 @@ function StatusBar(props) {
   });
 
   useEffect(() => {
-    Sockets.getByType("uptime").updaters.push((parsedData) => {
+    const uptimeSocket = Sockets.getByType("uptime");
+    const loadSocket = Sockets.getByType("load");
+
+    uptimeSocket.updaters.push((parsedData) => {
       setUptime(parsedData);
     });
-    Sockets.getByType("uptime").closers.push((event) => {
+    uptimeSocket.closers.push((event) => {
       setUptime("Invalid");
     });
 
-    Sockets.getByType("load").updaters.push((parsedData) => {
+    loadSocket.updaters.push((parsedData) => {
       setLoadData(parsedData);
     });
-    Sockets.getByType("load").closers.push((event) => {
+    loadSocket.closers.push((event) => {
       setLoadData({
         past1Min: 0.0,
         past5Min: 0.0,

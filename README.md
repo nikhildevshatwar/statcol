@@ -1,3 +1,9 @@
+stat-viz is a platform for building browser-based visulizations of statistics collected from target EVMs. The project is focused on providing users with an easy-to-access UI and providing developers easy-to-extend web components that can be customized for their own EVMs.
+
+For the development of this project, we used the J7 Common Processor Board as the target EVM. However, it is not a requirement for the project - the EVM-specific code is data collection and can be modified per target EVM.
+
+The only requirement is that the target EVM has a Linux distribution on which a websocket server can be instatiated.
+
 ## Build Instructions
 
 ```

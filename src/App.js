@@ -293,13 +293,13 @@ function StatusBar(props) {
           <div>{loadData.past15Min} &nbsp;</div>
         </Tooltip>
         | &nbsp;
-        <Tooltip title={uptime}>
-          <div>Active &nbsp;</div>
+        <Tooltip title="Uptime">
+          <div>{uptime} &nbsp;</div>
+        </Tooltip>
+        <Tooltip title={`Component: ${deadAlive ? "Alive" : "Dead"}`}>
+          <AlbumIcon color={deadAlive ? undefined : "disabled"} />
         </Tooltip>
       </Typography>
-      <Tooltip title={`Component: ${deadAlive ? "Alive" : "Dead"}`}>
-        <AlbumIcon color={deadAlive ? undefined : "disabled"} />
-      </Tooltip>
     </React.Fragment>
   );
 }

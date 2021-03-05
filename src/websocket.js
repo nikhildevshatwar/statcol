@@ -39,6 +39,10 @@ export const Sockets = [
   buildSocket("uptime", Parsers.parseUptime, 1.0),
   buildSocket("load", Parsers.parseLoad, 1.0),
   buildSocket("random", Parsers.parseRandom, 0.5),
+  buildSocket("random2", Parsers.parseRandom2, 0.5),
+  buildSocket("random3", Parsers.parseRandom3, 0.5),
+  buildSocket("random4", Parsers.parseRandom4, 0.5),
+  buildSocket("random5", Parsers.parseRandom5, 0.5),
   buildSocket("dead_alive", Parsers.parseDeadAlive, 0.5),
 ];
 

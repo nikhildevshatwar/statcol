@@ -84,6 +84,7 @@ class PieChart extends React.Component {
         data={this.state.data}
         layout={{
           height: 450,
+          margin: { l: 50, r: 50, b: 50, t: 50 },
           grid: {
             rows: this.props.socketObjs.length / this.size,
             columns: this.size,

@@ -51,6 +51,22 @@ export function parseRandom(event) {
   return event.data.split(" ").map((str) => parseFloat(str));
 }
 
+export function parseRandom2(event) {
+  return event.data.split(" ").map((str) => parseFloat(str));
+}
+
+export function parseRandom3(event) {
+  return event.data.split(" ").map((str) => parseFloat(str));
+}
+
+export function parseRandom4(event) {
+  return event.data.split(" ").map((str) => parseFloat(str));
+}
+
+export function parseRandom5(event) {
+  return event.data.split(" ").map((str) => parseFloat(str));
+}
+
 export function parseDeadAlive(event) {
   return event.data === "1";
 }

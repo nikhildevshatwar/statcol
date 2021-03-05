@@ -79,12 +79,32 @@ function MemChart() {
           socket: Sockets.getByType("random"),
           parser: (parsedData) => parsedData,
         },
+        {
+          socket: Sockets.getByType("random2"),
+          parser: (parsedData) => parsedData,
+        },
+        {
+          socket: Sockets.getByType("random3"),
+          parser: (parsedData) => parsedData,
+        },
+        {
+          socket: Sockets.getByType("random4"),
+          parser: (parsedData) => parsedData,
+        },
+        {
+          socket: Sockets.getByType("random5"),
+          parser: (parsedData) => parsedData,
+        },
       ]}
       labelSets={[
         ["Free", "Used", "Buffer and Cache", "Shared"],
         ["X", "Y", "Z", "W"],
+        ["X", "Y", "Z", "W"],
+        ["X", "Y", "Z", "W"],
+        ["X", "Y", "Z", "W"],
+        ["X", "Y", "Z", "W"],
       ]}
-      titles={["Main Memory", "Random"]}
+      titles={["Main Memory", "Random", "R2", "R3", "R4", "R5"]}
       settingsName="Memory and Random"
     />
   );

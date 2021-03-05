@@ -83,13 +83,13 @@ class PieChart extends React.Component {
         className={classes.root}
         data={this.state.data}
         layout={{
-          height: 300,
-          grid: { rows: this.size, columns: this.size },
+          height: 450,
+          grid: {
+            rows: this.props.socketObjs.length / this.size,
+            columns: this.size,
+          },
           showlegend: false,
           font: { color: colors.text },
-          margin: {
-            pad: 30,
-          },
           paper_bgcolor: colors.container,
           plot_bgcolor: colors.plot,
           uirevision: 1,

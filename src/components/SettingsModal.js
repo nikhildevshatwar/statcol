@@ -4,7 +4,10 @@ import Modal from "@material-ui/core/Modal";
 import { colors } from "../globals";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import SettingsIcon from "@material-ui/icons/Settings";
 import { store } from "react-notifications-component";
 
 function rand() {
@@ -135,14 +138,17 @@ export default function SettingsModal(props) {
 
   return (
     <div>
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="primary"
-        onClick={handleOpen}
-      >
-        Settings
-      </Button>
+      <Tooltip title="Settings">
+        <IconButton
+          edge="start"
+          color="secondary"
+          aria-label="settings"
+          className={classes.button}
+          onClick={handleOpen}
+        >
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
       <Modal
         open={open}
         onClose={handleClose}

@@ -1,16 +1,18 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import RedoIcon from "@material-ui/icons/Redo";
 import { makeStyles } from "@material-ui/core/styles";
 import SettingsModal from "./SettingsModal";
+import ToolTip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "row",
   },
   buttonGroup: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
   },
   button: {
     margin: 5,
@@ -22,23 +24,25 @@ export default function Generic(props) {
 
   return (
     <div className={classes.root}>
-      {props.innerComponent}
       <div className={classes.buttonGroup}>
-        <Button
-          id={`${props.socket.type}Reset`}
-          className={classes.button}
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            if (props.resetHandler !== undefined) {
-              props.resetHandler();
-            } else {
-              props.socket.connect();
-            }
-          }}
-        >
-          Reset
-        </Button>
+        <ToolTip title="Reset">
+          <IconButton
+            id={`${props.socket.type}Reset`}
+            edge="start"
+            color="secondary"
+            aria-label="reset"
+            className={classes.button}
+            onClick={() => {
+              if (props.resetHandler !== undefined) {
+                props.resetHandler();
+              } else {
+                props.socket.connect();
+              }
+            }}
+          >
+            <RedoIcon />
+          </IconButton>
+        </ToolTip>
         <SettingsModal
           className={classes.button}
           name={props.settings.name || "Settings"}
@@ -48,6 +52,7 @@ export default function Generic(props) {
           }}
         />
       </div>
+      {props.innerComponent}
     </div>
   );
 }

@@ -61,9 +61,6 @@ const styles = (theme) => ({
   menuButtonHidden: {
     display: "none",
   },
-  publishButton: {
-    marginLeft: 8,
-  },
   settingsButton: {
     marginLeft: 8,
   },

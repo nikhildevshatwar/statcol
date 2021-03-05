@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { colors } from "../globals";
 import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore";
@@ -117,25 +118,27 @@ export default function ConnectModal(props) {
   );
 
   return (
-    <div>
-      <IconButton
-        id="connectModal"
-        edge="start"
-        color="inherit"
-        aria-label="send ip address"
-        className={classes.publishButton}
-        onClick={handleOpen}
-      >
-        <SettingsBackupRestoreIcon />
-      </IconButton>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        {body}
-      </Modal>
-    </div>
+    <Tooltip title="Connect">
+      <div>
+        <IconButton
+          id="connectModal"
+          edge="start"
+          color="inherit"
+          aria-label="send ip address"
+          className={classes.publishButton}
+          onClick={handleOpen}
+        >
+          <SettingsBackupRestoreIcon />
+        </IconButton>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          {body}
+        </Modal>
+      </div>
+    </Tooltip>
   );
 }

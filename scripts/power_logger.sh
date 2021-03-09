@@ -4,6 +4,8 @@
 # Add support for other platforms by discovering the instances of
 # GPIO chips, GPIO controllers, and board specific hwmon connections, etc
 
+ARRAY=(${QUERY_STRING//[=&&]/ })
+
 init() {
 	#Find all the gpiochip instances
 	find /sys/class/gpio -name '*gpiochip*' | grep -o '...$' > index
@@ -44,7 +46,7 @@ logger() {
 			val=`expr $val + $tmp`
 			a=`expr $a + 1`
 		done
-		sleep 1
+		sleep ${ARRAY[1]:=0.3}
 
 		volt_uW[0]=`cat /sys/class/hwmon/hwmon0/power1_input`
 		volt_uW[1]=`cat /sys/class/hwmon/hwmon5/power1_input`

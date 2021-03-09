@@ -22,7 +22,15 @@ export function parseCPU(event) {
 }
 
 export function parseTemp(event) {
-  return event.data.split(" ").map((str) => parseInt(str));
+  const data = event.data.split(" ");
+
+  return [
+    parseFloat(data[3]),
+    parseFloat(data[5]),
+    parseFloat(data[7]),
+    parseFloat(data[9]),
+    parseFloat(data[11]),
+  ];
 }
 
 export function parseGPU(event) {

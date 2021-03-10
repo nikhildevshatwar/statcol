@@ -11,7 +11,9 @@ function buildSocket(type, parser, samplingInterval) {
     updaters: [],
     closers: [],
     parser: parser,
-    samplingInterval: samplingInterval,
+    args: {
+      samplingInterval: samplingInterval,
+    },
   };
 
   socket.init = (address, port) => {
@@ -28,13 +30,22 @@ function buildSocket(type, parser, samplingInterval) {
     socket.handle = connectToWebSocket(socket);
   };
 
+  socket.add_argument = (key, value) => {
+    socket.args[key] = value;
+
+    return socket;
+  };
+
   return socket;
 }
 
 export const Sockets = [
   buildSocket("memory", Parsers.parseFreeCommand, 0.3),
   buildSocket("cpu", Parsers.parseCPU, 0.5),
-  buildSocket("temp", Parsers.parseTemp, 1.0),
+  buildSocket("power_logger", Parsers.parseTemp, 1.0).add_argument(
+    "delay",
+    1000
+  ),
   buildSocket("gpu", Parsers.parseGPU, 1.5),
   buildSocket("uptime", Parsers.parseUptime, 1.0),
   buildSocket("load", Parsers.parseLoad, 1.0),
@@ -101,9 +112,7 @@ function connectToWebSocket(socketRef) {
     "/",
     socketRef.type,
     "?",
-    argsToString({
-      samplingInterval: socketRef.samplingInterval,
-    }),
+    argsToString(socketRef.args),
   ].join("");
 
   const socketHandle = new WebSocket(socketURL);

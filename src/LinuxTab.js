@@ -125,8 +125,8 @@ function CPUSeries() {
 function TempSeries() {
   return (
     <TimeSeries
-      socket={Sockets.getByType("temp")}
-      seriesNames={["T1", "T2", "T3", "T4", "T5", "T6", "T7"]}
+      socket={Sockets.getByType("power_logger")}
+      seriesNames={["T1", "T2", "T3", "T4", "T5"]}
       title="Temperature Load"
       yAxisTitle="Load"
       settingsName="Temperature"

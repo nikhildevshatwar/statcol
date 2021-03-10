@@ -22,7 +22,7 @@ class TimeSeries extends React.Component {
         type: "scatter",
         mode: "lines",
       })),
-      samplingInterval: this.props.socket.samplingInterval,
+      samplingInterval: this.props.socket.args.samplingInterval,
       clockCycle: this.props.clockCycle || 1000,
     };
   }
@@ -110,9 +110,9 @@ class TimeSeries extends React.Component {
             {
               id: "samplingInterval",
               name: "Sampling interval",
-              defaultValue: this.props.socket.samplingInterval,
+              defaultValue: this.props.socket.args.samplingInterval,
               update: (newValue) => {
-                this.props.socket.samplingInterval = newValue;
+                this.props.socket.args.samplingInterval = newValue;
               },
             },
             {

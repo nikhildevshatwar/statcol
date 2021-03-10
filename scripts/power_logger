@@ -68,4 +68,4 @@ logger() {
 init
 #Invoke logger for a good long time
 #websocketd --devconsole --port=8090 bash -c logger 1000
-logger $1
+logger ${ARRAY[3]:=1000}

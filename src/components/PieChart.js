@@ -109,9 +109,9 @@ class PieChart extends React.Component {
             return {
               id: `${socketObj.socket.type}samplingInterval`,
               name: `Sampling Interval: ${socketObj.socket.type}`,
-              defaultValue: socketObj.socket.samplingInterval,
+              defaultValue: socketObj.socket.args.samplingInterval,
               update: (newValue) => {
-                socketObj.socket.samplingInterval = newValue;
+                socketObj.socket.args.samplingInterval = newValue;
               },
             };
           }),

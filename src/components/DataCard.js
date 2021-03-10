@@ -19,7 +19,7 @@ class DataCard extends React.Component {
     super(props);
     this.state = {
       data: null,
-      samplingInterval: this.props.socket.samplingInterval,
+      samplingInterval: this.props.socket.args.samplingInterval,
     };
   }
 
@@ -56,9 +56,9 @@ class DataCard extends React.Component {
             {
               id: "samplingInterval",
               name: "Sampling Interval",
-              defaultValue: this.props.socket.samplingInterval,
+              defaultValue: this.props.socket.args.samplingInterval,
               update: (newValue) => {
-                this.props.socket.samplingInterval = newValue;
+                this.props.socket.args.samplingInterval = newValue;
               },
             },
           ],

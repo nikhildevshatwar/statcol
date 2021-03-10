@@ -43,7 +43,7 @@ export const Sockets = [
   buildSocket("memory", Parsers.parseFreeCommand, 0.3),
   buildSocket("cpu", Parsers.parseCPU, 0.5),
   buildSocket("power_logger", Parsers.parseTemp, 1.0).add_argument(
-    "delay",
+    "numSamples",
     1000
   ),
   buildSocket("gpu", Parsers.parseGPU, 1.5),

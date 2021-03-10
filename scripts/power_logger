@@ -4,7 +4,11 @@
 # Add support for other platforms by discovering the instances of
 # GPIO chips, GPIO controllers, and board specific hwmon connections, etc
 
+input_sample_count=$1
+
 ARRAY=(${QUERY_STRING//[=&&]/ })
+SAMPLING_INTERVAL=${ARRAY[1]:=0.3}
+NUM_SAMPLES=${ARRAY[3]:=${input_sample_count:=10}}
 
 init() {
 	#Find all the gpiochip instances
@@ -35,7 +39,7 @@ logger() {
 	volt_uW=(0 0 0 0 0)
 	volt_W=(0 0 0 0 0)
 
-	while [ $t -lt $1 ]
+	while [ $t -lt $NUM_SAMPLES ]
 	do
 		val=0
 		tmp=0
@@ -46,7 +50,7 @@ logger() {
 			val=`expr $val + $tmp`
 			a=`expr $a + 1`
 		done
-		sleep ${ARRAY[1]:=0.3}
+		sleep $SAMPLING_INTERVAL
 
 		volt_uW[0]=`cat /sys/class/hwmon/hwmon0/power1_input`
 		volt_uW[1]=`cat /sys/class/hwmon/hwmon5/power1_input`
@@ -68,4 +72,4 @@ logger() {
 init
 #Invoke logger for a good long time
 #websocketd --devconsole --port=8090 bash -c logger 1000
-logger ${ARRAY[3]:=1000}
+logger

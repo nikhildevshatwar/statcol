@@ -11,6 +11,11 @@ SAMPLING_INTERVAL=${ARRAY[1]:=0.3}
 NUM_SAMPLES=${ARRAY[3]:=${input_sample_count:=10}}
 
 init() {
+	#Ensure that gpiochips exist on hardware
+	if [[ ! -d "/sys/class/gpio" ]]; then
+		exit 1
+	fi
+
 	#Find all the gpiochip instances
 	find /sys/class/gpio -name '*gpiochip*' | grep -o '...$' > index
 	str=601000.gpio
@@ -46,6 +51,9 @@ logger() {
 		a=0
 		while [ $a -lt 16 ]
 		do
+			if [[ ! -d "/sys/class/hwmon/hwmon$a/power1_input" ]]; then
+				exit 1
+			fi
 			tmp=`cat /sys/class/hwmon/hwmon$a/power1_input`
 			val=`expr $val + $tmp`
 			a=`expr $a + 1`

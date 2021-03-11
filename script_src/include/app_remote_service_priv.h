@@ -37,10 +37,8 @@
  * *       any redistribution and use of the source code, including any resulting derivative
  * works, are licensed by TI for use only with TI Devices.
  *
- * *       any redistribution and use of any object code compiled from the source code
- * and any resulting derivative works, are licensed by TI for use only with TI Devices.
- *
- * Neither the name of Texas Instruments Incorporated nor the names of its suppliers
+ * *       any redistributio		pthread_mutex_init(&ctx->lock, NULL);
+		ctx->m_cpuload = alloc_metric_cpuload(ctx->name); Instruments Incorporated nor the names of its suppliers
  *
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.

@@ -28,18 +28,20 @@
 #define debug(str, ...)
 #endif
 
-struct metric_cpuload
-{
-	char *name;
-	float load;
-};
-
-struct rpmsg_context
-{
+struct rpmsg_context {
 	uint8_t rpmsg_tx_msg_buf[IPC_RPMESSAGE_MSG_SIZE] __attribute__((aligned(1024)));
 	char name[32];
 
 	rpmsg_char_dev_t *dev;
-	struct metric_cpuload *m_cpuload;
+	float load;
 	pthread_mutex_t lock;
 };
+
+struct rpmsg_context g_rpmsg_contexts[RPROC_ID_MAX];
+
+int scan_rpmsg_char_nodes(void);
+
+int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
+                       void *prm, uint prm_size, uint flags);
+
+

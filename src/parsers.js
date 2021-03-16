@@ -37,6 +37,26 @@ export function parseCPU(event) {
   return [parseCPU.seriesName, parsedData];
 }
 
+export function parseRemoteCPU(event) {
+  const data = event.data.split(" ");
+  const count = parseInt(data[0]);
+  if (isNaN(count)) {
+    return null;
+  }
+
+  if (!parseRemoteCPU.hasOwnProperty("seriesName")) {
+    parseRemoteCPU.seriesName = new Array(count).fill(0).map((_, index) => {
+      return data[2 * index + 1];
+    });
+  }
+
+  const parsedData = new Array(count).fill(0).map((_, index) => {
+    return parseFloat(data[2 * index + 2]);
+  });
+
+  return [parseRemoteCPU.seriesName, parsedData];
+}
+
 export function parseTemp(event) {
   const data = event.data.split(" ");
   const count = parseInt(data[0]);

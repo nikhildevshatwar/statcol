@@ -42,6 +42,7 @@ function buildSocket(type, parser, samplingInterval) {
 export const Sockets = [
   buildSocket("memory", Parsers.parseFreeCommand, 0.3),
   buildSocket("cpu", Parsers.parseCPU, 0.5),
+  buildSocket("remote_cpuload", Parsers.parseRemoteCPU, 0.5),
   buildSocket("power_logger", Parsers.parseTemp, 1.0).add_argument(
     "numSamples",
     1000

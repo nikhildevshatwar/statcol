@@ -39,7 +39,7 @@ void *print_remote_cpu_data(void *data) {
             *ptr = '\0';
 
             if (count) {
-                printf("WS-cpuload: %d%s\n", count, buffer);
+                printf("%d%s\n", count, buffer);
             }
         }
 

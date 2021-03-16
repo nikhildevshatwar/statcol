@@ -6,7 +6,6 @@ function GPUSeries() {
   return (
     <TimeSeries
       socket={Sockets.getByType("gpu")}
-      seriesNames={["G1", "G2"]}
       title="GPU Load"
       yAxisTitle="Load"
       settingsName="GPU"

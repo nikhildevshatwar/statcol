@@ -72,7 +72,7 @@ logger() {
 		volt_W[3]=`echo "scale=6; ${volt_uW[3]} / 1000000" | bc`
 		volt_W[4]=`echo "scale=6; ${volt_uW[4]} / 1000000" | bc`
 
-		echo "Temp: 5 MCU `echo ${volt_W[0]}` CORE `echo ${volt_W[1]}` CPU `echo ${volt_W[2]}` USB `echo ${volt_W[3]}` TOTAL_16_RAILS `echo ${volt_W[4]}`"
+		echo "5 MCU `echo ${volt_W[0]}` CORE `echo ${volt_W[1]}` CPU `echo ${volt_W[2]}` USB `echo ${volt_W[3]}` TOTAL_16_RAILS `echo ${volt_W[4]}`"
 		t=`expr $t + 1`
 	done
 }

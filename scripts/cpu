@@ -7,6 +7,6 @@ while true; do
 	Y=$((50 + $RANDOM % 5))
 	Z=$((90 + $RANDOM % 10))
 	W=$((75 + $RANDOM % 5))
-	echo $X $Y $Z $W
+	echo 4 C1 $X C2 $Y C3 $Z C4 $W
 	sleep ${ARRAY[1]:=0.3}
 done

@@ -15,13 +15,7 @@ class TimeSeries extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.seriesNames.map((seriesName) => ({
-        name: seriesName,
-        x: [],
-        y: [],
-        type: "scatter",
-        mode: "lines",
-      })),
+      data: [],
       samplingInterval: this.props.socket.args.samplingInterval,
       clockCycle: this.props.clockCycle || 1000,
     };
@@ -30,14 +24,26 @@ class TimeSeries extends React.Component {
   componentDidMount() {
     this.props.socket.updaters.push((parsedData) => {
       const date = extractTimeString(new Date());
+      const seriesNames = parsedData[0];
+      const data = parsedData[1];
+
       this.setState((state) => ({
-        data: state.data.map((seriesData, index) => ({
-          ...seriesData,
-          x: [...seriesData.x, date].splice(-this.state.clockCycle),
-          y: [...seriesData.y, parsedData[index]].splice(
-            -this.state.clockCycle
-          ),
-        })),
+        data:
+          state.data.length === 0
+            ? seriesNames.map((seriesName, index) => ({
+                name: seriesName,
+                x: [date],
+                y: [data[index]],
+                type: "scatter",
+                mode: "lines",
+              }))
+            : state.data.map((seriesData, index) => ({
+                ...seriesData,
+                x: [...seriesData.x, date].splice(-this.state.clockCycle),
+                y: [...seriesData.y, data[index]].splice(
+                  -this.state.clockCycle
+                ),
+              })),
       }));
     });
 

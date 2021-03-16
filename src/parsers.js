@@ -18,23 +18,63 @@ export function parseFreeCommand(event) {
 }
 
 export function parseCPU(event) {
-  return event.data.split(" ").map((str) => parseInt(str));
+  const data = event.data.split(" ");
+  const count = parseInt(data[0]);
+  if (isNaN(count)) {
+    return null;
+  }
+
+  if (!parseCPU.hasOwnProperty("seriesName")) {
+    parseCPU.seriesName = new Array(count).fill(0).map((_, index) => {
+      return data[2 * index + 1];
+    });
+  }
+
+  const parsedData = new Array(count).fill(0).map((_, index) => {
+    return parseInt(data[2 * index + 2]);
+  });
+
+  return [parseCPU.seriesName, parsedData];
 }
 
 export function parseTemp(event) {
   const data = event.data.split(" ");
+  const count = parseInt(data[0]);
+  if (isNaN(count)) {
+    return null;
+  }
 
-  return [
-    parseFloat(data[3]),
-    parseFloat(data[5]),
-    parseFloat(data[7]),
-    parseFloat(data[9]),
-    parseFloat(data[11]),
-  ];
+  if (!parseTemp.hasOwnProperty("seriesName")) {
+    parseTemp.seriesName = new Array(count).fill(0).map((_, index) => {
+      return data[2 * index + 1];
+    });
+  }
+
+  const parsedData = new Array(count).fill(0).map((_, index) => {
+    return parseFloat(data[2 * index + 2]);
+  });
+
+  return [parseTemp.seriesName, parsedData];
 }
 
 export function parseGPU(event) {
-  return event.data.split(" ").map((str) => parseInt(str));
+  const data = event.data.split(" ");
+  const count = parseInt(data[0]);
+  if (isNaN(count)) {
+    return null;
+  }
+
+  if (!parseGPU.hasOwnProperty("seriesName")) {
+    parseGPU.seriesName = new Array(count).fill(0).map((_, index) => {
+      return data[2 * index + 1];
+    });
+  }
+
+  const parsedData = new Array(count).fill(0).map((_, index) => {
+    return parseInt(data[2 * index + 2]);
+  });
+
+  return [parseGPU.seriesName, parsedData];
 }
 
 export function parseUptime(event) {

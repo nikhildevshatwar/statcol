@@ -30,7 +30,9 @@ void *print_remote_cpu_data(void *data) {
             count = 0;
             for (int j = 0; j < MAX_RPMSG_CONTEXTS; j++) {
                 ctx = &g_rpmsg_contexts[j];
-                if (!ctx->name) continue;
+
+                if (ctx->name[0] == 0) continue;
+
                 ptr += sprintf(ptr, " %s %03.2f", ctx->name, ctx->load);
                 count++;
             }

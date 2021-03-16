@@ -4,10 +4,10 @@ LIBS := -lti_rpmsg_char -lpthread
 SYSROOT ?= /
 CFLAGS += --sysroot=$(SYSROOT)
 
-all: scripts/cpuload
+all: scripts/remote_cpuload
 
-scripts/cpuload: script_src/cpuload.c script_src/statcol.c
+scripts/remote_cpuload: script_src/remote_cpuload.c script_src/statcol.c
 	$(CROSS_COMPILE)gcc $(CFLAGS) $(LIBS) -o $@ $^
 
 clean:
-	rm -rf scripts/cpuload
+	rm -rf scripts/remote_cpuload

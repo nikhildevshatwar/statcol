@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ARRAY=(${QUERY_STRING//[=&&]/ })
+
+unbuffer scripts/remote_cpuload_binary

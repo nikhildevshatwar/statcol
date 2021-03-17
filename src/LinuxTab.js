@@ -132,6 +132,17 @@ function TempSeries() {
   );
 }
 
+function RemoteCPUSeries() {
+  return (
+    <TimeSeries
+      socket={Sockets.getByType("remote_cpuload")}
+      title="Remote CPU"
+      yAxisTitle="Load"
+      settingsName="Remote CPU"
+    />
+  );
+}
+
 export default function LinuxTab() {
   const classes = useStyles();
 
@@ -142,6 +153,7 @@ export default function LinuxTab() {
       <div className={classes.chart}>
         <CPUSeries />
         <TempSeries />
+        <RemoteCPUSeries />
       </div>
     </React.Fragment>
   );

@@ -38,10 +38,9 @@ struct rpmsg_context {
 };
 
 struct rpmsg_context g_rpmsg_contexts[RPROC_ID_MAX];
+struct rpmsg_context *g_ddr_ctx;
 
 int scan_rpmsg_char_nodes(void);
 
 int remote_service_run(struct rpmsg_context *ctx, char *service, uint cmd,
                        void *prm, uint prm_size, uint flags);
-
-

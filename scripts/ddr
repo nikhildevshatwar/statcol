@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ARRAY=(${QUERY_STRING//[=&&]/ })
+
+unbuffer scripts/ddr_binary

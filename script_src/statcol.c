@@ -18,6 +18,10 @@ int scan_rpmsg_char_nodes(void) {
 
         debug(">> Opened RPMSG char device. Local ep = %d, fd = %d\n",
               dev->endpt, dev->fd);
+
+        if (i == R5F_MAIN0_0) {
+            g_ddr_ctx = ctx;
+        }
     }
     return num_ctx;
 }

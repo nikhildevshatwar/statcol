@@ -24,6 +24,8 @@ void *print_remote_cpu_data(void *data) {
     char buffer[200], *ptr;
     int count, i = 0;
 
+    struct arg_object *args = (struct arg_object *)(data);
+
     while (true) {
         if (i % 4 == 0) {
             ptr = &buffer[0];
@@ -43,7 +45,7 @@ void *print_remote_cpu_data(void *data) {
             }
         }
 
-        usleep(100 * 1000);
+        usleep(args->sampling_interval);
         i++;
     }
 }
@@ -53,12 +55,17 @@ void *print_remote_cpu_data(void *data) {
 
 int main(int argc, char *argv[]) {
     pthread_t thr_collect, thr_print;
+    struct arg_object args = {400 * 1000};
+
+    if (argc > 1) {
+        args.sampling_interval = (uint32_t)(strtod(argv[1], NULL) * 1000000);
+    }
 
     rpmsg_char_init(NULL);
     if (scan_rpmsg_char_nodes()) {
         /* Create the threads and wait for them */
         pthread_create(&thr_collect, NULL, collect_remote_cpu_data, NULL);
-        pthread_create(&thr_print, NULL, print_remote_cpu_data, NULL);
+        pthread_create(&thr_print, NULL, print_remote_cpu_data, &args);
         pthread_join(thr_print, NULL);
         pthread_join(thr_collect, NULL);
     }

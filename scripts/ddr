@@ -2,4 +2,4 @@
 
 ARRAY=(${QUERY_STRING//[=&&]/ })
 
-unbuffer scripts/ddr_binary
+unbuffer scripts/ddr_binary ${ARRAY[1]:=0.4}

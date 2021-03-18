@@ -28,6 +28,8 @@ void *print_ethfw_stats(void *data) {
     char buffer[200], *ptr;
     int count, i;
 
+    struct arg_object *args = (struct arg_object *)(data);
+
     while (g_ethfw_ctx != NULL) {
         remote_service_run(g_ethfw_ctx, APP_ETHFW_STATS_SERVICE_NAME,
                            APP_ETHFW_STATS_CMD_GET_BANDWIDTH, &ethfw_stats,
@@ -49,17 +51,22 @@ void *print_ethfw_stats(void *data) {
             printf("%d%s\n", count * 2, buffer);
         }
 
-        usleep(400 * 1000);
+        usleep(args->sampling_interval);
     }
 }
 
 int main(int argc, char *argv[]) {
     pthread_t thr_collect, thr_print;
+    struct arg_object args = {400 * 1000};
+
+    if (argc > 1) {
+        args.sampling_interval = (uint32_t)(strtod(argv[1], NULL) * 1000000);
+    }
 
     rpmsg_char_init(NULL);
     if (scan_rpmsg_char_nodes()) {
         /* Create the threads and wait for them */
-        pthread_create(&thr_print, NULL, print_ethfw_stats, NULL);
+        pthread_create(&thr_print, NULL, print_ethfw_stats, &args);
         pthread_join(thr_print, NULL);
     }
 

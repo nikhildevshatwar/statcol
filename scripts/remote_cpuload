@@ -2,4 +2,4 @@
 
 ARRAY=(${QUERY_STRING//[=&&]/ })
 
-unbuffer scripts/remote_cpuload_binary
+unbuffer scripts/remote_cpuload_binary ${ARRAY[1]:=0.4}

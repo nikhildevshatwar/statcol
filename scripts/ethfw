@@ -2,4 +2,4 @@
 
 ARRAY=(${QUERY_STRING//[=&&]/ })
 
-unbuffer scripts/ethfw_binary
+unbuffer scripts/ethfw_binary ${ARRAY[1]:=0.4}

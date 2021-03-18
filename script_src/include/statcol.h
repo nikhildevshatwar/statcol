@@ -37,6 +37,10 @@ struct rpmsg_context {
 	pthread_mutex_t lock;
 };
 
+struct arg_object {
+    uint32_t sampling_interval;
+};
+
 struct rpmsg_context g_rpmsg_contexts[RPROC_ID_MAX];
 struct rpmsg_context *g_ddr_ctx;
 struct rpmsg_context *g_ethfw_ctx;

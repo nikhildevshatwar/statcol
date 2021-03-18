@@ -39,6 +39,7 @@ struct rpmsg_context {
 
 struct rpmsg_context g_rpmsg_contexts[RPROC_ID_MAX];
 struct rpmsg_context *g_ddr_ctx;
+struct rpmsg_context *g_ethfw_ctx;
 
 int scan_rpmsg_char_nodes(void);
 

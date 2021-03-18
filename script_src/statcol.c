@@ -21,6 +21,7 @@ int scan_rpmsg_char_nodes(void) {
 
         if (i == R5F_MAIN0_0) {
             g_ddr_ctx = ctx;
+            g_ethfw_ctx = ctx;
         }
     }
     return num_ctx;

@@ -8,6 +8,7 @@ import TableCell from "@material-ui/core/TableCell";
 import { colors } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
+import Meter from "./components/Meter";
 import PieChart from "./components/PieChart";
 import { Sockets } from "./websocket";
 
@@ -141,6 +142,10 @@ function RemoteCPUSeries() {
       settingsName="Remote CPU"
     />
   );
+}
+
+function MeterExample() {
+  return (<Meter socket={Sockets.getByType("meter_example")} settingsName="Meter Example" />);
 }
 
 export default function LinuxTab() {

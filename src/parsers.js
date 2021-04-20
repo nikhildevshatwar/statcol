@@ -138,3 +138,7 @@ export function parseRandom5(event) {
 export function parseDeadAlive(event) {
   return event.data === "1";
 }
+
+export function parseMeter(event) {
+  return parseInt(event.data);
+}

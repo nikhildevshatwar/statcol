@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ARRAY=(${QUERY_STRING//[=&&]/ })
+
+while true; do
+	X=$((500 + 25 * ($RANDOM % 5) ))
+	echo $X
+    sleep ${ARRAY[1]:=0.3}
+done

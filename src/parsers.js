@@ -142,3 +142,42 @@ export function parseDeadAlive(event) {
 export function parseMeter(event) {
   return parseInt(event.data);
 }
+
+export function parseDemo(event) {
+  if (!parseDemo.hasOwnProperty("output")) {
+    // model_name, sample_count, capture, pre-process, dl-inference, post-process, total_time, fps
+    parseDemo.output = ["", "", "", "", "", "", "", ""];
+  }
+
+  const data = event.data.replace(/[^a-zA-Z0-9:\. ]/g, "").trim().split(':');
+  const key = data[0].trim();
+  const regex = /[+-]?\d+(?:\.\d+)?/g;
+  const value = data[1].trim();
+
+  if (key.startsWith("modelname")) {
+    parseDemo.output[0] = value;
+  }
+  if (key.startsWith("capture")) {
+    console.log(value);
+    const values = value.match(regex);
+    parseDemo.output[1] = values[2];
+    parseDemo.output[2] = values[1];
+  }
+  if (key.startsWith("preprocess")) {
+    parseDemo.output[3] = value.match(regex)[1];
+  }
+  if (key.startsWith("dlinference")) {
+    parseDemo.output[4] = value.match(regex)[1];
+  }
+  if (key.startsWith("postprocess")) {
+    parseDemo.output[5] = value.match(regex)[1];
+  }
+  if (key.startsWith("total time")) {
+    parseDemo.output[6] = value.match(regex)[1];
+  }
+  if (key.startsWith("framerate")) {
+    parseDemo.output[7] = value.match(regex)[1];
+  }
+
+  return parseDemo.output;
+}

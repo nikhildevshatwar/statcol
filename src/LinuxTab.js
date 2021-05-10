@@ -30,6 +30,48 @@ const useStyles = makeStyles({
   },
 });
 
+function DemoCard() {
+  const content = (parsedData) => {
+    return (
+      <Table size="small">
+        Object Detection Demo
+        <TableHead>
+          <TableRow color="white">
+            <StyledTableCell>Model Name</StyledTableCell>
+            <StyledTableCell>Sample Count</StyledTableCell>
+            <StyledTableCell>Capture</StyledTableCell>
+            <StyledTableCell>Pre-Process</StyledTableCell>
+            <StyledTableCell>Dl-Inference</StyledTableCell>
+            <StyledTableCell>Post-Process</StyledTableCell>
+            <StyledTableCell>Total Time</StyledTableCell>
+            <StyledTableCell>Framerate</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <StyledTableCell>{parsedData[0]}</StyledTableCell>
+            <StyledTableCell>{parsedData[1]}</StyledTableCell>
+            <StyledTableCell>{parsedData[2]}</StyledTableCell>
+            <StyledTableCell>{parsedData[3]}</StyledTableCell>
+            <StyledTableCell>{parsedData[4]}</StyledTableCell>
+            <StyledTableCell>{parsedData[5]}</StyledTableCell>
+            <StyledTableCell>{parsedData[6]}</StyledTableCell>
+            <StyledTableCell>{parsedData[7]}</StyledTableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+  };
+
+  return (
+    <DataCard
+      socket={Sockets.getByType("demo_test")}
+      content={content}
+      settingsName="Demo Test"
+    />
+  );
+}
+
 function MemCard() {
   const content = (parsedData) => {
     return (
@@ -160,6 +202,8 @@ export default function LinuxTab() {
         <TempSeries />
         <RemoteCPUSeries />
       </div>
+      <MeterExample />
+      <DemoCard />
     </React.Fragment>
   );
 }

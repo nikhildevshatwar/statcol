@@ -203,6 +203,7 @@ export default function LinuxTab() {
         <RemoteCPUSeries />
       </div>
       <MeterExample />
+      <DemoCard />
     </React.Fragment>
   );
 }

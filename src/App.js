@@ -143,7 +143,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       drawerOpen: true,
-      tabSelected: "Linux",
+      tabSelected: "Edge AI",
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);

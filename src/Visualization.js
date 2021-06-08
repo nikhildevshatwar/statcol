@@ -1,10 +1,10 @@
-import LinuxTab from "./LinuxTab";
+import EdgeAITab from "./EdgeAITab";
 import GPUTab from "./GPUTab";
 
 export default function Visualization({ tabSelected }) {
   switch (tabSelected) {
-    case "Linux":
-      return <LinuxTab />;
+    case "Edge AI":
+      return <EdgeAITab />;
     case "GPU":
       return <GPUTab />;
     default:

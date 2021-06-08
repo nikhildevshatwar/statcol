@@ -28,12 +28,15 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "row",
   },
+  table: {
+    tableLayout: "fixed",
+  },
 });
 
 function DemoCard() {
   const content = (parsedData) => {
     return (
-      <Table size="small">
+      <Table size="small" style={{tableLayout: 'fixed'}}>
         Object Detection Demo Statistics (in ms)
         <TableHead>
           <TableRow color="white">
@@ -67,7 +70,7 @@ function DemoCard() {
 function MemCard() {
   const content = (parsedData) => {
     return (
-      <Table size="small">
+      <Table size="small" style={{tableLayout: 'fixed'}}>
         Memory (In MB):
         <TableHead>
           <TableRow color="white">
@@ -182,12 +185,12 @@ function MeterExample() {
   return (<Meter socket={Sockets.getByType("meter_example")} settingsName="Meter Example" />);
 }
 
-export default function LinuxTab() {
+export default function EdgeAITab() {
   const classes = useStyles();
 
   return (
     <React.Fragment>
-      <MemCard />
+      <MemCard/>
       <MemChart />
       <div className={classes.chart}>
         <CPUSeries />

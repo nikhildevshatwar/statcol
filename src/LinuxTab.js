@@ -34,29 +34,21 @@ function DemoCard() {
   const content = (parsedData) => {
     return (
       <Table size="small">
-        Object Detection Demo
+        Object Detection Demo Statistics (in ms)
         <TableHead>
           <TableRow color="white">
-            <StyledTableCell>Model Name</StyledTableCell>
-            <StyledTableCell>Sample Count</StyledTableCell>
             <StyledTableCell>Capture</StyledTableCell>
             <StyledTableCell>Pre-Process</StyledTableCell>
             <StyledTableCell>Dl-Inference</StyledTableCell>
             <StyledTableCell>Post-Process</StyledTableCell>
-            <StyledTableCell>Total Time</StyledTableCell>
-            <StyledTableCell>Framerate</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
-            <StyledTableCell>{parsedData[0]}</StyledTableCell>
-            <StyledTableCell>{parsedData[1]}</StyledTableCell>
-            <StyledTableCell>{parsedData[2]}</StyledTableCell>
-            <StyledTableCell>{parsedData[3]}</StyledTableCell>
-            <StyledTableCell>{parsedData[4]}</StyledTableCell>
-            <StyledTableCell>{parsedData[5]}</StyledTableCell>
-            <StyledTableCell>{parsedData[6]}</StyledTableCell>
-            <StyledTableCell>{parsedData[7]}</StyledTableCell>
+            <StyledTableCell>{parsedData[0][0]} ({parsedData[0][1]})</StyledTableCell>
+            <StyledTableCell>{parsedData[1][0]} ({parsedData[1][1]})</StyledTableCell>
+            <StyledTableCell>{parsedData[2][0]} ({parsedData[2][1]})</StyledTableCell>
+            <StyledTableCell>{parsedData[3][0]} ({parsedData[3][1]})</StyledTableCell>
           </TableRow>
         </TableBody>
       </Table>

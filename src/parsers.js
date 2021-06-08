@@ -143,41 +143,26 @@ export function parseMeter(event) {
   return parseInt(event.data);
 }
 
-export function parseDemo(event) {
-  if (!parseDemo.hasOwnProperty("output")) {
-    // model_name, sample_count, capture, pre-process, dl-inference, post-process, total_time, fps
-    parseDemo.output = ["", "", "", "", "", "", "", ""];
+export function buildDemoParser(attribute_count) {
+  function parseDemo(event) {
+    if (!parseDemo.hasOwnProperty("output")) {
+      parseDemo.output = Array(attribute_count);
+      parseDemo.output.fill([0, 0]);
+      parseDemo.index = 0;
+    }
+
+    if (!event.data.startsWith("[UTILS]")) {
+      return parseDemo.output;
+    }
+
+    const regex = /[+-]?\d+(?:\.\d+)?/g;
+    const values = event.data.match(regex);
+    parseDemo.output[parseDemo.index][0] = values[0];
+    parseDemo.output[parseDemo.index][1] = values[1];
+    parseDemo.index = (parseDemo.index + 1) % attribute_count;
+
+    return parseDemo.output;
   }
 
-  const data = event.data.replace(/[^a-zA-Z0-9:\. ]/g, "").trim().split(':');
-  const key = data[0].trim();
-  const regex = /[+-]?\d+(?:\.\d+)?/g;
-  const value = data[1].trim();
-
-  if (key.startsWith("modelname")) {
-    parseDemo.output[0] = value;
-  }
-  if (key.startsWith("capture")) {
-    console.log(value);
-    const values = value.match(regex);
-    parseDemo.output[1] = values[2];
-    parseDemo.output[2] = values[1];
-  }
-  if (key.startsWith("preprocess")) {
-    parseDemo.output[3] = value.match(regex)[1];
-  }
-  if (key.startsWith("dlinference")) {
-    parseDemo.output[4] = value.match(regex)[1];
-  }
-  if (key.startsWith("postprocess")) {
-    parseDemo.output[5] = value.match(regex)[1];
-  }
-  if (key.startsWith("total time")) {
-    parseDemo.output[6] = value.match(regex)[1];
-  }
-  if (key.startsWith("framerate")) {
-    parseDemo.output[7] = value.match(regex)[1];
-  }
-
-  return parseDemo.output;
+  return parseDemo;
 }

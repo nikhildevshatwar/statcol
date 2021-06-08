@@ -6,3 +6,5 @@ while true; do
         cat /opt/edge_ai_apps/apps_python/detection_pipe
         sleep ${ARRAY[1]:=0.3}
 done
+
+rm /opt/edge_ai_apps/apps_python/detection_pipe

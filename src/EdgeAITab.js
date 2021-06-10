@@ -159,6 +159,7 @@ function CPUSeries() {
       socket={Sockets.getByType("cpu")}
       title="CPU Load"
       yAxisTitle="Load"
+      yAxisRange={[0, 100]}
       settingsName="CPU"
     />
   );
@@ -181,6 +182,7 @@ function RemoteCPUSeries() {
       socket={Sockets.getByType("remote_cpuload")}
       title="Remote CPU"
       yAxisTitle="Load"
+      yAxisRange={[0, 100]}
       settingsName="Remote CPU"
     />
   );

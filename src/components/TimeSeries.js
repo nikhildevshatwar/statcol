@@ -94,6 +94,8 @@ class TimeSeries extends React.Component {
             color: colors.text,
             title: { text: this.props.yAxisTitle, color: colors.text },
             automargin: true,
+            range: this.props.yAxisRange,
+            autorange: !this.props.hasOwnProperty("yAxisRange"),
           },
           margin: {
             pad: 30,

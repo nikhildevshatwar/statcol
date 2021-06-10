@@ -33,29 +33,34 @@ const useStyles = makeStyles({
   },
 });
 
+function parseDemoOutput(output, name) {
+  const tableHeadRow = [];
+  const tableBodyRow = [];
+  for(let [key, value] of Object.entries(output)) {
+    tableHeadRow.push(<StyledTableCell>{key}</StyledTableCell>);
+    tableBodyRow.push(<StyledTableCell>{value[0]} ({value[1]})</StyledTableCell>);
+  }
+
+  return (
+    <Table size="small" style={{tableLayout: 'fixed'}}>
+      {name}
+      <TableHead>
+        <TableRow color="white">
+          {tableHeadRow}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          {tableBodyRow}
+       </TableRow>
+      </TableBody>
+    </Table>
+  );
+}
+
 function DemoCard() {
   const content = (parsedData) => {
-    return (
-      <Table size="small" style={{tableLayout: 'fixed'}}>
-        Object Detection Demo Statistics (in ms)
-        <TableHead>
-          <TableRow color="white">
-            <StyledTableCell>Capture</StyledTableCell>
-            <StyledTableCell>Pre-Process</StyledTableCell>
-            <StyledTableCell>Dl-Inference</StyledTableCell>
-            <StyledTableCell>Post-Process</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <StyledTableCell>{parsedData[0][0]} ({parsedData[0][1]})</StyledTableCell>
-            <StyledTableCell>{parsedData[1][0]} ({parsedData[1][1]})</StyledTableCell>
-            <StyledTableCell>{parsedData[2][0]} ({parsedData[2][1]})</StyledTableCell>
-            <StyledTableCell>{parsedData[3][0]} ({parsedData[3][1]})</StyledTableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    );
+    return parseDemoOutput(parsedData, "Object Detection Demo Statistics (in ms)");
   };
 
   return (

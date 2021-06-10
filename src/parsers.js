@@ -143,12 +143,10 @@ export function parseMeter(event) {
   return parseInt(event.data);
 }
 
-export function buildDemoParser(attribute_count) {
+export function buildDemoParser() {
   function parseDemo(event) {
     if (!parseDemo.hasOwnProperty("output")) {
-      parseDemo.output = Array(attribute_count);
-      parseDemo.output.fill([0, 0]);
-      parseDemo.index = 0;
+      parseDemo.output = {};
     }
 
     if (!event.data.startsWith("[UTILS]")) {
@@ -156,10 +154,11 @@ export function buildDemoParser(attribute_count) {
     }
 
     const regex = /[+-]?\d+(?:\.\d+)?/g;
+    let key = event.data.match(/'(.*?)'/g)[0];
+    key = key.substring(1, key.length - 1);
     const values = event.data.match(regex);
-    parseDemo.output[parseDemo.index][0] = values[0];
-    parseDemo.output[parseDemo.index][1] = values[1];
-    parseDemo.index = (parseDemo.index + 1) % attribute_count;
+
+    parseDemo.output[key] = values;
 
     return parseDemo.output;
   }

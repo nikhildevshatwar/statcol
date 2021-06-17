@@ -34,11 +34,16 @@ const useStyles = makeStyles({
 });
 
 function parseDemoOutput(output, name) {
-  const tableHeadRow = [];
+  const tableHeadRow = ["Name", "Value", "Average Value"].map(title => <StyledTableCell>{title}</StyledTableCell>);
   const tableBodyRow = [];
   for(let [key, value] of Object.entries(output)) {
-    tableHeadRow.push(<StyledTableCell>{key}</StyledTableCell>);
-    tableBodyRow.push(<StyledTableCell>{value[0]} ({value[1]})</StyledTableCell>);
+    tableBodyRow.push(
+    <TableRow>
+      <StyledTableCell>{key}</StyledTableCell>
+      <StyledTableCell>{value[0]}</StyledTableCell>
+      <StyledTableCell>{value[1]}</StyledTableCell>
+    </TableRow>
+    )
   }
 
   return (
@@ -50,9 +55,7 @@ function parseDemoOutput(output, name) {
         </TableRow>
       </TableHead>
       <TableBody>
-        <TableRow>
-          {tableBodyRow}
-       </TableRow>
+       {tableBodyRow} 
       </TableBody>
     </Table>
   );

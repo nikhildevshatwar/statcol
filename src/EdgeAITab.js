@@ -25,8 +25,7 @@ const StyledTableCell = withStyles({
 
 const useStyles = makeStyles({
   chart: {
-    display: "flex",
-    flexDirection: "row",
+    display: "block",
   },
   table: {
     tableLayout: "fixed",

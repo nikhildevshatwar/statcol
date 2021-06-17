@@ -26,14 +26,14 @@ const drawerWidth = 240;
 
 const styles = (theme) => ({
   root: {
-    display: "flex",
+    display: "block",
     backgroundColor: colors.background,
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
   },
   toolbarIcon: {
-    display: "flex",
+    display: "block",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
@@ -59,7 +59,7 @@ const styles = (theme) => ({
     marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none",
+    display: "block",
   },
   settingsButton: {
     marginLeft: 8,
@@ -100,7 +100,7 @@ const styles = (theme) => ({
   },
   paper: {
     padding: theme.spacing(2),
-    display: "flex",
+    display: "block",
     overflow: "auto",
     flexDirection: "column",
   },
@@ -127,7 +127,7 @@ const styles = (theme) => ({
     color: colors.text,
   },
   statusBar: {
-    display: "flex",
+    display: "block",
     backgroundColor: colors.input,
     color: colors.text,
     borderRadius: "5ch",

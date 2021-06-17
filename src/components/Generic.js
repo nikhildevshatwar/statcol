@@ -7,12 +7,10 @@ import ToolTip from "@material-ui/core/Tooltip";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    flexDirection: "row",
+    display: "block",
   },
   buttonGroup: {
-    display: "flex",
-    flexDirection: "column",
+    display: "block",
   },
   button: {
     margin: 5,

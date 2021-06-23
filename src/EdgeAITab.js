@@ -8,7 +8,6 @@ import TableCell from "@material-ui/core/TableCell";
 import { colors } from "./globals";
 import DataCard from "./components/DataCard";
 import TimeSeries from "./components/TimeSeries";
-import Meter from "./components/Meter";
 import PieChart from "./components/PieChart";
 import { Sockets } from "./websocket";
 
@@ -120,37 +119,12 @@ function MemChart() {
           socket: Sockets.getByType("memory"),
           parser: (parsedData) => parsedData.slice(1, 5),
         },
-        {
-          socket: Sockets.getByType("random"),
-          parser: (parsedData) => parsedData,
-        },
-        {
-          socket: Sockets.getByType("random2"),
-          parser: (parsedData) => parsedData,
-        },
-        {
-          socket: Sockets.getByType("random3"),
-          parser: (parsedData) => parsedData,
-        },
-        {
-          socket: Sockets.getByType("random4"),
-          parser: (parsedData) => parsedData,
-        },
-        {
-          socket: Sockets.getByType("random5"),
-          parser: (parsedData) => parsedData,
-        },
       ]}
       labelSets={[
         ["Free", "Used", "Buffer and Cache", "Shared"],
-        ["X", "Y", "Z", "W"],
-        ["X", "Y", "Z", "W"],
-        ["X", "Y", "Z", "W"],
-        ["X", "Y", "Z", "W"],
-        ["X", "Y", "Z", "W"],
       ]}
-      titles={["Main Memory", "Random", "R2", "R3", "R4", "R5"]}
-      settingsName="Memory and Random"
+      titles={["Main Memory"]}
+      settingsName="Memory"
     />
   );
 }
@@ -190,10 +164,6 @@ function RemoteCPUSeries() {
   );
 }
 
-function MeterExample() {
-  return (<Meter socket={Sockets.getByType("meter_example")} settingsName="Meter Example" />);
-}
-
 export default function EdgeAITab() {
   const classes = useStyles();
 
@@ -206,7 +176,6 @@ export default function EdgeAITab() {
         <TempSeries />
         <RemoteCPUSeries />
       </div>
-      <MeterExample />
       <DemoCard />
     </React.Fragment>
   );

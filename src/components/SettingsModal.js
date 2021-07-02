@@ -27,7 +27,8 @@ function getModalStyle() {
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    margin: 5,
+    margin: 0,
+    padding: 0,
   },
   textField: {
     color: "inherit",

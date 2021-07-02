@@ -8,12 +8,19 @@ import ToolTip from "@material-ui/core/Tooltip";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
+    margin: 0,
+    padding: 0,
   },
   buttonGroup: {
-    display: "block",
+    display: "flex",
+    margin: 0,
+    padding: 0,
   },
   button: {
-    margin: 5,
+    margin: 0,
+    padding: 0,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
 }));
 

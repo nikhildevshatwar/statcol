@@ -26,14 +26,16 @@ const drawerWidth = 240;
 
 const styles = (theme) => ({
   root: {
-    display: "block",
+    display: "flex",
+    alignContent: "center",
     backgroundColor: colors.background,
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
   },
   toolbarIcon: {
-    display: "block",
+    display: "flex",
+    alignContent: "center",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
@@ -59,7 +61,8 @@ const styles = (theme) => ({
     marginRight: 36,
   },
   menuButtonHidden: {
-    display: "block",
+    display: "flex",
+    alignContent: "center",
   },
   settingsButton: {
     marginLeft: 8,
@@ -95,14 +98,14 @@ const styles = (theme) => ({
     overflow: "auto",
   },
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    margin: 0,
+    padding: 0,
   },
   paper: {
     padding: theme.spacing(2),
-    display: "block",
+    display: "flex",
+    alignContent: "center",
     overflow: "auto",
-    flexDirection: "column",
   },
   drawerButton: {
     color: colors.text,
@@ -127,7 +130,8 @@ const styles = (theme) => ({
     color: colors.text,
   },
   statusBar: {
-    display: "block",
+    display: "flex",
+    alignContent: "center",
     backgroundColor: colors.input,
     color: colors.text,
     borderRadius: "5ch",
@@ -223,7 +227,7 @@ class App extends React.Component {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
+            <Container className={classes.container}>
               <Visualization tabSelected={this.state.tabSelected} />
             </Container>
           </main>

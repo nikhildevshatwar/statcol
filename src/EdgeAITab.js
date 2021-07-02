@@ -11,6 +11,7 @@ import TimeSeries from "./components/TimeSeries";
 import PieChart from "./components/PieChart";
 import { Sockets } from "./websocket";
 
+/* Move to Generic location */
 const StyledTableCell = withStyles({
   head: {
     backgroundColor: colors.container,
@@ -18,13 +19,18 @@ const StyledTableCell = withStyles({
   },
   body: {
     fontSize: 14,
+    textAlign: "right",
     color: colors.text,
   },
 })(TableCell);
 
 const useStyles = makeStyles({
-  chart: {
-    display: "block",
+  root: {
+    margin: 0,
+    padding: 0,
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   table: {
     tableLayout: "fixed",
@@ -168,15 +174,13 @@ export default function EdgeAITab() {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <div className={classes.root}>
       <MemCard/>
       <MemChart />
-      <div className={classes.chart}>
-        <CPUSeries />
-        <TempSeries />
-        <RemoteCPUSeries />
-      </div>
+      <CPUSeries />
+      <TempSeries />
+      <RemoteCPUSeries />
       <DemoCard />
-    </React.Fragment>
+    </div>
   );
 }
